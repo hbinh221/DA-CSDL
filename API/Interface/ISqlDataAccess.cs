@@ -9,7 +9,7 @@ namespace API.Interface
     public interface ISqlDataAccess
     {
         DbConnection GetDbConnection();
-        T Get<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure);
+        Task<T> Get<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure);
         List<T> GetAll<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure);
         int Execute(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure);
         public Task<IEnumerable<T>> LoadData<T, U>(string storedProcedure, U parameters);

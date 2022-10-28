@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,12 +48,20 @@ namespace API.Controllers
         }
 
         [HttpGet("getall")]
-        public async Task<ActionResult> GetAllUser()
+        public async Task<IEnumerable<GetAllUserDto>> GetAllUser()
         {
             var dp_params = new DynamicParameters();
-            var userList = await Task.FromResult(_db.GetAll<GetAllUserDto>("GetUser", dp_params,
-                commandType: System.Data.CommandType.StoredProcedure));
-            return Ok(userList);
+            var userList = await Task.FromResult(_db.GetAll<GetAllUserDto>("GetUser", dp_params));
+            return userList;
+
+            /*using (SqlConnection connection = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            {
+                connection.Open();
+                string query = "select * from AppUser";
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.ExecuteNonQuery();
+                return new List<GetAllUserDto>();
+            }*/
         }
     }
 }

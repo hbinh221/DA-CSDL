@@ -43,10 +43,10 @@ namespace API.Service
             throw new NotImplementedException();
         }
 
-        public T Get<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
+        public async Task<T> Get<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
         {
             using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            return db.Query<T>(sp, parms, commandType: commandType).FirstOrDefault();
+            return (await db.QueryAsync<T>(sp, parms, commandType: commandType)).FirstOrDefault();
         }
 
         public List<T> GetAll<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
