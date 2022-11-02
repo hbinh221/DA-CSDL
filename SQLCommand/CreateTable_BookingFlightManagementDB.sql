@@ -1,4 +1,10 @@
 ﻿-- Create table
+drop database BookingFlightManagement
+go
+create database BookingFlightManagement
+go
+use BookingFlightManagement
+go
 create table Airline(
 	Id uniqueidentifier primary key default newsequentialid(),
 	AirlineName nvarchar(50) not null
@@ -53,6 +59,7 @@ create table Plane(
 	PlaneName nvarchar(20) not null,
 	SeatQuantity int not null,
 	Quantity int not null,
+	IsChoice bit not null,
 	AirlineId uniqueidentifier,
 	constraint Plane_AirlineId_Foreign foreign key (AirlineId) references Airline(Id)
 );
@@ -62,7 +69,7 @@ create table Flight(
 	FlightNo nvarchar(10) not null,
 	DepartureTime datetime2 not null,
 	LandedTime datetime2 not null,
-	Cost money not null,
+	Cost money null,
 	Remark nvarchar(max),
 	FromLocationId uniqueidentifier,
 	ToLocationId uniqueidentifier,
@@ -94,14 +101,14 @@ go
 create table Ticket(
 	Id uniqueidentifier primary key default newsequentialid(),
 	Code nvarchar(10) not null,
-	Price money not null,
+	Price money null,
 	Remark nvarchar(max),
-	Gate nvarchar(10) not null,
-	FlightId uniqueidentifier,
-	PassengerId uniqueidentifier,
-	PaymentId uniqueidentifier,
-	ReservationId uniqueidentifier unique,
-	PromotionId uniqueidentifier,
+	Gate nvarchar(10) null,
+	FlightId uniqueidentifier null,
+	PassengerId uniqueidentifier null,
+	PaymentId uniqueidentifier null,
+	ReservationId uniqueidentifier unique null,
+	PromotionId uniqueidentifier null,
 	constraint Ticket_FlightId_Foreign foreign key (FlightId) references Flight(Id),
 	constraint Ticket_PassengerId_Foreign foreign key (PassengerId) references Passenger(Id),
 	constraint Ticket_PaymentId_Foreign foreign key (PaymentId) references Payment(Id),
