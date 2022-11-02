@@ -1,0 +1,24 @@
+<nz-radio-group  nzButtonStyle="solid" class="mb-3">
+    <label nz-radio-button nzValue="A">Round-Trip</label>
+    <label nz-radio-button nzValue="B">One Way</label>
+</nz-radio-group>
+
+    <div nz-row nzGutter="16">
+        <div nz-col nzSpan="8">
+            <nz-select class="w-100" nzShowSearch nzAllowClear nzPlaceHolder="Select a person" >
+                <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
+                <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
+                <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
+              </nz-select>
+        </div>
+        <div nz-col nzSpan="8">
+            <nz-select class="w-100"nzShowSearch nzAllowClear nzPlaceHolder="Select a person" >
+                <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
+                <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
+                <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
+              </nz-select>
+        </div>
+        <div nz-col nzSpan="8">
+        <nz-range-picker [nzRanges]="ranges" ngModel ></nz-range-picker>
+        </div>
+    </div>
