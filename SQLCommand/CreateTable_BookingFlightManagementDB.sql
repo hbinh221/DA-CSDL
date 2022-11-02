@@ -19,13 +19,12 @@ create table Rank(
 	Id uniqueidentifier primary key default newsequentialid(),
 	RankName nvarchar(20) not null,
 	Cost money not null,
-	WeightBaggage int not null
+	BaggageWeight int not null
 );
 go
 create table Payment(
 	Id uniqueidentifier primary key default newsequentialid(),
-	PaymentType nvarchar(20) not null,
-	PaymentDate datetime2 not null default getdate()
+	PaymentType nvarchar(20) not null
 );
 go
 create table Passenger(
@@ -50,7 +49,7 @@ create table Service(
 	Id uniqueidentifier primary key default newsequentialid(),
 	ServiceName nvarchar(100) not null,
 	Cost money not null,
-	AirlineId uniqueidentifier,
+	AirlineId uniqueidentifier not null,
 	constraint Service_AirlineId_Foreign foreign key (AirlineId) references Airline(Id)
 );
 go
@@ -60,7 +59,7 @@ create table Plane(
 	SeatQuantity int not null,
 	Quantity int not null,
 	IsChoice bit not null,
-	AirlineId uniqueidentifier,
+	AirlineId uniqueidentifier not null,
 	constraint Plane_AirlineId_Foreign foreign key (AirlineId) references Airline(Id)
 );
 go
@@ -69,11 +68,11 @@ create table Flight(
 	FlightNo nvarchar(10) not null,
 	DepartureTime datetime2 not null,
 	LandedTime datetime2 not null,
-	Cost money null,
-	Remark nvarchar(max),
-	FromLocationId uniqueidentifier,
-	ToLocationId uniqueidentifier,
-	PlaneId uniqueidentifier,
+	Cost money not null,
+	Remark nvarchar(max) null,
+	FromLocationId uniqueidentifier not null,
+	ToLocationId uniqueidentifier not null,
+	PlaneId uniqueidentifier not null,
 	constraint Flight_FromLocationId_Foreign foreign key (FromLocationId) references Location(Id),
 	constraint Flight_ToLocationId_Foreign foreign key (ToLocationId) references Location(Id),
 	constraint Flight_PlaneId_Foreign foreign key (PlaneId) references Plane(Id)
@@ -82,7 +81,7 @@ go
 create table Reservation(
 	Id uniqueidentifier primary key default newsequentialid(),
 	ReservationNo nvarchar(10) not null,
-	AcommodationDate datetime2 null,
+	ReservationDate datetime2 null,
 	IsReserved bit not null,
 	FlightId uniqueidentifier not null,
 	RankId uniqueidentifier null,
@@ -104,6 +103,7 @@ create table Ticket(
 	Price money null,
 	Remark nvarchar(max),
 	Gate nvarchar(10) null,
+	PaymentDate datetime2 not null default getdate(),
 	FlightId uniqueidentifier null,
 	PassengerId uniqueidentifier null,
 	PaymentId uniqueidentifier null,
@@ -117,8 +117,8 @@ create table Ticket(
 );
 go
 create table ServiceDetail(
-	TicketId uniqueidentifier,
-	ServiceId uniqueidentifier,
+	TicketId uniqueidentifier not null,
+	ServiceId uniqueidentifier not null,
 	constraint ServiceDetail_TicketId_Foreign foreign key (TicketId) references Ticket(Id),
 	constraint ServiceDetail_ServiceId_Foreign foreign key (ServiceId) references Service(Id)
 );

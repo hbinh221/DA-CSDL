@@ -2,6 +2,7 @@
 -- After create reservation then create ticket with this reservation
 create procedure CrtTicWthRes 
 @FlightId uniqueidentifier
+with recompile
 as
 begin
 	declare @ReservationList uniqueidentifier, @ReservationQuantity uniqueidentifier;
@@ -18,6 +19,7 @@ end;
 -- SP getall if @Id parameter null or get by Id if @Id parameter is not null
 create procedure GetLocation 
 @Id uniqueidentifier
+with recompile
 as
 begin
 	select * from Location 
@@ -26,6 +28,7 @@ end;
 
 create procedure GetAirline
 @Id uniqueidentifier
+with recompile
 as
 begin
 	select * from Airline 
@@ -34,6 +37,7 @@ end;
 
 create procedure GetPromotion
 @Id uniqueidentifier
+with recompile
 as
 begin
 	select * from Promotion 
@@ -43,6 +47,7 @@ end;
 
 create procedure GetPayment 
 @Id uniqueidentifier
+with recompile
 as
 begin
 	select * from Payment 
@@ -51,6 +56,7 @@ end;
 -- get plane by airline
 create procedure GetPlane 
 @Id uniqueidentifier, @AirlineId uniqueidentifier
+with recompile
 as
 begin
 	select * from Plane 
@@ -60,6 +66,7 @@ end;
 
 create procedure GetService
 @Id uniqueidentifier, @AirlineId uniqueidentifier
+with recompile
 as
 begin
 	select Id, ServiceName, Cost from Service 
