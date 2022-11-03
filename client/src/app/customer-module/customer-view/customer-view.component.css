@@ -1,0 +1,17 @@
+.content-wrapper{
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 800px;
+    min-height: 200px;
+    bottom: -20%;
+    background-color: #fff;
+    box-shadow: 0 15px 32px -10px rgb(108 117 125 / 10%), 0 4px 11px -3px rgb(0 0 0 / 25%);
+    border-radius: 30px;
+}
+
+.content__wrapper-tab{
+    border-radius: 30px;
+}
