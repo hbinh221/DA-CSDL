@@ -7,17 +7,6 @@
             <img width="100%" height="100%" style="object-fit:cover" src="../../../assets/img/airport-terminal.jpg" alt="">
         </div>
       </nz-carousel>
-      <div class="content-wrapper">
-        <nz-tabset nzType="card" class="content__wrapper-tab">
-            <nz-tab nzTitle="Booking Flight">
-                <app-booking-flight></app-booking-flight>
-            </nz-tab>
-            <nz-tab nzTitle="Your Trips">
-                <app-personal-flight></app-personal-flight>
-            </nz-tab>
-            <nz-tab nzTitle="Search Flights">
-                <app-search-flight></app-search-flight>
-            </nz-tab>
-          </nz-tabset>
-      </div>
+      <router-outlet></router-outlet>
+  
 </div>

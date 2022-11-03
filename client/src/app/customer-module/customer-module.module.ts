@@ -7,6 +7,8 @@ import { SharedModuleModule } from '../shared-module/shared-module.module';
 import { BookingFlightComponent } from './booking-flight/booking-flight.component';
 import { PersonalFlightComponent } from './personal-flight/personal-flight.component';
 import { SearchFlightComponent } from './search-flight/search-flight.component';
+import { RegisterComponent } from './register/register.component';
+import { CustomerViewComponent } from './customer-view/customer-view.component';
 
 
 @NgModule({
@@ -15,6 +17,8 @@ import { SearchFlightComponent } from './search-flight/search-flight.component';
     BookingFlightComponent,
     SearchFlightComponent,
     PersonalFlightComponent,
+    RegisterComponent,
+    CustomerViewComponent,
   ],
   imports: [
     CommonModule,
