@@ -49,10 +49,10 @@ namespace API.Service
             return (await db.QueryAsync<T>(sp, parms, commandType: commandType)).FirstOrDefault();
         }
 
-        public List<T> GetAll<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
+        public async Task<List<T>> GetAll<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
         {
             using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            return db.Query<T>(sp, parms, commandType: commandType).ToList();
+            return (await db.QueryAsync<T>(sp, parms, commandType: commandType)).ToList();
         }
 
         public DbConnection GetDbConnection()

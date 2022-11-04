@@ -33,9 +33,11 @@ create table Passenger(
 	LastName nvarchar(10) not null,
 	IdCard nvarchar(12) not null,
 	BirthDay datetime2 not null,
-	Gender bit not null,
+	Gender bit not null, -- 1 male, 0 female
 	Phone nvarchar(10) not null,
-	Email nvarchar(50) not null
+	Email nvarchar(50) not null,
+	Password nvarchar(1000) null,
+	Role bit null -- 1 admin, 0 passenger
 );
 go
 /*create table Baggage(
@@ -58,7 +60,6 @@ create table Plane(
 	PlaneName nvarchar(20) not null,
 	SeatQuantity int not null,
 	Quantity int not null,
-	IsChoice bit not null,
 	AirlineId uniqueidentifier not null,
 	constraint Plane_AirlineId_Foreign foreign key (AirlineId) references Airline(Id)
 );
