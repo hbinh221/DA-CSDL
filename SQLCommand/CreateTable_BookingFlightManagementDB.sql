@@ -37,7 +37,7 @@ create table Passenger(
 	Phone nvarchar(10) not null,
 	Email nvarchar(50) not null,
 	Password nvarchar(1000) null,
-	Role bit null -- 1 admin, 0 passenger
+	IsAdmin bit null -- 1 admin, 0 passenger
 );
 go
 /*create table Baggage(
