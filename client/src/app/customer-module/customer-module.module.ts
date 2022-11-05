@@ -9,6 +9,9 @@ import { PersonalFlightComponent } from './personal-flight/personal-flight.compo
 import { SearchFlightComponent } from './search-flight/search-flight.component';
 import { RegisterComponent } from './register/register.component';
 import { CustomerViewComponent } from './customer-view/customer-view.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -21,6 +24,10 @@ import { CustomerViewComponent } from './customer-view/customer-view.component';
     CustomerViewComponent,
   ],
   imports: [
+    CommonModule,
+    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     CommonModule,
     CustomerModuleRoutingModule,
     SharedModuleModule

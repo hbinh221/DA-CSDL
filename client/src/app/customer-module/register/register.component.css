@@ -1,0 +1,16 @@
+.register-container{
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding-bottom: 100px;
+    background-position: center bottom;
+    background-attachment: fixed;
+    background-color: #041116;
+    background-image: url(../../../assets/img/default-bg.jpg);
+}
+
+.register__container-header{
+    color:#fff;
+    text-align: center;
+    padding: 190px 0 60px 0;
+    font-size: 32px;
+}
