@@ -26,6 +26,8 @@ begin
 	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id ;
 end;
 
+exec GetLocation null
+
 create procedure GetAirline
 @Id uniqueidentifier
 with recompile
@@ -61,7 +63,7 @@ as
 begin
 	select * from Plane 
 	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id)
-	and IsChoice = 0 and AirlineId = @AirlineId;
+	and AirlineId = @AirlineId;
 end;
 
 create procedure GetService
@@ -73,3 +75,13 @@ begin
 	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id)
 	and AirlineId = @AirlineId;
 end;
+
+create procedure Signin
+@Email nvarchar(50)
+with recompile
+as
+begin
+	select Id, Email, Password, Role from Passenger 
+	where Email = @Email
+end;
+drop proc Signin

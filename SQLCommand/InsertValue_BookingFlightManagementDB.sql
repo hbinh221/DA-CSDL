@@ -19,3 +19,6 @@ insert into Airline(AirlineName) values
 (N'Pacific Airlines'),
 (N'Bamboo Airways'),
 (N'Vietstar Airlines');
+
+insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, Role) 
+values (N'NTD', N'Hunter', N'001201015778', '2001-09-17 16:12:25.113', 1, N'0392047428', N'bykmaimai@gmail.com', N'123456789',1);
