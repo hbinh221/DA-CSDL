@@ -20,5 +20,10 @@ insert into Airline(AirlineName) values
 (N'Bamboo Airways'),
 (N'Vietstar Airlines');
 
-insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, Role) 
+insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin) 
 values (N'NTD', N'Hunter', N'001201015778', '2001-09-17 16:12:25.113', 1, N'0392047428', N'bykmaimai@gmail.com', N'123456789',1);
+
+insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin) 
+values (N'NTD', N'Hunter', N'001201015778', '2001-09-17 16:12:25.113', 1, N'0392047428', N'ntdhunter@gmail.com', N'123456789',1);
+
+select * from Service where Id = 'b1042222-145d-ed11-bb15-5ce0c53b4edf'

@@ -71,10 +71,12 @@ create procedure GetService
 with recompile
 as
 begin
-	select Id, ServiceName, Cost from Service 
+	select Id, ServiceName, Cost, AirlineId from Service 
 	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id)
 	and AirlineId = @AirlineId;
 end;
+
+drop proc GetService
 
 create procedure Signin
 @Email nvarchar(50)
@@ -84,4 +86,22 @@ begin
 	select Id, Email, Password, Role from Passenger 
 	where Email = @Email
 end;
-drop proc Signin
+
+create procedure CheckDuplicateEmail
+@Email nvarchar(50)
+as
+begin
+	declare @IsDuplicate bit, @DuplicateId uniqueidentifier; 
+	set @DuplicateId = (select Id from Passenger where Email = @Email);
+	if(isnull(@DuplicateId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000')
+	begin
+		set @IsDuplicate = 1;
+	end
+	else
+	begin
+		set @IsDuplicate = 0;
+	end
+	select @IsDuplicate as IsDuplicate;
+end;
+
+exec CheckDuplicateEmail 'ntdhunter@gmail.co'
