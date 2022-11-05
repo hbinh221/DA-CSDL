@@ -10,28 +10,40 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
        
         </ul>
-        <ul class="navbar-nav ">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#"
-                nz-popover
-                [(nzPopoverVisible)]="isVisibleLogin"
-                nzPopoverTitle="Login"
-                nzPopoverTrigger="click"
-                [nzPopoverContent]="contentTemplate">Sigh in</a>
-              </li>
+        <ul class="navbar-nav" *ngIf="(getUser() | async) as user; else login">
+          <li class="nav-item" style="display: flex; align-items:baseline">
+            <span class="mr-1" nz-icon nzType="user" nzTheme="outline"></span>
+            <span class="mr-1"> {{user.name}}</span>
+            <span (click)="logout()">Log out</span>
+          </li>
+          <li class="nav-item">
+          </li>
+        </ul>
+        <ng-template #login>
+          <ul class="navbar-nav" >
               <li class="nav-item">
-                <a class="nav-link" [routerLink]="'/customer/register'" href="#">Register</a>
-              </li>
-            </ul>
+                  <a class="nav-link active" aria-current="page" href="#"
+                  nz-popover
+                  [(nzPopoverVisible)]="isVisibleLogin"
+                  nzPopoverTitle="Login"
+                  nzPopoverTrigger="click"
+                  [nzPopoverContent]="contentTemplate">Sigh in</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" [routerLink]="'/customer/register'" href="#">Register</a>
+                </li>
+          </ul>
+        </ng-template>
+       
       </div>
     </div>
 
     <ng-template #contentTemplate>
       <form nz-form [formGroup]="form" class="login-form" (ngSubmit)="submitForm()">
         <nz-form-item>
-          <nz-form-control nzErrorTip="Please input your username!">
-            <nz-input-group nzPrefixIcon="user">
-              <input type="text" nz-input formControlName="userName" placeholder="Username" />
+          <nz-form-control nzErrorTip="Please input your email!">
+            <nz-input-group nzPrefixIcon="mail">
+              <input type="text" nz-input formControlName="email" placeholder="Email" />
             </nz-input-group>
           </nz-form-control>
         </nz-form-item>

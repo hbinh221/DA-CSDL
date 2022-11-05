@@ -17,8 +17,10 @@ const routes: Routes = [
     },
 ]
 },
-
-
+  {
+    path: '',
+    component: CustomerLayoutComponent,
+  },
   {
     path: 'customer',
     component: CustomerLayoutComponent,

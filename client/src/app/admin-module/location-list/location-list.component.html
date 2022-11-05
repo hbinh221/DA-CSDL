@@ -1,0 +1,32 @@
+<nz-page-header
+class="site-page-header"
+nzTitle="Location Management"
+></nz-page-header>
+<div nz-row>
+    <div nzSpan="8">
+        <nz-input-group [nzSuffix]="suffixIconSearch">
+            <input type="text" nz-input placeholder="Search..." />
+          </nz-input-group>
+          <ng-template #suffixIconSearch>
+            <span nz-icon nzType="search"></span>
+          </ng-template>
+    </div>
+</div>
+<nz-table #filterTable [nzData]="listOfData" nzTableLayout="fixed"
+[nzFrontPagination]="true"
+      [nzShowPagination]="true">
+    <thead>
+      <tr>
+        <th
+          *ngFor="let column of listOfColumns"
+        >
+          {{ column.name }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of filterTable.data">
+        <td>{{ data.name }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
