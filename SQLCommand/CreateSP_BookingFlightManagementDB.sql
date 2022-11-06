@@ -89,6 +89,7 @@ end;
 
 create procedure CheckDuplicateEmail
 @Email nvarchar(50)
+with recompile
 as
 begin
 	declare @IsDuplicate bit, @DuplicateId uniqueidentifier; 
@@ -104,4 +105,16 @@ begin
 	select @IsDuplicate as IsDuplicate;
 end;
 
-exec CheckDuplicateEmail 'ntdhunter@gmail.co'
+create procedure GetFlight
+@Id uniqueidentifier, @AirlineId uniqueidentifier
+with recompile
+as
+begin
+	(select f.Id, f.FlightNo, p.PlaneName, p.SeatQuantity, f.FromLocationId, f.ToLocationId, f.DepartureTime, f.LandedTime, f.Cost, f.Remark 
+	from (select * from Airline where Id = @AirlineId) a
+	inner join Plane p on a.Id = p.AirlineId
+	inner join Flight f on p.Id = f.PlaneId
+	inner join Location fl on f.FromLocationId = fl.Id
+	inner join Location tl on f.ToLocationId = tl.Id
+	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or f.Id = @Id))
+end;
