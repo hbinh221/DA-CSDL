@@ -7,24 +7,24 @@ use BookingFlightManagement
 go
 create table Airline(
 	Id uniqueidentifier primary key default newsequentialid(),
-	AirlineName nvarchar(50) not null
+	AirlineName nvarchar(50) unique not null
 );
 go
 create table Location(
 	Id uniqueidentifier primary key default newsequentialid(),
-	LocationName nvarchar(50) not null
+	LocationName nvarchar(50) unique not null
 );
 go
 create table Rank(
 	Id uniqueidentifier primary key default newsequentialid(),
-	RankName nvarchar(20) not null,
+	RankName nvarchar(20) unique not null,
 	Cost money not null,
 	BaggageWeight int not null
 );
 go
 create table Payment(
 	Id uniqueidentifier primary key default newsequentialid(),
-	PaymentType nvarchar(100) not null
+	PaymentType nvarchar(100) unique not null
 );
 go
 create table Passenger(
@@ -60,12 +60,13 @@ create table Plane(
 	PlaneName nvarchar(20) not null,
 	SeatQuantity int not null,
 	AirlineId uniqueidentifier not null,
-	constraint Plane_AirlineId_Foreign foreign key (AirlineId) references Airline(Id)
+	constraint Plane_AirlineId_Foreign foreign key (AirlineId) references Airline(Id),
+	constraint CHK_SeatQuantity check (SeatQuantity>=250)
 );
 go
 create table Flight(
 	Id uniqueidentifier primary key default newsequentialid(),
-	FlightNo nvarchar(10) not null,
+	FlightNo nvarchar(20) not null,
 	DepartureTime datetime2 not null,
 	LandedTime datetime2 not null,
 	Cost money not null,

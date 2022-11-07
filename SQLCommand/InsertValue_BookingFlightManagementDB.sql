@@ -27,13 +27,13 @@ go
 insert into Payment(PaymentType) values 
 (N'Thẻ tín dụng'),
 (N'Thẻ ghi nợ nội địa'),
---(N'Thẻ thanh toán quốc tế'),
+(N'Thẻ thanh toán quốc tế'),
 (N'Tại nhà');
 go
 declare @AirlineId uniqueidentifier;
 set @AirlineId = (select top 1 Id from Airline);
 insert into Plane(PlaneName, SeatQuantity, AirlineId) values 
-(N'Plane1', 10, @AirlineId);
+(N'Plane1', 250, @AirlineId);
 go
 insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin) 
 values (N'NTD', N'Hunter', N'001201015778', '2001-09-17 16:12:25.113', 1, N'0392047428', N'bykmaimai@gmail.com', N'123456789',1);
@@ -46,6 +46,5 @@ set @PlaneId = (select top 1 Id from Plane);
 set @FromLocationId = (select top 1 Id from Location);
 set @ToLocationId = (select top 1 Id from Location order by Id desc);
 insert into Flight(FlightNo, Cost, Remark, DepartureTime, LandedTime, FromLocationId, ToLocationId, PlaneId)
-values (N'FlightNo1', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()), 
+values (N'FlightNo2', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()), 
 @FromLocationId, @ToLocationId, @PlaneId);
-

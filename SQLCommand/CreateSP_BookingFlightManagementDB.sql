@@ -1,21 +1,4 @@
 -- Create stored procedure
--- After create reservation then create ticket with this reservation
-create or alter procedure CrtTicWthRes 
-@FlightId uniqueidentifier
-with recompile
-as
-begin
-	declare @ReservationList uniqueidentifier, @ReservationQuantity uniqueidentifier;
-	set @ReservationList = (select Id from Reservation where FlightId = @FlightId);
-	set @ReservationQuantity = count(@ReservationList);
-	while @ReservationQuantity > 0
-	begin
-		insert into Ticket(Code, Price, Remark, PromotionId, FlightId, ReservationId, PassengerId, PaymentId) 
-		values ('ASD', 100000)
-		set @ReservationQuantity = @ReservationQuantity - 1;
-	end;
-end;
-go
 -- SP getall if @Id parameter null or get by Id if @Id parameter is not null
 create or alter procedure GetLocation 
 @Id uniqueidentifier
