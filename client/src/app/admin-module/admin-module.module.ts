@@ -10,6 +10,10 @@ import { LocationListComponent } from './location-list/location-list.component';
 import { LocationDrawerComponent } from './location-list/partials/location-drawer/location-drawer.component';
 import { ListBaseComponent } from './shared/list-base/list-base.component';
 import { ModelBaseComponent } from './shared/modal-base/modal-base.component';
+import { AirlineListComponent } from './airline-list/airline-list.component';
+import { PaymentListComponent } from './payment-list/payment-list.component';
+import { PromotionListComponent } from './promotion-list/promotion-list.component';
+import { RankListComponent } from './rank-list/rank-list.component';
 
 
 @NgModule({
@@ -18,7 +22,11 @@ import { ModelBaseComponent } from './shared/modal-base/modal-base.component';
     LocationListComponent,
     LocationDrawerComponent,
     ListBaseComponent,
-    ModelBaseComponent
+    ModelBaseComponent,
+    AirlineListComponent,
+    PaymentListComponent,
+    PromotionListComponent,
+    RankListComponent,
   ],
   imports: [
     CommonModule,

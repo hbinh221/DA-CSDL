@@ -24,7 +24,7 @@ create table Rank(
 go
 create table Payment(
 	Id uniqueidentifier primary key default newsequentialid(),
-	PaymentType nvarchar(20) not null
+	PaymentType nvarchar(100) not null
 );
 go
 create table Passenger(
@@ -59,7 +59,6 @@ create table Plane(
 	Id uniqueidentifier primary key default newsequentialid(),
 	PlaneName nvarchar(20) not null,
 	SeatQuantity int not null,
-	Quantity int not null,
 	AirlineId uniqueidentifier not null,
 	constraint Plane_AirlineId_Foreign foreign key (AirlineId) references Airline(Id)
 );
@@ -81,7 +80,7 @@ create table Flight(
 go
 create table Reservation(
 	Id uniqueidentifier primary key default newsequentialid(),
-	ReservationNo nvarchar(10) not null,
+	ReservationNo nvarchar(20) not null,
 	ReservationDate datetime2 null,
 	IsReserved bit not null,
 	FlightId uniqueidentifier not null,
@@ -104,7 +103,7 @@ create table Ticket(
 	Price money null,
 	Remark nvarchar(max),
 	Gate nvarchar(10) null,
-	PaymentDate datetime2 not null default getdate(),
+	PaymentDate datetime2 null,
 	FlightId uniqueidentifier null,
 	PassengerId uniqueidentifier null,
 	PaymentId uniqueidentifier null,

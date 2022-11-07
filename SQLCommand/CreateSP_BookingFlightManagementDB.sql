@@ -1,6 +1,6 @@
 -- Create stored procedure
 -- After create reservation then create ticket with this reservation
-create procedure CrtTicWthRes 
+create or alter procedure CrtTicWthRes 
 @FlightId uniqueidentifier
 with recompile
 as
@@ -15,9 +15,9 @@ begin
 		set @ReservationQuantity = @ReservationQuantity - 1;
 	end;
 end;
-
+go
 -- SP getall if @Id parameter null or get by Id if @Id parameter is not null
-create procedure GetLocation 
+create or alter procedure GetLocation 
 @Id uniqueidentifier
 with recompile
 as
@@ -25,10 +25,8 @@ begin
 	select * from Location 
 	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id ;
 end;
-
-exec GetLocation null
-
-create procedure GetAirline
+go
+create or alter procedure GetAirline
 @Id uniqueidentifier
 with recompile
 as
@@ -36,8 +34,8 @@ begin
 	select * from Airline 
 	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id ;
 end;
-
-create procedure GetPromotion
+go
+create or alter procedure GetPromotion
 @Id uniqueidentifier
 with recompile
 as
@@ -46,8 +44,8 @@ begin
 	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000')
 	or Id = @Id and EndDate <= GETDATE();
 end;
-
-create procedure GetPayment 
+go
+create or alter procedure GetPayment 
 @Id uniqueidentifier
 with recompile
 as
@@ -55,8 +53,9 @@ begin
 	select * from Payment 
 	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id ;
 end;
+go
 -- get plane by airline
-create procedure GetPlane 
+create or alter procedure GetPlane 
 @Id uniqueidentifier, @AirlineId uniqueidentifier
 with recompile
 as
@@ -65,8 +64,8 @@ begin
 	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id)
 	and AirlineId = @AirlineId;
 end;
-
-create procedure GetService
+go
+create or alter procedure GetService
 @Id uniqueidentifier, @AirlineId uniqueidentifier
 with recompile
 as
@@ -75,19 +74,17 @@ begin
 	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id)
 	and AirlineId = @AirlineId;
 end;
-
-drop proc GetService
-
-create procedure Signin
+go
+create or alter procedure Signin
 @Email nvarchar(50)
 with recompile
 as
 begin
-	select Id, Email, Password, Role from Passenger 
+	select Id, Email, Password, IsAdmin from Passenger 
 	where Email = @Email
 end;
-
-create procedure CheckDuplicateEmail
+go
+create or alter procedure CheckDuplicateEmail
 @Email nvarchar(50)
 with recompile
 as
@@ -104,13 +101,13 @@ begin
 	end
 	select @IsDuplicate as IsDuplicate;
 end;
-
-create procedure GetFlight
+go
+create or alter procedure GetFlight
 @Id uniqueidentifier, @AirlineId uniqueidentifier
 with recompile
 as
 begin
-	(select f.Id, f.FlightNo, p.PlaneName, p.SeatQuantity, f.FromLocationId, f.ToLocationId, f.DepartureTime, f.LandedTime, f.Cost, f.Remark 
+	(select f.Id, f.FlightNo, p.PlaneName, p.SeatQuantity, fl.LocationName as FromLocation, tl.LocationName as ToLocation, f.DepartureTime, f.LandedTime, f.Cost, f.Remark 
 	from (select * from Airline where Id = @AirlineId) a
 	inner join Plane p on a.Id = p.AirlineId
 	inner join Flight f on p.Id = f.PlaneId
