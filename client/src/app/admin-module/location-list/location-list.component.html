@@ -14,7 +14,8 @@ nzTitle="Location Management"
 </div>
 <nz-table #filterTable [nzData]="listOfData" nzTableLayout="fixed"
 [nzFrontPagination]="true"
-      [nzShowPagination]="true">
+      [nzShowPagination]="true"
+      [nzLoading]="isLoading">
     <thead>
       <tr>
         <th

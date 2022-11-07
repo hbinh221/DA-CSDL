@@ -11,9 +11,9 @@ export class ListBaseComponent implements OnInit {
   listOfColumns: any[] = [];
   totalPages: number = 0;
   listOfData: any[] = [];
-
-  constructor(private router: Router,
-    private message: NzMessageService,) { }
+  isLoading: boolean = false;
+  constructor(protected router: Router,
+    protected message: NzMessageService,) { }
 
   ngOnInit(): void {
     this.fetchData();

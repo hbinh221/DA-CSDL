@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { LocationService } from 'src/app/services/location.service';
 import { ListBaseComponent } from '../shared/list-base/list-base.component';
 
 @Component({
@@ -12,6 +15,20 @@ export class LocationListComponent extends ListBaseComponent {
       name: 'Location Name',
     },
   ];
+  constructor(injector: Injector,protected router: Router,
+    protected message: NzMessageService,
+    private locationService: LocationService) {
+    super(router,message);
+  }
 
+  fetchData() {
+    this.isLoading = true;
+     this.locationService.getLocation().subscribe(res=>{
+      if(res){
+        this.listOfData = res;
+        this.isLoading = false;
+      }
+     });
+  }
   
 }

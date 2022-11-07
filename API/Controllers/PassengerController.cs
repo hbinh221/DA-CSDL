@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PassengerController : ControllerBase
     {
         private readonly IConfiguration _config;
@@ -38,7 +38,7 @@ namespace API.Controllers
             {
                 return BadRequest("Password invalid");
             }
-            return Ok("Success");
+            return Ok(user);
         }
 
         [HttpPost("register")]
