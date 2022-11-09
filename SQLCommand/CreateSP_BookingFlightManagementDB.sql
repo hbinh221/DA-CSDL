@@ -49,6 +49,16 @@
 
 --end
 --go
+-- calculate flight time function
+create function dbo.CalcFlightTime(@DepartureDate datetime2, @LandedTime datetime2)
+returns nvarchar(8)
+as
+begin
+	declare @FlightTime varchar(8);
+	set @FlightTime = convert(varchar(8), dateadd(minute, datediff(minute, convert(time(0), @DepartureDate), convert(time(0), @LandedTime)), 0), 114);
+	return @FlightTime;
+end
+go
 -- SP getall if @Id parameter null or get by Id if @Id parameter is not null
 create or alter procedure GetLocation 
 @Id uniqueidentifier
@@ -160,6 +170,7 @@ begin
 	where t.FlightId = @FlightId
 end;
 go
+-- get all flight in day
 create or alter procedure GetFlightForPassenger
 @DepartureTime datetime2, @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @AirlineId uniqueidentifier
 with recompile
@@ -175,20 +186,19 @@ begin
 		f.DepartureTime, 
 		f.LandedTime, 
 		--dbo.MinutesToDuration(datediff(minute, convert(time, f.DepartureTime), convert(time, f.LandedTime))) as FlightTime, 
-		convert(varchar(8),  dateadd(minute, datediff(minute, 
-		convert(time(0), f.DepartureTime), convert(time(0), f.LandedTime)), 0), 114) as FlightTime,
+		--convert(varchar(8),  dateadd(minute, datediff(minute, 
+		--convert(time(0), f.DepartureTime), convert(time(0), f.LandedTime)), 0), 114) as FlightTime,
+		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime) as FlightTime,
 		f.Cost, 
 		f.Remark 
 	from Airline a
 	inner join Plane p on a.Id = p.AirlineId
 	inner join (select Id, FlightNo, DepartureTime, LandedTime, Cost, Remark, PlaneId, FromLocationId, ToLocationId
-	from Flight where DepartureTime = @DepartureTime and FromLocationId = @FromLocationId 
-	and ToLocationId = @ToLocationId) f on p.Id = f.PlaneId
+	from Flight where convert(date, DepartureTime) = convert(date, @DepartureTime) and convert(time, DepartureTime) >= convert(time(0), getdate())
+	and FromLocationId = @FromLocationId and ToLocationId = @ToLocationId) f on p.Id = f.PlaneId
 	inner join Location fl on f.FromLocationId = fl.Id
 	inner join Location tl on f.ToLocationId = tl.Id
 end;
-exec GetFlightForPassenger 
-'2022-11-07 18:53:18.0500000', '77EA7E3D-925E-ED11-BE82-484D7EF0B796', '7CEA7E3D-925E-ED11-BE82-484D7EF0B796', '80EA7E3D-925E-ED11-BE82-484D7EF0B796'
 go
 select convert(
 	varchar(8), 
@@ -205,6 +215,8 @@ select dateadd(minute,
 		datediff(minute, 
 		convert(time(0) ,'2020-12-23 23:40:00.2756145'), 
 		convert(time(0) ,'2020-12-24 01:00:00.2756145')), 0)
+go
+select convert(time(0) ,'2020-12-23 23:40:00.2756145')
 go
 -- check to create a flight that does not duplicate flight times on one plane
 create or alter procedure CheckCreateFlight
