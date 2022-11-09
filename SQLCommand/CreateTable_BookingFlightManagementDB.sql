@@ -61,14 +61,14 @@ create table Plane(
 	SeatQuantity int not null,
 	AirlineId uniqueidentifier not null,
 	constraint Plane_AirlineId_Foreign foreign key (AirlineId) references Airline(Id),
-	constraint CHK_SeatQuantity check (SeatQuantity>=250)
+	constraint Chk_SeatQuantity check (SeatQuantity>=250)
 );
 go
 create table Flight(
 	Id uniqueidentifier primary key default newsequentialid(),
 	FlightNo nvarchar(20) not null,
 	DepartureTime datetime2 not null,
-	LandedTime datetime2 not null,
+	LandedTime datetime2 not null, -- khong qua 1 ngay, khong duoi 1 phut
 	Cost money not null,
 	Remark nvarchar(max) null,
 	FromLocationId uniqueidentifier not null,
@@ -76,7 +76,9 @@ create table Flight(
 	PlaneId uniqueidentifier not null,
 	constraint Flight_FromLocationId_Foreign foreign key (FromLocationId) references Location(Id),
 	constraint Flight_ToLocationId_Foreign foreign key (ToLocationId) references Location(Id),
-	constraint Flight_PlaneId_Foreign foreign key (PlaneId) references Plane(Id)
+	constraint Flight_PlaneId_Foreign foreign key (PlaneId) references Plane(Id),
+	--constraint Chk_DepartureTime check (DepartureTime >= getdate()),
+	--constraint Chk_DepartureTime check (LandedTime >= getdate() and LandedTime > DepartureTime)
 );
 go
 create table Reservation(
