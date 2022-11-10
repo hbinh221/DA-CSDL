@@ -73,5 +73,30 @@ namespace API.Controllers
             };
             return Ok("Success");
         }
+
+        [HttpPost("check/expiredpromotion")]
+        public async Task<Response<bool>> CheckExpiredPromotion([FromForm] string promotionName)
+        {
+            var dp_params = new DynamicParameters();
+            Response<bool> response = new Response<bool>();
+            dp_params.Add("@PromotionName", promotionName, DbType.String);
+
+            using(IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            {
+                string sqlCommand = "select * from Promotion where PromotionName = @PromotionName and EndDate >= getdate()";
+                var data = await db.QueryAsync<PromotionDto>(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(data.AsList().Count != 0)
+                {
+                    response.Code = 200;
+                    response.Data = true;
+                }
+                else
+                {
+                    response.Code = 200;
+                    response.Data = false;
+                }
+            }
+            return response;
+        }
     }
 }

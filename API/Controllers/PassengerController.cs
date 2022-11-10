@@ -25,20 +25,27 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login(LoginInput input)
+        public async Task<Response<LoginDto>> Login(LoginInput input)
         {
             var dp_params = new DynamicParameters();
+            Response<LoginDto> response = new Response<LoginDto>();
             dp_params.Add("@Email", input.Email, DbType.String);
             LoginDto user = await _db.Get<LoginDto>("Signin", dp_params);
             if(user == null)
             {
-                return BadRequest("Email invalid");
+                response.Code = 400;
+                response.Data = null;
+                return response;
             }
             else if(user.Password != input.Password)
             {
-                return BadRequest("Password invalid");
+                response.Code = 400;
+                response.Data = null;
+                return response;
             }
-            return Ok(user);
+            response.Code = 200;
+            response.Data = user;
+            return response;
         }
 
         [HttpPost("register")]
