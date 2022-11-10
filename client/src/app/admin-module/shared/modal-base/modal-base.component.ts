@@ -1,5 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-modal-base',
@@ -17,7 +19,11 @@ export class ModelBaseComponent implements OnInit {
   modalTitle: string = 'Create'
   isEdit: boolean = false;
   recordName: string = '';
-  constructor() { }
+  isLoading: boolean = false;
+  data: any;
+  constructor(protected http: HttpClient,
+    protected fb: FormBuilder,
+    protected msg: NzMessageService) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -30,6 +36,16 @@ export class ModelBaseComponent implements OnInit {
       this.modalForm.controls[i].markAsDirty();
       this.modalForm.controls[i].updateValueAndValidity();
     }
+  }
+
+  deleteItem(){}
+
+  changeEdit(ev: any) {
+    this.isEdit = ev;
+    if (this.mode === 'detail') {
+      this.modalForm.patchValue(this.data);
+    }
+    this.checkEditForm();
   }
 
   checkEditForm(){
@@ -46,14 +62,16 @@ export class ModelBaseComponent implements OnInit {
   
   openModal(data:any,mode: string, isEdit: boolean){
     this.isVisible = true;
-    this.isEdit = isEdit
+    this.isEdit = isEdit;
+    this.mode = mode;
+    this.data = data;
     if(mode === 'create'){
       this.modalForm.reset();
     }
     else{
       this.modalForm.patchValue(data);
-      this.checkEditForm();
     }
+    this.checkEditForm();
   }
 
   submitForm(){}

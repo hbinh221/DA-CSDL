@@ -1,7 +1,72 @@
-<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()" >
-    <ng-container *nzModalContent>
-      <p>Content one</p>
-      <p>Content two</p>
-      <p>Content three</p>
-    </ng-container>
-  </nz-modal>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]="modalTitle"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="modalForm">
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true">Location Name</nz-form-label>
+        <nz-form-control nzErrorTip="Please input location name!">
+          <nz-input-group nzPrefixIcon="environment">
+            <input
+              type="text"
+              nz-input
+              formControlName="locationName"
+              placeholder="Location Name"
+            />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+  <div *nzModalFooter>
+    <div nz-row>
+      <div nz-col nzSpan="4">
+        <div class="float-left">
+          <button nz-button nzType="default" (click)="handleCancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+      <div nz-col nzSpan="20">
+        <!-- <div class="float-right">
+            <button 
+            *ngIf="!isEdit && mode ==='detail'"
+             nz-button nzType="primary" 
+            (click)="changeEdit(true)">Edit</button>
+          </div>
+       -->
+        <div class="float-right ml-2">
+          <button *ngIf="mode ==='detail'"
+           nz-button 
+           (click)="deleteItem()"
+           [nzLoading]="isLoading"
+          nzType="primary" nzDanger
+          >Delete</button>
+        </div>
+        <div class="float-right ml-2">
+          <button
+            *ngIf="isEdit"
+            nz-button
+            nzType="primary"
+            (click)="submitForm()"
+            [nzLoading]="isLoading"
+          >
+            Save
+          </button>
+        </div>
+        <div class="float-right">
+          <button
+            *ngIf="isEdit && mode === 'detail'"
+            nz-button
+            nzType="default"
+            (click)="changeEdit(false)"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-modal>

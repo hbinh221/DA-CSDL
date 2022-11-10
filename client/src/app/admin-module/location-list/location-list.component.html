@@ -37,5 +37,11 @@
   </tbody>
 </nz-table>
 
-
-<app-location-modal #modalBase></app-location-modal>
+<div class="btn--fab" (click)="goToCreate()" >
+  <span nz-icon nzType="plus" nzTheme="outline"></span>
+  <!-- <i class="fas fa-plus-circle cursor-pointer"></i> -->
+</div>
+<app-location-modal #modalBase
+(onDeleteItem)="onDeleteItem($event)"
+(onCreateItem)="onCreateItem($event)"
+(onUpdateItem)="onUpdateItem($event)"></app-location-modal>

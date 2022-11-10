@@ -16,9 +16,10 @@ export class LocationService {
     return this.http.get(environment.baseUrl + this.baseUrl + '/get/location' + idString);
   }
   createLocation(payload: any): Observable<any>{
-    return this.http.post(environment + this.baseUrl + 'create/location', payload);
+    return this.http.post(environment.baseUrl + this.baseUrl +
+       '/create/location' + '?name=' + payload,  null);
   }
   deleteLocation(id: string): Observable<any>{
-    return this.http.delete(environment + this.baseUrl + 'delete/location' + '?id=' + id);
+    return this.http.delete(environment.baseUrl + this.baseUrl + '/delete/location' + '?id=' + id);
   }
 }

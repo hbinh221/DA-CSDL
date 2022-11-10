@@ -7,7 +7,7 @@
             <div nz-col nzSpan="8">
                 <nz-form-item>
                     <nz-form-control>
-                        <nz-form-label >From</nz-form-label>
+                        <nz-form-label [nzRequired]="true" >From</nz-form-label>
                         <nz-select (ngModelChange)="onChangeSourceLocation($event)" class="w-100" nzShowSearch nzPlaceHolder="Select a location"  formControlName="fromLocationId">
                             <nz-option  *ngFor="let location of sourceLocation" [nzLabel]="location.locationName" [nzValue]="location.id">
                             </nz-option>
@@ -18,7 +18,7 @@
             <div nz-col nzSpan="8">
                 <nz-form-item>
                     <nz-form-control>
-                        <nz-form-label >To</nz-form-label>
+                        <nz-form-label [nzRequired]="true" >To</nz-form-label>
                 <nz-select (ngModelChange)="onChangeDesLocation($event)" class="w-100"nzShowSearch nzAllowClear nzPlaceHolder="Select a location"  formControlName="toLocationId">
                     <nz-option  *ngFor="let location of desLocation" [nzLabel]="location.locationName" [nzValue]="location.id"></nz-option>
                   </nz-select>
@@ -28,7 +28,7 @@
             <div nz-col nzSpan="8">
                 <nz-form-item>
                     <nz-form-control>
-                        <nz-form-label >Date</nz-form-label>
+                        <nz-form-label [nzRequired]="true" >Date</nz-form-label>
             <nz-range-picker formControlName="flightTime" [nzRanges]="ranges" ></nz-range-picker>
                         </nz-form-control>
                         </nz-form-item>
@@ -39,7 +39,7 @@
             <div nz-col nzSpan="8">
                 <nz-form-item>
                     <nz-form-control>
-                        <nz-form-label >Passengers</nz-form-label>
+                        <nz-form-label [nzRequired]="true" >Passengers</nz-form-label>
                 <nz-input-number formControlName="passenger" [nzMax]="3"
                 [nzMin]="1"
                 class="w-100" [nzStep]="1"></nz-input-number>

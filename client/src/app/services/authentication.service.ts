@@ -21,7 +21,7 @@ export class AuthenticationService {
       map((response: any) => {
         const user = response;
         if(user) {
-          this.message.success("Logged In");
+          // this.message.success("Logged In");
           this.setCurrentUser(user);
         }
       })

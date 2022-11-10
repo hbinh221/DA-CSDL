@@ -11,7 +11,6 @@ import { ModelBaseComponent } from '../shared/modal-base/modal-base.component';
   styleUrls: ['./location-list.component.css']
 })
 export class LocationListComponent extends ListBaseComponent {
-  @ViewChild('modalBase') modalBase!: ModelBaseComponent;
   listOfColumns: any[] = [
     {
       name: 'Location Name',
@@ -54,8 +53,6 @@ export class LocationListComponent extends ListBaseComponent {
      });
   }
 
-  async goToDetail(data: string) {
-    this.modalBase.openModal(data, 'detail', false);
-  }
+
   
 }

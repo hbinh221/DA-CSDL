@@ -18,6 +18,8 @@ import { FlightListComponent } from './flight-list/flight-list.component';
 import { PassengerListComponent } from './passenger-list/passenger-list.component';
 import { TicketListComponent } from './ticket-list/ticket-list.component';
 import { LocationModalComponent } from './location-list/partials/location-modal/location-modal.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -38,6 +40,9 @@ import { LocationModalComponent } from './location-list/partials/location-modal/
   ],
   imports: [
     CommonModule,
+    FormsModule,
+    HttpClientModule,
+    ReactiveFormsModule,
     AdminModuleRoutingModule,
     SharedModuleModule,
   ],
