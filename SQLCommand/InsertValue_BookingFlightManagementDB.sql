@@ -48,3 +48,8 @@ set @ToLocationId = (select top 1 Id from Location order by Id desc);
 insert into Flight(FlightNo, Cost, Remark, DepartureTime, LandedTime, FromLocationId, ToLocationId, PlaneId)
 values (N'FlightNo2', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()), 
 @FromLocationId, @ToLocationId, @PlaneId);
+select * from Passenger
+insert into Promotion(PromotionName, StartDate, EndDate, Discount) values
+(N'Promotion1',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),
+(N'Promotion2',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),
+(N'Promotion3',GETDATE(), DATEADD(HH, 2, GETDATE()), 10);

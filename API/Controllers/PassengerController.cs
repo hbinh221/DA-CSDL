@@ -25,26 +25,34 @@ namespace API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult> Login(LoginInput input)
+        public async Task<Response<LoginDto>> Login(LoginInput input)
         {
             var dp_params = new DynamicParameters();
+            Response<LoginDto> response = new Response<LoginDto>();
             dp_params.Add("@Email", input.Email, DbType.String);
             LoginDto user = await _db.Get<LoginDto>("Signin", dp_params);
             if(user == null)
             {
-                return BadRequest("Email invalid");
+                response.Code = 400;
+                response.Data = null;
+                return response;
             }
             else if(user.Password != input.Password)
             {
-                return BadRequest("Password invalid");
+                response.Code = 400;
+                response.Data = null;
+                return response;
             }
-            return Ok(user);
+            response.Code = 200;
+            response.Data = user;
+            return response;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> Register(RegisterDto input)
+        public async Task<Response<LoginDto>> Register(RegisterDto input)
         {
             var dp_params = new DynamicParameters();
+            Response<LoginDto> response = new Response<LoginDto>();
             dp_params.Add("@FirstName", input.FirstName, DbType.String);
             dp_params.Add("@LastName", input.LastName, DbType.String);
             dp_params.Add("@IdCard", input.IdCard, DbType.String);
@@ -58,15 +66,25 @@ namespace API.Controllers
             {
                 string sqlCommand = "insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin)" +
                     "values (@FirstName, @LastName,@IdCard,@BirthDay,@Gender,@Phone,@Email,@Password,@IsAdmin)";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                {
+                    sqlCommand = "select top 1 * from Passenger where IsAdmin = 1 order by Id desc";
+                    var newData = await db.QueryFirstAsync<LoginDto>(sqlCommand, null, null, null, CommandType.Text);
+                    if(newData != null)
+                    {
+                        response.Code = 200;
+                        response.Data = newData;
+                    }
+                }
             };
-            return Ok("Success");
+            return response;
         }
 
-        [HttpPost("addpassenger")]
-        public async Task<ActionResult> InsertPassenger(List<PassengerDto> input)
+        [HttpPost("add/passenger")]
+        public async Task<Response<string>> InsertPassenger(List<PassengerDto> input)
         {
             var dp_params = new DynamicParameters();
+            Response<string> response = new Response<string>();
             foreach(PassengerDto passenger in input)
             {
                 dp_params.Add("@FirstName", passenger.FirstName, DbType.String);
@@ -82,14 +100,18 @@ namespace API.Controllers
                 {
                     string sqlCommand = "insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin)" +
                         "values (@FirstName, @LastName,@IdCard,@BirthDay,@Gender,@Phone,@Email,@Password,@IsAdmin)";
-                    await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                    if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == input.Count)
+                    {
+                        response.Code = 200;
+                        response.Data = "Success";
+                    }
                 };
             }
-            return Ok("Success");
+            return response;
         }
 
         [HttpPost("checkemail")]
-        public async Task<bool> CheckDuplicateEmail(string email)
+        public async Task<bool> CheckDuplicateEmail([FromForm] string email)
         {
             var dp_params = new DynamicParameters();
             dp_params.Add("@Email", email, DbType.String);

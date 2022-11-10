@@ -167,12 +167,13 @@ begin
 	select t.Code, t.Price, ra.RankName, ra.BaggageWeight from Ticket t 
 	inner join Reservation r on t.ReservationId = r.Id
 	inner join Rank ra on r.RankId = ra.Id
-	where t.FlightId = @FlightId
+	where t.FlightId = @FlightId and r.IsReserved = 0
 end;
 go
 -- get all flight in day
 create or alter procedure GetFlightForPassenger
-@DepartureTime datetime2, @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @AirlineId uniqueidentifier
+@DepartureTime datetime2, @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @AirlineId uniqueidentifier,
+@PageNum int, @PageSize int
 with recompile
 as
 begin
@@ -198,6 +199,8 @@ begin
 	and FromLocationId = @FromLocationId and ToLocationId = @ToLocationId) f on p.Id = f.PlaneId
 	inner join Location fl on f.FromLocationId = fl.Id
 	inner join Location tl on f.ToLocationId = tl.Id
+	order by Id
+	offset 5 rows fetch next 1 rows only
 end;
 go
 select convert(
@@ -236,3 +239,8 @@ begin
 	end;
 end
 go
+declare @PageNum int, @PageSize int;
+set @PageNum = 6
+set @PageSize = 2
+select * from Location order by Id asc offset (@PageNum - 1) * @PageSize rows fetch next @PageSize rows only
+select * from Location order by Id asc

@@ -35,9 +35,10 @@ namespace API.Controllers
         }
 
         [HttpPost("create/service")]
-        public async Task<ActionResult> CreateService(ServiceInput input)
+        public async Task<Response<ServiceDto>> CreateService(ServiceInput input)
         {
             var dp_params = new DynamicParameters();
+            Response<ServiceDto> response = new Response<ServiceDto>();
             dp_params.Add("@ServiceName", input.ServiceName, DbType.String);
             dp_params.Add("@Cost", input.Cost, DbType.Decimal);
             dp_params.Add("@AirlineId", input.AirlineId, DbType.Guid);
@@ -46,9 +47,18 @@ namespace API.Controllers
             {
                 string sqlCommand = "insert into Service(ServiceName, Cost, AirlineId)" +
                     "values (@ServiceName, @Cost, @AirlineId)";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                {
+                    sqlCommand = "select top 1 * from Service order by Id desc";
+                    var newData = await db.QueryFirstAsync<ServiceDto>(sqlCommand, null, null, null, CommandType.Text);
+                    if(newData != null)
+                    {
+                        response.Code = 200;
+                        response.Data = newData;
+                    }
+                }
             };
-            return Ok("Success");
+            return response;
         }
 
         [HttpDelete("delete/service")]

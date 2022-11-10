@@ -34,9 +34,10 @@ namespace API.Controllers
         }
 
         [HttpPost("create/promotion")]
-        public async Task<ActionResult> CreatePromotion(PromotionInput input)
+        public async Task<Response<PromotionDto>> CreatePromotion(PromotionInput input)
         {
             var dp_params = new DynamicParameters();
+            Response<PromotionDto> response = new Response<PromotionDto>();
             dp_params.Add("@PromotionName", input.PromotionName, DbType.String); 
             dp_params.Add("@StartDate", input.StartDate, DbType.DateTime2);
             dp_params.Add("@EndDate", input.EndDate, DbType.DateTime2);
@@ -46,9 +47,18 @@ namespace API.Controllers
             {
                 string sqlCommand = "insert into Promotion(PromotionName, StartDate, EndDate, Discount)" +
                     "values (@PromotionName, @StartDate, @EndDate, @Discount)";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                {
+                    sqlCommand = "select * from Promotion order by Id desc";
+                    var newData = await db.QueryFirstAsync<PromotionDto>(sqlCommand, null, null, null, CommandType.Text);
+                    if(newData != null)
+                    {
+                        response.Code = 200;
+                        response.Data = newData;
+                    }
+                }
             };
-            return Ok("Success");
+            return response;
         }
 
         [HttpDelete("delete/promotion")]
@@ -62,6 +72,31 @@ namespace API.Controllers
                 await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
             };
             return Ok("Success");
+        }
+
+        [HttpPost("check/expiredpromotion")]
+        public async Task<Response<bool>> CheckExpiredPromotion([FromForm] string promotionName)
+        {
+            var dp_params = new DynamicParameters();
+            Response<bool> response = new Response<bool>();
+            dp_params.Add("@PromotionName", promotionName, DbType.String);
+
+            using(IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            {
+                string sqlCommand = "select * from Promotion where PromotionName = @PromotionName and EndDate >= getdate()";
+                var data = await db.QueryAsync<PromotionDto>(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(data.AsList().Count != 0)
+                {
+                    response.Code = 200;
+                    response.Data = true;
+                }
+                else
+                {
+                    response.Code = 200;
+                    response.Data = false;
+                }
+            }
+            return response;
         }
     }
 }

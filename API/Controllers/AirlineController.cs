@@ -35,17 +35,28 @@ namespace API.Controllers
         }
 
         [HttpPost("create/airline")]
-        public async Task<ActionResult> CreateAirline(string name)
+        public async Task<Response<AirlineDto>> CreateAirline(string name)
         {
             var dp_params = new DynamicParameters();
+            Response<AirlineDto> response = new Response<AirlineDto>();
             dp_params.Add("@AirlineName", name, DbType.String);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 string sqlCommand = "insert into Airline(AirlineName)" +
                     "values (@AirlineName)";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                {
+                    sqlCommand = "select top 1 * from Airline order by Id desc";
+                    var newData = await db.QueryFirstAsync<AirlineDto>(sqlCommand, null, null, null, CommandType.Text);
+                    if (newData != null)
+                    {
+                        response.Code = 200;
+                        response.Data = newData;
+                    }
+                }
+
             };
-            return Ok("Success");
+            return response;
         }
 
         [HttpDelete("delete/airline")]

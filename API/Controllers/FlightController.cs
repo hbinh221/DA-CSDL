@@ -46,9 +46,10 @@ namespace API.Controllers
         }
 
         [HttpPost("create/flight")]
-        public async Task<ActionResult> CreateFlight(FlightInput input)
+        public async Task<Response<FlightDto>> CreateFlight(FlightInput input)
         {
             var dp_params = new DynamicParameters();
+            Response<FlightDto> response = new Response<FlightDto>();
             dp_params.Add("@FlightNo", input.FlightNo, DbType.String);
             dp_params.Add("@DepartureTime", input.DepartureTime, DbType.DateTime2);
             dp_params.Add("@LandedTime", input.LandedTime, DbType.DateTime2);
@@ -62,19 +63,28 @@ namespace API.Controllers
             {
                 string sqlCommand = "insert into Flight(FlightNo, DepartureTime, LandedTime, Cost, Remark, FromLocationId, ToLocationId, PlaneId)" +
                     "values (@FlightNo, @DepartureTime, @LandedTime, @Cost, @Remark, @FromLocationId, @ToLocationId, @AirlineId)";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                {
+                    sqlCommand = "select top 1 * from Flight order by Id desc";
+                    var newData = await db.QueryFirstAsync<FlightDto>(sqlCommand, null, null, null, CommandType.Text);
+                    if(newData != null)
+                    {
+                        response.Code = 200;
+                        response.Data = newData;
+                    }
+                }
             };
-            return Ok("Success");
+            return response;
         }
 
-        [HttpPost("checkcreateflight")]
-        public async Task<IEnumerable> CheckCreateFlight(Guid planeId, DateTime departureTime)
+        [HttpPost("check/createflight")]
+        public async Task<bool> CheckCreateFlight(Guid planeId, DateTime departureTime)
         {
             var dp_params = new DynamicParameters();
             dp_params.Add("@PlaneId", planeId, DbType.Guid);
             dp_params.Add("@DepartureTime", departureTime, DbType.DateTime2);
 
-            return await _db.GetAll<bool>("GetFlightForPassenger", dp_params);
+            return await _db.Get<bool>("CheckCreateFlight", dp_params);
         }
     }
 }
