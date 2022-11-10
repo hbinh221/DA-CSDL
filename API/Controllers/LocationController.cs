@@ -36,17 +36,25 @@ namespace API.Controllers
         }
 
         [HttpPost("create/location")]
-        public async Task<ActionResult> CreateLocation(string name)
+        public async Task<Response<LocationDto>> CreateLocation(string name)
         {
             var dp_params = new DynamicParameters();
+            Response<LocationDto> response = new Response<LocationDto>();
             dp_params.Add("@LocationName", name, DbType.String);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 string sqlCommand = "insert into Location(LocationName)" +
                     "values (@LocationName)";
                 await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                sqlCommand = "select top 1 * from Location order by Id desc";
+                var test = await db.QueryFirstAsync<LocationDto>(sqlCommand, dp_params, null, null, CommandType.Text);
+                if (test != null)
+                {
+                    response.StatusCode = 200;
+                    response.Result = test;
+                }    
             };
-            return Ok("Success");
+            return response;
         }
 
         [HttpDelete("delete/location")]
