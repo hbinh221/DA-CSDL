@@ -34,9 +34,10 @@ namespace API.Controllers
         }
 
         [HttpPost("create/promotion")]
-        public async Task<ActionResult> CreatePromotion(PromotionInput input)
+        public async Task<Response<PromotionDto>> CreatePromotion(PromotionInput input)
         {
             var dp_params = new DynamicParameters();
+            Response<PromotionDto> response = new Response<PromotionDto>();
             dp_params.Add("@PromotionName", input.PromotionName, DbType.String); 
             dp_params.Add("@StartDate", input.StartDate, DbType.DateTime2);
             dp_params.Add("@EndDate", input.EndDate, DbType.DateTime2);
@@ -46,9 +47,18 @@ namespace API.Controllers
             {
                 string sqlCommand = "insert into Promotion(PromotionName, StartDate, EndDate, Discount)" +
                     "values (@PromotionName, @StartDate, @EndDate, @Discount)";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                {
+                    sqlCommand = "select * from Promotion order by Id desc";
+                    var newData = await db.QueryFirstAsync<PromotionDto>(sqlCommand, null, null, null, CommandType.Text);
+                    if(newData != null)
+                    {
+                        response.Code = 200;
+                        response.Data = newData;
+                    }
+                }
             };
-            return Ok("Success");
+            return response;
         }
 
         [HttpDelete("delete/promotion")]

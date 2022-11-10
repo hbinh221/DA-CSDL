@@ -34,17 +34,27 @@ namespace API.Controllers
         }
 
         [HttpPost("create/payment")]
-        public async Task<ActionResult> CreatePayment(string name)
+        public async Task<Response<PaymentDto>> CreatePayment(string name)
         {
             var dp_params = new DynamicParameters();
+            Response<PaymentDto> response = new Response<PaymentDto>();
             dp_params.Add("@PaymentName", name, DbType.String);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 string sqlCommand = "insert into Location(PaymentName)" +
                     "values (@PaymentName)";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                {
+                    sqlCommand = "select top 1 * from Payment order by Id desc";
+                    var newData = await db.QueryFirstAsync<PaymentDto>(sqlCommand, null, null, null, CommandType.Text);
+                    if(newData != null)
+                    {
+                        response.Code = 200;
+                        response.Data = newData;
+                    }
+                }
             };
-            return Ok("Success");
+            return response;
         }
 
         [HttpDelete("delete/payment")]

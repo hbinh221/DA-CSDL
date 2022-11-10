@@ -167,7 +167,7 @@ begin
 	select t.Code, t.Price, ra.RankName, ra.BaggageWeight from Ticket t 
 	inner join Reservation r on t.ReservationId = r.Id
 	inner join Rank ra on r.RankId = ra.Id
-	where t.FlightId = @FlightId
+	where t.FlightId = @FlightId and r.IsReserved = 0
 end;
 go
 -- get all flight in day

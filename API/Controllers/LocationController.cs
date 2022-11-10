@@ -45,14 +45,17 @@ namespace API.Controllers
             {
                 string sqlCommand = "insert into Location(LocationName)" +
                     "values (@LocationName)";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
-                sqlCommand = "select top 1 * from Location order by Id desc";
-                var test = await db.QueryFirstAsync<LocationDto>(sqlCommand, dp_params, null, null, CommandType.Text);
-                if (test != null)
+                
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                 {
-                    response.StatusCode = 200;
-                    response.Result = test;
-                }    
+                    sqlCommand = "select top 1 * from Location order by Id desc";
+                    var newData = await db.QueryFirstAsync<LocationDto>(sqlCommand, null, null, null, CommandType.Text);
+                    if (newData != null)
+                    {
+                        response.Code = 200;
+                        response.Data = newData;
+                    }    
+                }   
             };
             return response;
         }

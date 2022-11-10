@@ -35,21 +35,30 @@ namespace API.Controllers
         }
 
         [HttpPost("create/plane")]
-        public async Task<ActionResult> CreatePlane(PlaneInput input)
+        public async Task<Response<PlaneDto>> CreatePlane(PlaneInput input)
         {
             var dp_params = new DynamicParameters();
+            Response<PlaneDto> response = new Response<PlaneDto>();
             dp_params.Add("@PlaneName", input.PlaneName, DbType.String);
             dp_params.Add("@SeatQuantity", input.SeatQuantity, DbType.Int64);
-            dp_params.Add("@PlaneType", input.PlaneType, DbType.String);
             dp_params.Add("@AirlineId", input.AirlineId, DbType.Guid);
 
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                string sqlCommand = "insert into Service(PlaneName, SeatQuantity, PlaneType, AirlineId)" +
-                    "values (@PlaneName, @SeatQuantity, @PlaneType, @AirlineId)";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                string sqlCommand = "insert into Plane(PlaneName, SeatQuantity, AirlineId)" +
+                    "values (@PlaneName, @SeatQuantity, @AirlineId)";
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                {
+                    sqlCommand = "select top 1 * from Plane where AirlineId = @AirlineId order by Id desc";
+                    var newData = await db.QueryFirstAsync<PlaneDto>(sqlCommand, dp_params, null, null, CommandType.Text);
+                    if(newData != null)
+                    {
+                        response.Code = 200;
+                        response.Data = newData;
+                    }
+                }
             };
-            return Ok("Success");
+            return response;
         }
 
         [HttpDelete("delete/plane")]
