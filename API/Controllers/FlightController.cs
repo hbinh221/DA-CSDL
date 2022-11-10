@@ -34,7 +34,7 @@ namespace API.Controllers
             return await _db.GetAll<FlightDto>("GetFlight", dp_params);
         }
 
-        [HttpGet("get/flight")]
+        [HttpGet("get/getflightforpassenger")]
         public async Task<IEnumerable> GetFlightForPassenger(DateTime departureTime ,Guid fromLocationId, Guid toLocationId, Guid airlineId)
         {
             var dp_params = new DynamicParameters();
