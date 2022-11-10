@@ -1,4 +1,64 @@
 -- Create stored procedure
+--make color
+--create function dbo.MinutesToDuration(@minutes int)
+--returns nvarchar(30)
+--as
+--begin
+--	declare @hours  nvarchar(20)
+--	set @hours = 
+--    case when @minutes >= 60 then
+--        (select cast((@minutes / 60) as varchar(2)) + 'h' +  
+--                case when (@minutes % 60) > 0 then
+--                    cast((@minutes % 60) as varchar(2)) + 'm'
+--                else
+--                    ''
+--                end)
+--		else 
+--			cast((@minutes % 60) as varchar(2)) + 'm'
+--		end
+--	return @hours
+--end
+--go
+--create function dbo.ConvertTimeToHHMMSS
+--(
+--    @time decimal(28,3), 
+--    @unit varchar(20)
+--)
+--returns varchar(20)
+--as
+--begin
+
+--    declare @seconds decimal(18,3), @minutes int, @hours int;
+
+--    if(@unit = 'hour' or @unit = 'hh' )
+--        set @seconds = @time * 60 * 60;
+--    else if(@unit = 'minute' or @unit = 'mi' or @unit = 'n')
+--        set @seconds = @time * 60;
+--    else if(@unit = 'second' or @unit = 'ss' or @unit = 's')
+--        set @seconds = @time;
+--    else set @seconds = 0; -- unknown time units
+
+--    set @hours = convert(int, @seconds /60 / 60);
+--    set @minutes = convert(int, (@seconds / 60) - (@hours * 60 ));
+--    set @seconds = @seconds % 60;
+
+--    return 
+--        convert(varchar(9), convert(int, @hours)) + ':' +
+--        right('00' + convert(varchar(2), convert(int, @minutes)), 2) + ':' +
+--        right('00' + convert(varchar(6), @seconds), 6)
+
+--end
+--go
+-- calculate flight time function
+create function dbo.CalcFlightTime(@DepartureDate datetime2, @LandedTime datetime2)
+returns nvarchar(8)
+as
+begin
+	declare @FlightTime varchar(8);
+	set @FlightTime = convert(varchar(8), dateadd(minute, datediff(minute, convert(time(0), @DepartureDate), convert(time(0), @LandedTime)), 0), 114);
+	return @FlightTime;
+end
+go
 -- SP getall if @Id parameter null or get by Id if @Id parameter is not null
 create or alter procedure GetLocation 
 @Id uniqueidentifier
@@ -98,3 +158,81 @@ begin
 	inner join Location tl on f.ToLocationId = tl.Id
 	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or f.Id = @Id))
 end;
+go
+create or alter procedure GetRemaningTicket
+@FlightId uniqueidentifier
+with recompile
+as
+begin
+	select t.Code, t.Price, ra.RankName, ra.BaggageWeight from Ticket t 
+	inner join Reservation r on t.ReservationId = r.Id
+	inner join Rank ra on r.RankId = ra.Id
+	where t.FlightId = @FlightId
+end;
+go
+-- get all flight in day
+create or alter procedure GetFlightForPassenger
+@DepartureTime datetime2, @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @AirlineId uniqueidentifier
+with recompile
+as
+begin
+	select 
+		f.Id, 
+		f.FlightNo, 
+		p.PlaneName,
+		p.SeatQuantity, 
+		fl.LocationName as FromLocation, 
+		tl.LocationName as ToLocation, 
+		f.DepartureTime, 
+		f.LandedTime, 
+		--dbo.MinutesToDuration(datediff(minute, convert(time, f.DepartureTime), convert(time, f.LandedTime))) as FlightTime, 
+		--convert(varchar(8),  dateadd(minute, datediff(minute, 
+		--convert(time(0), f.DepartureTime), convert(time(0), f.LandedTime)), 0), 114) as FlightTime,
+		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime) as FlightTime,
+		f.Cost, 
+		f.Remark 
+	from Airline a
+	inner join Plane p on a.Id = p.AirlineId
+	inner join (select Id, FlightNo, DepartureTime, LandedTime, Cost, Remark, PlaneId, FromLocationId, ToLocationId
+	from Flight where convert(date, DepartureTime) = convert(date, @DepartureTime) and convert(time, DepartureTime) >= convert(time(0), getdate())
+	and FromLocationId = @FromLocationId and ToLocationId = @ToLocationId) f on p.Id = f.PlaneId
+	inner join Location fl on f.FromLocationId = fl.Id
+	inner join Location tl on f.ToLocationId = tl.Id
+end;
+go
+select convert(
+	varchar(8), 
+	dateadd(minute, 
+		datediff(minute, 
+		convert(time(0) ,'2020-12-23 23:40:00.2756145'), 
+		convert(time(0) ,'2020-12-24 23:42:00.2756145')), 0), 114);
+go
+select datediff(minute, 
+		convert(time(0) ,'2020-12-23 23:40:00.2756145'), 
+		convert(time(0) ,'2021-12-24 01:40:00.2756145'))
+go
+select dateadd(minute, 
+		datediff(minute, 
+		convert(time(0) ,'2020-12-23 23:40:00.2756145'), 
+		convert(time(0) ,'2020-12-24 01:00:00.2756145')), 0)
+go
+select convert(time(0) ,'2020-12-23 23:40:00.2756145')
+go
+-- check to create a flight that does not duplicate flight times on one plane
+create or alter procedure CheckCreateFlight
+@PlaneId uniqueidentifier, @DepartureTime datetime2
+with recompile
+as
+begin
+	declare @MaxLandedTime datetime2, @IsCreate bit;
+	set @MaxLandedTime = (select max(LandedTime) from Flight where PlaneId = @PlaneId and LandedTime >= getdate())
+	if(@DepartureTime >= @MaxLandedTime)
+	begin
+		set @IsCreate = 1;
+	end
+	else
+	begin
+		set @IsCreate = 0;
+	end;
+end
+go

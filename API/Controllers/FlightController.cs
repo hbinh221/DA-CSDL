@@ -34,12 +34,23 @@ namespace API.Controllers
             return await _db.GetAll<FlightDto>("GetFlight", dp_params);
         }
 
+        [HttpGet("get/flight")]
+        public async Task<IEnumerable> GetFlightForPassenger(DateTime departureTime ,Guid fromLocationId, Guid toLocationId, Guid airlineId)
+        {
+            var dp_params = new DynamicParameters();
+            dp_params.Add("@DepartureTime", departureTime, DbType.DateTime2);
+            dp_params.Add("@FromLocationId", fromLocationId, DbType.Guid);
+            dp_params.Add("@ToLocationId", toLocationId, DbType.Guid);
+            dp_params.Add("@AirlineId", airlineId, DbType.Guid);
+            return await _db.GetAll<GetFlightForPassengerDto>("GetFlightForPassenger", dp_params);
+        }
+
         [HttpPost("create/flight")]
-        public async Task<ActionResult> CreateService(FlightInput input)
+        public async Task<ActionResult> CreateFlight(FlightInput input)
         {
             var dp_params = new DynamicParameters();
             dp_params.Add("@FlightNo", input.FlightNo, DbType.String);
-            dp_params.Add("@DepartureTime", input.DepatureTime, DbType.DateTime2);
+            dp_params.Add("@DepartureTime", input.DepartureTime, DbType.DateTime2);
             dp_params.Add("@LandedTime", input.LandedTime, DbType.DateTime2);
             dp_params.Add("@Cost", input.Cost, DbType.Decimal);
             dp_params.Add("@Remark", input.Cost, DbType.String);
@@ -54,6 +65,16 @@ namespace API.Controllers
                 await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
             };
             return Ok("Success");
+        }
+
+        [HttpPost("checkcreateflight")]
+        public async Task<IEnumerable> CheckCreateFlight(Guid planeId, DateTime departureTime)
+        {
+            var dp_params = new DynamicParameters();
+            dp_params.Add("@PlaneId", planeId, DbType.Guid);
+            dp_params.Add("@DepartureTime", departureTime, DbType.DateTime2);
+
+            return await _db.GetAll<bool>("GetFlightForPassenger", dp_params);
         }
     }
 }
