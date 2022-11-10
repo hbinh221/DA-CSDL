@@ -46,8 +46,8 @@ export class LocationListComponent extends ListBaseComponent {
   fetchData() {
     this.isLoading = true;
      this.locationService.getLocation().subscribe(res=>{
-      if(res){
-        this.listOfData = res;
+      if(res.code === 200){
+        this.listOfData = res.data;
         this.isLoading = false;
       }
      });

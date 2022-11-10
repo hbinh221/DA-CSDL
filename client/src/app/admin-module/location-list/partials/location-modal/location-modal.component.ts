@@ -39,10 +39,16 @@ export class LocationModalComponent
     this.locationService
       .deleteLocation(this.modalForm.value.id)
       .subscribe((response) => {
-    this.isLoading = false;
-          this.msg.success('Successfully');
-          this.handleCancel();
-          this.onDeleteItem.emit(response);
+        if(response.code === 200){
+                this.isLoading = false;
+                this.msg.success('Successfully');
+                this.handleCancel();
+                this.onDeleteItem.emit(response.data);
+        }
+        else{
+          this.isLoading = false;
+          this.msg.error('Failed');
+        }
       });
   }
 
@@ -53,11 +59,18 @@ export class LocationModalComponent
       this.locationService
         .createLocation(this.modalForm.value.locationName)
         .subscribe((res) => {
-            this.isLoading = false;
-            this.modalForm.reset();
-            this.msg.success('Successfully');
-            this.checkEditForm();
-            this.onCreateItem.emit(res);
+            if(res.code === 200){
+              this.isLoading = false;
+              this.modalForm.reset();
+              this.msg.success('Successfully');
+              this.checkEditForm();
+              this.onCreateItem.emit(res.data);
+            }
+            else{
+              this.isLoading = false;
+              this.msg.error('Failed');
+
+            }
         });
     }
   }

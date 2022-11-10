@@ -50,7 +50,12 @@ export class HeaderComponent implements OnInit {
           })
         )
         .subscribe(response => {
+          if(response.code === 200){
             this.message.success("Success");
+          }
+          else{
+            this.message.error("Incorect email or password")
+          }
          
         })
   }
