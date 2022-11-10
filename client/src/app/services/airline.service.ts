@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class AirlineService {
-  baseUrl: string = 'api/airline';
+  baseUrl: string = 'airline';
   constructor(private http: HttpClient) {}
 
   getAirline(id?: string): Observable<any> {

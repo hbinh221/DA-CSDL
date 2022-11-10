@@ -2,9 +2,9 @@
 class="site-page-header"
 nzTitle="Location Management"
 ></nz-page-header>
-<div nz-row>
+<div nz-row  style="padding: 0px 24px;">
     <div nzSpan="8">
-        <nz-input-group [nzSuffix]="suffixIconSearch">
+        <nz-input-group [nzSuffix]="suffixIconSearch" class="mb-2">
             <input type="text" nz-input placeholder="Search..." />
           </nz-input-group>
           <ng-template #suffixIconSearch>
@@ -15,11 +15,14 @@ nzTitle="Location Management"
 <nz-table #filterTable [nzData]="listOfData" nzTableLayout="fixed"
 [nzFrontPagination]="true"
       [nzShowPagination]="true"
-      [nzLoading]="isLoading">
+      [nzLoading]="isLoading"
+      [nzScroll]="{ y: scrollY }">
     <thead>
       <tr>
         <th
-          *ngFor="let column of listOfColumns"
+          *ngFor="let column of listOfColumns; 
+          trackBy: trackByMethod
+          "
         >
           {{ column.name }}
         </th>
@@ -27,7 +30,7 @@ nzTitle="Location Management"
     </thead>
     <tbody>
       <tr *ngFor="let data of filterTable.data">
-        <td>{{ data.name }}</td>
+        <td>{{ data.locationName }}</td>
       </tr>
     </tbody>
   </nz-table>

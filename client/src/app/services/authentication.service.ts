@@ -10,14 +10,14 @@ import { LoginModel } from '../customer-module/models/login.model';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  baseUrl = 'Passenger/login';
+  baseUrl = 'passenger';
   currentUserSource = new BehaviorSubject<any>(null);
   currentUser =  this.currentUserSource.asObservable();
 
   constructor(private http: HttpClient, private message: NzMessageService) { }
 
   login(payload: LoginModel):Observable<any>{
-    return this.http.post(environment.baseUrl + 'Passenger/login', payload).pipe(
+    return this.http.post(environment.baseUrl + this.baseUrl + '/login', payload).pipe(
       map((response: any) => {
         const user = response;
         if(user) {

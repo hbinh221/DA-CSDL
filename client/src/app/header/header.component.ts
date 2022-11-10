@@ -45,16 +45,13 @@ export class HeaderComponent implements OnInit {
         .login(this.form.value)
         .pipe(
           catchError((err) => {
+              this.message.error("Incorrect email or password");
             return of(err);
           })
         )
         .subscribe(response => {
-          if(response.status === 200){
             this.message.success("Success");
-          }
-          else{
-            this.message.error("Incorrect email or password");
-          }
+         
         })
   }
 }

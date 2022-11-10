@@ -14,6 +14,10 @@ import { AirlineListComponent } from './airline-list/airline-list.component';
 import { PaymentListComponent } from './payment-list/payment-list.component';
 import { PromotionListComponent } from './promotion-list/promotion-list.component';
 import { RankListComponent } from './rank-list/rank-list.component';
+import { PlaneListComponent } from './plane-list/plane-list.component';
+import { FlightListComponent } from './flight-list/flight-list.component';
+import { PassengerListComponent } from './passenger-list/passenger-list.component';
+import { TicketListComponent } from './ticket-list/ticket-list.component';
 
 
 @NgModule({
@@ -27,6 +31,10 @@ import { RankListComponent } from './rank-list/rank-list.component';
     PaymentListComponent,
     PromotionListComponent,
     RankListComponent,
+    PlaneListComponent,
+    FlightListComponent,
+    PassengerListComponent,
+    TicketListComponent,
   ],
   imports: [
     CommonModule,

@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class LocationService {
-  baseUrl: string = 'api/Location';
+  baseUrl: string = 'Location';
   constructor(private http: HttpClient) { }
 
   getLocation(id?:string): Observable<any>{

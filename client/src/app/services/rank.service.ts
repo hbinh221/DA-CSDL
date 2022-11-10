@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class RankService {
-  baseUrl: string = 'api/rank';
+  baseUrl: string = 'rank';
   constructor(private http: HttpClient) {}
 
   getRank(id?: string): Observable<any> {

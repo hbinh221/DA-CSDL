@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './admin-module/admin-layout/admin-layout.component';
 import { CustomerLayoutComponent } from './customer-module/customer-layout/customer-layout.component';
 import { RegisterComponent } from './customer-module/register/register.component';
+import { AdminGuard } from './guards/admin.guard';
 
 const routes: Routes = [
 
@@ -14,7 +15,8 @@ const routes: Routes = [
       {
         path: '',
         loadChildren: () => import('./admin-module/admin-module.module').then((m) => m.AdminModuleModule),
-    },
+        // canLoad: [AdminGuard]
+      },
 ]
 },
   {

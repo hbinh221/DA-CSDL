@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class PaymentService {
-  baseUrl: string = 'api/payment';
+  baseUrl: string = 'payment';
   constructor(private http: HttpClient) {}
 
   getPayment(id?: string): Observable<any> {

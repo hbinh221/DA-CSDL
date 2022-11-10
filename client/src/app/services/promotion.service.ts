@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class PromotionService {
-  baseUrl: string = 'api/promotion';
+  baseUrl: string = 'promotion';
   constructor(private http: HttpClient) {}
 
   getPromotion(id?: string): Observable<any> {

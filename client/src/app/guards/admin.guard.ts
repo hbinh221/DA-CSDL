@@ -15,7 +15,7 @@ export class AdminGuard implements CanLoad {
   canLoad(): Observable<boolean> {
     return this.authenticationService.currentUser.pipe(
       map(user => {
-        if(user.isAdmin) return true;
+        if(user.role) return true;
         else{
           this.message.error("You must be admin to do this");
           this.router.navigateByUrl('customer');

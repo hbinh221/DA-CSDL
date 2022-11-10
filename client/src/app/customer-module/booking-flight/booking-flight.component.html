@@ -1,24 +1,63 @@
-<nz-radio-group  nzButtonStyle="solid" class="mb-3">
-    <label nz-radio-button nzValue="A">Round-Trip</label>
-    <label nz-radio-button nzValue="B">One Way</label>
-</nz-radio-group>
+<form nz-form [formGroup]="form" nzLayout="vertical">
+            <nz-radio-group formControlName="type"  nzButtonStyle="solid" class="mb-3">
+                <label nz-radio-button nzValue="one-way">One Way</label>
+                <label nz-radio-button nzValue="round-trip">Round-Trip</label>
+            </nz-radio-group>
+        <div nz-row nzGutter="16">
+            <div nz-col nzSpan="8">
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-form-label >From</nz-form-label>
+                        <nz-select (ngModelChange)="onChangeSourceLocation($event)" class="w-100" nzShowSearch nzPlaceHolder="Select a location"  formControlName="fromLocationId">
+                            <nz-option  *ngFor="let location of sourceLocation" [nzLabel]="location.locationName" [nzValue]="location.id">
+                            </nz-option>
+                          </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="8">
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-form-label >To</nz-form-label>
+                <nz-select (ngModelChange)="onChangeDesLocation($event)" class="w-100"nzShowSearch nzAllowClear nzPlaceHolder="Select a location"  formControlName="toLocationId">
+                    <nz-option  *ngFor="let location of desLocation" [nzLabel]="location.locationName" [nzValue]="location.id"></nz-option>
+                  </nz-select>
+                  </nz-form-control>
+                  </nz-form-item>
+            </div>
+            <div nz-col nzSpan="8">
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-form-label >Date</nz-form-label>
+            <nz-range-picker formControlName="flightTime" [nzRanges]="ranges" ></nz-range-picker>
+                        </nz-form-control>
+                        </nz-form-item>
+        </div>
+        </div>
 
-    <div nz-row nzGutter="16">
-        <div nz-col nzSpan="8">
-            <nz-select class="w-100" nzShowSearch nzAllowClear nzPlaceHolder="Select a person" >
-                <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
-                <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
-                <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
-              </nz-select>
+        <div nz-row nzGutter="16">
+            <div nz-col nzSpan="8">
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-form-label >Passengers</nz-form-label>
+                <nz-input-number formControlName="passenger" [nzMax]="3"
+                [nzMin]="1"
+                class="w-100" [nzStep]="1"></nz-input-number>
+                </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div nz-col nzSpan="8">
+                <nz-form-item>
+                    <nz-form-control>
+                        <nz-form-label >Promotion</nz-form-label>
+                        <input nz-input placeholder="Promotion" formControlName="promotion" />
+                    </nz-form-control>
+                </nz-form-item>
+            </div>
         </div>
-        <div nz-col nzSpan="8">
-            <nz-select class="w-100"nzShowSearch nzAllowClear nzPlaceHolder="Select a person" >
-                <nz-option nzLabel="Jack" nzValue="jack"></nz-option>
-                <nz-option nzLabel="Lucy" nzValue="lucy"></nz-option>
-                <nz-option nzLabel="Tom" nzValue="tom"></nz-option>
-              </nz-select>
-        </div>
-        <div nz-col nzSpan="8">
-        <nz-range-picker [nzRanges]="ranges" ngModel ></nz-range-picker>
-        </div>
-    </div>
+
+        <button [disabled]="!form.controls.fromLocationId.valid" nz-button nzType="primary" class=" float-right d-flex align-center">
+            Go forward
+            <span nz-icon nzType="right"></span>
+          </button>
+</form>
