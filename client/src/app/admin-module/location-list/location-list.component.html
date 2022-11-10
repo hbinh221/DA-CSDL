@@ -1,36 +1,41 @@
 <nz-page-header
-class="site-page-header"
-nzTitle="Location Management"
+  class="site-page-header"
+  nzTitle="Location Management"
 ></nz-page-header>
-<div nz-row  style="padding: 0px 24px;">
-    <div nzSpan="8">
-        <nz-input-group [nzSuffix]="suffixIconSearch" class="mb-2">
-            <input type="text" nz-input placeholder="Search..." />
-          </nz-input-group>
-          <ng-template #suffixIconSearch>
-            <span nz-icon nzType="search"></span>
-          </ng-template>
-    </div>
+<div nz-row style="padding: 0px 24px">
+  <div nzSpan="8">
+    <nz-input-group [nzSuffix]="suffixIconSearch" class="mb-2">
+      <input type="text" nz-input placeholder="Search..." />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search"></span>
+    </ng-template>
+  </div>
 </div>
-<nz-table #filterTable [nzData]="listOfData" nzTableLayout="fixed"
-[nzFrontPagination]="true"
-      [nzShowPagination]="true"
-      [nzLoading]="isLoading"
-      [nzScroll]="{ y: scrollY }">
-    <thead>
-      <tr>
-        <th
-          *ngFor="let column of listOfColumns; 
-          trackBy: trackByMethod
-          "
-        >
-          {{ column.name }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let data of filterTable.data">
+<nz-table
+  #filterTable
+  [nzData]="listOfData"
+  nzTableLayout="fixed"
+  [nzFrontPagination]="true"
+  [nzShowPagination]="true"
+  [nzLoading]="isLoading"
+  [nzScroll]="{ y: scrollY }"
+>
+  <thead>
+    <tr>
+      <th *ngFor="let column of listOfColumns; trackBy: trackByMethod">
+        {{ column.name }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let data of filterTable.data" >
+      <tr (click)="goToDetail(data)">
         <td>{{ data.locationName }}</td>
       </tr>
-    </tbody>
-  </nz-table>
+    </ng-container>
+  </tbody>
+</nz-table>
+
+
+<app-location-modal #modalBase></app-location-modal>

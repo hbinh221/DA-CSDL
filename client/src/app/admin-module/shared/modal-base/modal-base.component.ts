@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -8,6 +8,15 @@ import { FormGroup } from '@angular/forms';
 })
 export class ModelBaseComponent implements OnInit {
   modalForm!:FormGroup;
+  @Output() onCreateItem = new EventEmitter();
+  @Output() onDeleteItem = new EventEmitter();
+  @Output() onUpdateItem = new EventEmitter();
+  @Output() onCloseModal = new EventEmitter();
+  isVisible: boolean = false;
+  mode: string = 'create';
+  modalTitle: string = 'Create'
+  isEdit: boolean = false;
+  recordName: string = '';
   constructor() { }
 
   ngOnInit(): void {
@@ -23,6 +32,35 @@ export class ModelBaseComponent implements OnInit {
     }
   }
 
+  checkEditForm(){
+    if(this.isEdit) {
+      this.modalForm.enable();
+      this.modalTitle = 'Update: ' + this.recordName;
+    }
+    else{
+      this.modalForm.disable();
+      this.modalTitle = 'View: ' + this.recordName;
+    }
+  }
+
+  
+  openModal(data:any,mode: string, isEdit: boolean){
+    this.isVisible = true;
+    this.isEdit = isEdit
+    if(mode === 'create'){
+      this.modalForm.reset();
+    }
+    else{
+      this.modalForm.patchValue(data);
+      this.checkEditForm();
+    }
+  }
+
   submitForm(){}
+
+  handleCancel(){
+    this.isVisible = false;
+  }
+
 
 }

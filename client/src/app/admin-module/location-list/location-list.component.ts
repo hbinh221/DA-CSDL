@@ -1,8 +1,9 @@
-import { Component, HostListener, Injector, OnInit } from '@angular/core';
+import { Component, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { LocationService } from 'src/app/services/location.service';
 import { ListBaseComponent } from '../shared/list-base/list-base.component';
+import { ModelBaseComponent } from '../shared/modal-base/modal-base.component';
 
 @Component({
   selector: 'app-location-list',
@@ -10,6 +11,7 @@ import { ListBaseComponent } from '../shared/list-base/list-base.component';
   styleUrls: ['./location-list.component.css']
 })
 export class LocationListComponent extends ListBaseComponent {
+  @ViewChild('modalBase') modalBase!: ModelBaseComponent;
   listOfColumns: any[] = [
     {
       name: 'Location Name',
@@ -50,6 +52,10 @@ export class LocationListComponent extends ListBaseComponent {
         this.isLoading = false;
       }
      });
+  }
+
+  async goToDetail(data: string) {
+    this.modalBase.openModal(data, 'detail', false);
   }
   
 }

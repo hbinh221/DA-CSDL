@@ -7,7 +7,6 @@ import { SharedModuleModule } from '../shared-module/shared-module.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { AdminGuard } from '../guards/admin.guard';
 import { LocationListComponent } from './location-list/location-list.component';
-import { LocationDrawerComponent } from './location-list/partials/location-drawer/location-drawer.component';
 import { ListBaseComponent } from './shared/list-base/list-base.component';
 import { ModelBaseComponent } from './shared/modal-base/modal-base.component';
 import { AirlineListComponent } from './airline-list/airline-list.component';
@@ -18,13 +17,13 @@ import { PlaneListComponent } from './plane-list/plane-list.component';
 import { FlightListComponent } from './flight-list/flight-list.component';
 import { PassengerListComponent } from './passenger-list/passenger-list.component';
 import { TicketListComponent } from './ticket-list/ticket-list.component';
+import { LocationModalComponent } from './location-list/partials/location-modal/location-modal.component';
 
 
 @NgModule({
   declarations: [
     AdminLayoutComponent,
     LocationListComponent,
-    LocationDrawerComponent,
     ListBaseComponent,
     ModelBaseComponent,
     AirlineListComponent,
@@ -35,6 +34,7 @@ import { TicketListComponent } from './ticket-list/ticket-list.component';
     FlightListComponent,
     PassengerListComponent,
     TicketListComponent,
+    LocationModalComponent,
   ],
   imports: [
     CommonModule,

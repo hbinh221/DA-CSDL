@@ -23,9 +23,9 @@ export class ListBaseComponent implements OnInit {
 
   goToCreate(){}
 
-  goToDetail(){}
+  async goToDetail(data: any){}
 
-  goToEdit(){}
+  async goToEdit(data: any){}
 
 
   
