@@ -44,7 +44,7 @@ namespace API.Controllers
             dp_params.Add("@BaggageWeight", input.BaggageWeight, DbType.Int64);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                string sqlCommand = "insert into Location(RankName, Cost, BaggageWeight)" +
+                string sqlCommand = "insert into Rank(RankName, Cost, BaggageWeight)" +
                     "values (@RankName, @Cost, @BaggageWeight)";
                 if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                 {

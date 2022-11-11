@@ -1,4 +1,7 @@
-<nz-page-header class="site-page-header" nzTitle="Airline Management"></nz-page-header>
+<nz-page-header
+  class="site-page-header"
+  nzTitle="Airline Management"
+></nz-page-header>
 <div nz-row>
   <div nzSpan="8">
     <nz-input-group [nzSuffix]="suffixIconSearch">
@@ -9,8 +12,15 @@
     </ng-template>
   </div>
 </div>
-<nz-table #filterTable [nzData]="listOfData" nzTableLayout="fixed" [nzFrontPagination]="true" [nzShowPagination]="true"
-  [nzLoading]="isLoading">
+<nz-table
+  #filterTable
+  [nzData]="listOfData"
+  nzTableLayout="fixed"
+  [nzFrontPagination]="true"
+  [nzShowPagination]="true"
+  [nzLoading]="isLoading"
+  [nzScroll]="{ y: scrollY }"
+>
   <thead>
     <tr>
       <th *ngFor="let column of listOfColumns">
@@ -20,7 +30,18 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of filterTable.data">
-      <td>{{ data.name }}</td>
+      <td>{{ data.airlineName }}</td>
     </tr>
   </tbody>
 </nz-table>
+
+<div class="btn--fab" (click)="goToCreate()">
+  <span nz-icon nzType="plus" nzTheme="outline"></span>
+  <!-- <i class="fas fa-plus-circle cursor-pointer"></i> -->
+</div>
+<app-airline-modal
+  #modalBase
+  (onDeleteItem)="onDeleteItem($event)"
+  (onCreateItem)="onCreateItem($event)"
+  (onUpdateItem)="onUpdateItem($event)"
+></app-airline-modal>

@@ -18,11 +18,11 @@ export class RankService {
     );
   }
   createRank(payload: any): Observable<any> {
-    return this.http.post(environment + this.baseUrl + 'create/rank', payload);
+    return this.http.post(environment.baseUrl + this.baseUrl + '/create/rank', payload);
   }
   deleteRank(id: string): Observable<any> {
     return this.http.delete(
-      environment + this.baseUrl + 'delete/rank' + '?id=' + id
+      environment.baseUrl + this.baseUrl + '/delete/rank' + '?id=' + id
     );
   }
 }

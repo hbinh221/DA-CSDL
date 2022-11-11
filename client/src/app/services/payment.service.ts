@@ -19,13 +19,13 @@ export class PaymentService {
   }
   createPayment(payload: any): Observable<any> {
     return this.http.post(
-      environment + this.baseUrl + 'create/payment',
+      environment.baseUrl + this.baseUrl + '/create/payment',
       payload
     );
   }
   deletePayment(id: string): Observable<any> {
     return this.http.delete(
-      environment + this.baseUrl + 'delete/payment' + '?id=' + id
+      environment.baseUrl + this.baseUrl + '/delete/payment' + '?id=' + id
     );
   }
 }

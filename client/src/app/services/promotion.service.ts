@@ -19,13 +19,13 @@ export class PromotionService {
   }
   createPromotion(payload: any): Observable<any> {
     return this.http.post(
-      environment + this.baseUrl + 'create/promotion',
+      environment.baseUrl + this.baseUrl + '/create/promotion',
       payload
     );
   }
   deletePromotion(id: string): Observable<any> {
     return this.http.delete(
-      environment + this.baseUrl + 'delete/promotion' + '?id=' + id
+      environment.baseUrl + this.baseUrl + '/delete/promotion' + '?id=' + id
     );
   }
 }

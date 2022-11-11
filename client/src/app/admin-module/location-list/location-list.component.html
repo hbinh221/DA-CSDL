@@ -29,7 +29,7 @@
     </tr>
   </thead>
   <tbody>
-    <ng-container *ngFor="let data of filterTable.data" >
+    <ng-container *ngFor="let data of filterTable.data">
       <tr (click)="goToDetail(data)">
         <td>{{ data.locationName }}</td>
       </tr>
@@ -37,11 +37,13 @@
   </tbody>
 </nz-table>
 
-<div class="btn--fab" (click)="goToCreate()" >
+<div class="btn--fab" (click)="goToCreate()">
   <span nz-icon nzType="plus" nzTheme="outline"></span>
   <!-- <i class="fas fa-plus-circle cursor-pointer"></i> -->
 </div>
-<app-location-modal #modalBase
-(onDeleteItem)="onDeleteItem($event)"
-(onCreateItem)="onCreateItem($event)"
-(onUpdateItem)="onUpdateItem($event)"></app-location-modal>
+<app-location-modal
+  #modalBase
+  (onDeleteItem)="onDeleteItem($event)"
+  (onCreateItem)="onCreateItem($event)"
+  (onUpdateItem)="onUpdateItem($event)"
+></app-location-modal>
