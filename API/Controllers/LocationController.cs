@@ -32,7 +32,7 @@ namespace API.Controllers
             var dp_params = new DynamicParameters();
             Response<IEnumerable<LocationDto>> response = new Response<IEnumerable<LocationDto>>();
             dp_params.Add("@Id ", id, DbType.Guid);
-            var newData = await _db.GetAll<LocationDto>("GetLocation", dp_params); ;
+            var newData = await _db.GetAll<LocationDto>("GetLocation", dp_params);
 
             if (newData != null)
             {
