@@ -18,9 +18,11 @@ export class AirlineService {
     );
   }
   createAirline(payload: any): Observable<any> {
+    let airlineName = '';
+    if (payload) airlineName = '?name=' + payload;
     return this.http.post(
-      environment.baseUrl + this.baseUrl + '/create/airline',
-      payload
+      environment.baseUrl + this.baseUrl + '/create/airline' + airlineName,
+      null
     );
   }
   deleteAirline(id: string): Observable<any> {

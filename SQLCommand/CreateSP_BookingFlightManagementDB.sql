@@ -99,13 +99,15 @@ end;
 go
 -- get plane by airline
 create or alter procedure GetPlane 
-@Id uniqueidentifier, @AirlineId uniqueidentifier
+@Id uniqueidentifier
+--, @AirlineId uniqueidentifier
 with recompile
 as
 begin
-	select * from Plane 
-	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id)
-	and AirlineId = @AirlineId;
+	select p.Id, p.PlaneName, p.SeatQuantity, a.AirlineName, p.AirlineId from Airline a
+	inner join Plane p on a.Id = p.AirlineId
+	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or p.Id = @Id)
+	--and AirlineId = @AirlineId;
 end;
 go
 create or alter procedure GetService
@@ -239,6 +241,7 @@ begin
 	end;
 end
 go
+
 declare @PageNum int, @PageSize int;
 set @PageNum = 6
 set @PageSize = 2

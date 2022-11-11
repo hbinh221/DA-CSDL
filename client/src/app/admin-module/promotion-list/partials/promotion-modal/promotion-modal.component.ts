@@ -4,13 +4,18 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { DatePipe } from '@angular/common';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-promotion-modal',
   templateUrl: './promotion-modal.component.html',
-  styleUrls: ['./promotion-modal.component.css']
+  styleUrls: ['./promotion-modal.component.css'],
 })
-export class PromotionModalComponent extends ModelBaseComponent implements OnInit {
+export class PromotionModalComponent
+  extends ModelBaseComponent
+  implements OnInit
+{
   startDate: Date = new Date();
   endDate: Date = new Date();
 
@@ -18,6 +23,7 @@ export class PromotionModalComponent extends ModelBaseComponent implements OnIni
     protected http: HttpClient,
     protected fb: FormBuilder,
     protected msg: NzMessageService,
+    public datepipe: DatePipe,
     private promotionService: PromotionService
   ) {
     super(http, fb, msg);
@@ -42,37 +48,33 @@ export class PromotionModalComponent extends ModelBaseComponent implements OnIni
     this.promotionService
       .deletePromotion(this.modalForm.value.id)
       .subscribe((response) => {
-    this.isLoading = false;
-          this.msg.success('Successfully');
-          this.handleCancel();
-          this.onDeleteItem.emit(response);
+        this.isLoading = false;
+        this.msg.success('Successfully');
+        this.handleCancel();
+        this.onDeleteItem.emit(response.data);
       });
   }
 
   submitForm(): void {
     this.validateForm();
-    this.isLoading = true;
     if (this.mode === 'create') {
-      this.promotionService
-        .createPromotion(this.modalForm.value.locationName)
-        .subscribe((res) => {
-            this.isLoading = false;
-            this.modalForm.reset();
-            this.msg.success('Successfully');
-            this.checkEditForm();
-            this.onCreateItem.emit(res);
-        });
+      if (this.modalForm.value.startDate > this.modalForm.value.endDate) {
+        this.msg.warning('Ngày kết thúc phải lớn hơn ngày bắt đầu');
+      } else {
+        this.isLoading = true;
+        this.promotionService
+          .createPromotion(this.modalForm.value).pipe(finalize(() => this.isLoading = false))
+          .subscribe((res) => {
+            if(res.code === 200) {
+              this.modalForm.reset();
+              this.msg.success('Successfully');
+              this.checkEditForm();
+              this.onCreateItem.emit(res.data);
+            } else {
+              this.msg.error('Failed');
+            }
+          });
+      }
     }
   }
-
-  onChangeStartDate(result: Date): void {
-    this.modalForm.value.startDate = result;
-    console.log(this.modalForm.value.startDate);
-  }
-
-  onChangeEndDate(result: Date): void {
-    this.modalForm.value.endDate = result;
-    console.log(this.modalForm.value.startDate);
-  }
-
 }

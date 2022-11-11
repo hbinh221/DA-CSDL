@@ -45,22 +45,30 @@ namespace API.Controllers
         {
             var dp_params = new DynamicParameters();
             Response<AirlineDto> response = new Response<AirlineDto>();
-            dp_params.Add("@AirlineName", name, DbType.String);
+            dp_params.Add("@AirlineName", name.Trim(), DbType.String);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                string sqlCommand = "insert into Airline(AirlineName)" +
-                    "values (@AirlineName)";
-                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                string sqlCommand = "select * from Airline where AirlineName = @AirlineName";
+                if((await db.QueryAsync(sqlCommand, dp_params, null, null, CommandType.Text)).AsList().Count == 1)
                 {
-                    sqlCommand = "select top 1 * from Airline order by Id desc";
-                    var newData = await db.QueryFirstAsync<AirlineDto>(sqlCommand, null, null, null, CommandType.Text);
-                    if (newData != null)
+                    response.Code = 500;
+                    response.Data = null;
+                    return response;
+                }
+                else
+                {
+                    sqlCommand = "insert into Airline(AirlineName) values (@AirlineName)";
+                    if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                     {
-                        response.Code = 200;
-                        response.Data = newData;
+                        sqlCommand = "select top 1 * from Airline order by Id desc";
+                        var newData = await db.QueryFirstAsync<AirlineDto>(sqlCommand, null, null, null, CommandType.Text);
+                        if (newData != null)
+                        {
+                            response.Code = 200;
+                            response.Data = newData;
+                        }
                     }
                 }
-
             };
             return response;
         }

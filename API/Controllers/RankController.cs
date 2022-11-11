@@ -39,38 +39,58 @@ namespace API.Controllers
         {
             var dp_params = new DynamicParameters();
             Response<RankDto> response = new Response<RankDto>();
-            dp_params.Add("@RankName", input.RankName, DbType.String);
+            dp_params.Add("@RankName", input.RankName.Trim(), DbType.String);
             dp_params.Add("@Cost", input.Cost, DbType.Decimal);
             dp_params.Add("@BaggageWeight", input.BaggageWeight, DbType.Int64);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                string sqlCommand = "insert into Rank(RankName, Cost, BaggageWeight)" +
-                    "values (@RankName, @Cost, @BaggageWeight)";
-                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                string sqlCommand = "select * from Rank where RankName = @RankName";
+                if ((await db.QueryAsync(sqlCommand, dp_params, null, null, CommandType.Text)).AsList().Count == 1)
                 {
-                    sqlCommand = "select top 1 * from Rank order by Id desc";
-                    var newData = await db.QueryFirstAsync<RankDto>(sqlCommand, null, null, null, CommandType.Text);
-                    if(newData != null)
+                    response.Code = 500;
+                    response.Data = null;
+                    return response;
+                }
+                else
+                {
+                    sqlCommand = "insert into Rank(RankName, Cost, BaggageWeight)" +
+                        "values (@RankName, @Cost, @BaggageWeight)";
+                    if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                     {
-                        response.Code = 200;
-                        response.Data = newData;
-                    }    
+                        sqlCommand = "select top 1 * from Rank order by Id desc";
+                        var newData = await db.QueryFirstAsync<RankDto>(sqlCommand, null, null, null, CommandType.Text);
+                        if(newData != null)
+                        {
+                            response.Code = 200;
+                            response.Data = newData;
+                        }    
+                    }
                 }
             };
             return response;
         }
 
         [HttpDelete("delete/rank")]
-        public async Task<ActionResult> DeleteRank(Guid id)
+        public async Task<Response<RankDto>> DeleteRank(Guid id)
         {
             var dp_params = new DynamicParameters();
+            Response<RankDto> response = new Response<RankDto>();
             dp_params.Add("@Id", id, DbType.Guid);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                string sqlCommand = "delete from Rank where Id = @Id";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                string sqlCommand = "select * from Rank where Id = @Id";
+                var oldData = await db.QueryFirstAsync<RankDto>(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(oldData != null)
+                {
+                    response.Data = oldData;
+                }
+                sqlCommand = "delete from Rank where Id = @Id";
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                {
+                    response.Code = 200;
+                }
             };
-            return Ok("Success");
+            return response;
         }
     }
 }

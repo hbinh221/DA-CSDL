@@ -19,8 +19,8 @@ export class PaymentService {
   }
   createPayment(payload: any): Observable<any> {
     return this.http.post(
-      environment.baseUrl + this.baseUrl + '/create/payment',
-      payload
+      environment.baseUrl + this.baseUrl + '/create/payment' + '?name=' + payload,
+      null
     );
   }
   deletePayment(id: string): Observable<any> {

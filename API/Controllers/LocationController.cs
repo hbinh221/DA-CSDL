@@ -47,20 +47,29 @@ namespace API.Controllers
         {
             var dp_params = new DynamicParameters();
             Response<LocationDto> response = new Response<LocationDto>();
-            dp_params.Add("@LocationName", name, DbType.String);
+            dp_params.Add("@LocationName", name.Trim(), DbType.String);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                string sqlCommand = "insert into Location(LocationName)" +
-                    "values (@LocationName)";
 
-                if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                string sqlCommand = "select * from Location where LocationName = @LocationName";
+                if ((await db.QueryAsync(sqlCommand, dp_params, null, null, CommandType.Text)).AsList().Count == 1)
                 {
-                    sqlCommand = "select top 1 * from Location order by Id desc";
-                    var newData = await db.QueryFirstAsync<LocationDto>(sqlCommand, dp_params, null, null, CommandType.Text);
-                    if (newData != null)
+                    response.Code = 500;
+                    response.Data = null;
+                    return response;
+                }
+                else
+                {
+                    sqlCommand = "insert into Location(LocationName) values (@LocationName)";
+                    if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                     {
-                        response.Code = 200;
-                        response.Data = newData;
+                        sqlCommand = "select top 1 * from Location order by Id desc";
+                        var newData = await db.QueryFirstAsync<LocationDto>(sqlCommand, dp_params, null, null, CommandType.Text);
+                        if (newData != null)
+                        {
+                            response.Code = 200;
+                            response.Data = newData;
+                        }
                     }
                 }
             };

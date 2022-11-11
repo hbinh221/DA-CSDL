@@ -10,10 +10,10 @@ import { Component, HostListener } from '@angular/core';
   styleUrls: ['./payment-list.component.css'],
 })
 export class PaymentListComponent extends ListBaseComponent {
-  
+
   listOfColumns: any[] = [
     {
-      name: 'Payment Name',
+      name: 'Payment Type',
     },
   ];
   scrollY!: string;
@@ -49,8 +49,8 @@ export class PaymentListComponent extends ListBaseComponent {
   fetchData() {
     this.isLoading = true;
     this.paymentService.getPayment().subscribe((res) => {
-      if (res) {
-        this.listOfData = res;
+      if (res.code == 200) {
+        this.listOfData = res.data;
         this.isLoading = false;
       }
     });

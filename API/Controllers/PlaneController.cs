@@ -26,13 +26,12 @@ namespace API.Controllers
         }
 
         [HttpGet("get/plane")]
-        public async Task<Response<IEnumerable<PlaneDto>>> GetPlane(Guid? id, Guid airlineId)
+        public async Task<Response<IEnumerable<PlaneDto>>> GetPlane(Guid? id)
         {
             var dp_params = new DynamicParameters();
             Response<IEnumerable<PlaneDto>> response = new Response<IEnumerable<PlaneDto>>();
 
             dp_params.Add("@Id", id, DbType.Guid);
-            dp_params.Add("@AirlineId", airlineId, DbType.Guid);
 
             var newData = await _db.GetAll<PlaneDto>("GetPlane", dp_params);
 
@@ -59,7 +58,7 @@ namespace API.Controllers
                     "values (@PlaneName, @SeatQuantity, @AirlineId)";
                 if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                 {
-                    sqlCommand = "select top 1 * from Plane where AirlineId = @AirlineId order by Id desc";
+                    sqlCommand = "select top 1 * from Airline a inner join Plane p on a.Id = p.AirlineId where AirlineId = @AirlineId order by p.Id desc";
                     var newData = await db.QueryFirstAsync<PlaneDto>(sqlCommand, dp_params, null, null, CommandType.Text);
                     if(newData != null)
                     {
@@ -81,7 +80,8 @@ namespace API.Controllers
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
 
-                string sqlCommand = "select * from Plane where Id = @Id";
+                string sqlCommand = "select top 1 p.Id, p.PlaneName, p.SeatQuantity, a.AirlineName, p.AirlineId " +
+                    "from Airline a inner join Plane p on a.Id = p.AirlineId where p.Id = @Id order by p.Id desc";
                 var oldData = await db.QueryFirstAsync<PlaneDto>(sqlCommand, dp_params, null, null, CommandType.Text);
 
                 if (oldData != null)

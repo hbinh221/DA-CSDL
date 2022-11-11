@@ -29,9 +29,12 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of filterTable.data">
-      <td>{{ data.airlineName }}</td>
-    </tr>
+    <ng-container *ngFor="let data of filterTable.data">
+      <tr (click)="goToDetail(data)">
+        <td>{{ data.airlineName }}</td>
+      </tr>
+    </ng-container>
+
   </tbody>
 </nz-table>
 

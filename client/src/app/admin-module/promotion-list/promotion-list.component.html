@@ -1,7 +1,4 @@
-<nz-page-header
-  class="site-page-header"
-  nzTitle="Promotion Management"
-></nz-page-header>
+<nz-page-header class="site-page-header" nzTitle="Promotion Management"></nz-page-header>
 <div nz-row>
   <div nzSpan="8">
     <nz-input-group [nzSuffix]="suffixIconSearch">
@@ -12,15 +9,8 @@
     </ng-template>
   </div>
 </div>
-<nz-table
-  #filterTable
-  [nzData]="listOfData"
-  nzTableLayout="fixed"
-  [nzFrontPagination]="true"
-  [nzShowPagination]="true"
-  [nzLoading]="isLoading"
-  [nzScroll]="{ y: scrollY }"
->
+<nz-table #filterTable [nzData]="listOfData" nzTableLayout="fixed" [nzFrontPagination]="true" [nzShowPagination]="true"
+  [nzLoading]="isLoading" [nzScroll]="{ y: scrollY }">
   <thead>
     <tr>
       <th *ngFor="let column of listOfColumns">
@@ -29,12 +19,15 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of filterTable.data">
-      <td>{{ data.promotionName }}</td>
-      <td>{{ data.startDate }}</td>
-      <td>{{ data.endDate }}</td>
-      <td>{{ data.discount }}%</td>
-    </tr>
+    <ng-container *ngFor="let data of filterTable.data">
+      <tr (click)="goToDetail(data)">
+        <td>{{ data.promotionName }}</td>
+        <td>{{ data.startDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ data.endDate | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ data.discount }}%</td>
+      </tr>
+    </ng-container>
+
   </tbody>
 </nz-table>
 
@@ -42,9 +35,5 @@
   <span nz-icon nzType="plus" nzTheme="outline"></span>
   <!-- <i class="fas fa-plus-circle cursor-pointer"></i> -->
 </div>
-<app-promotion-modal
-  #modalBase
-  (onDeleteItem)="onDeleteItem($event)"
-  (onCreateItem)="onCreateItem($event)"
-  (onUpdateItem)="onUpdateItem($event)"
-></app-promotion-modal>
+<app-promotion-modal #modalBase (onDeleteItem)="onDeleteItem($event)" (onCreateItem)="onCreateItem($event)"
+  (onUpdateItem)="onUpdateItem($event)"></app-promotion-modal>

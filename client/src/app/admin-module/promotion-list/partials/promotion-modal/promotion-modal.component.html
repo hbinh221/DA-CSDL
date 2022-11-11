@@ -1,44 +1,42 @@
-<nz-modal
-  [(nzVisible)]="isVisible"
-  [nzTitle]="modalTitle"
-  (nzOnCancel)="handleCancel()"
->
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()">
   <ng-container *nzModalContent>
     <form nz-form [formGroup]="modalForm">
+
       <nz-form-item>
-        <nz-form-label [nzRequired]="true">Promotion Name</nz-form-label>
+        <nz-form-label [nzRequired]="true" style="width: 30%; text-align: left;">Promotion Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input promotion name!">
           <nz-input-group nzPrefixIcon="environment">
-            <input
-              type="text"
-              nz-input
-              formControlName="promotionName"
-              placeholder="Promotion Name"
-            />
+            <input type="text" nz-input formControlName="promotionName" placeholder="Promotion Name" />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="true">Start Date</nz-form-label>
-        <nz-date-picker [(ngModel)]="modalForm.value.startDate" (ngModelChange)="onChangeStartDate($event)"></nz-date-picker>
+        <nz-form-label [nzRequired]="true" style="width: 30%; text-align: left;">Start Date</nz-form-label>
+        <nz-form-control nzErrorTip="Please input start date!">
+          <nz-input-group nzPrefixIcon="environment">
+            <nz-date-picker formControlName="startDate" placeholder="Start Date" [(ngModel)]="modalForm.value.startDate"
+              style="width: 100%"></nz-date-picker>
+          </nz-input-group>
+        </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="true">End Date</nz-form-label>
-        <nz-date-picker [(ngModel)]="modalForm.value.endDate" (ngModelChange)="onChangeEndDate($event)"></nz-date-picker>
+        <nz-form-label [nzRequired]="true" style="width: 30%; text-align: left;">End Date</nz-form-label>
+        <nz-form-control nzErrorTip="Please input end date!">
+          <nz-input-group nzPrefixIcon="environment">
+            <nz-date-picker formControlName="endDate" placeholder="End Date" [(ngModel)]="modalForm.value.endDate"
+              style="width: 100%"></nz-date-picker>
+          </nz-input-group>
+        </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="true">Discount</nz-form-label>
+        <nz-form-label [nzRequired]="true" style="width: 30%; text-align: left;">Discount</nz-form-label>
         <nz-form-control nzErrorTip="Please input discount!">
           <nz-input-group nzPrefixIcon="environment">
-            <input
-              type="number"
-              nz-input
-              formControlName="discount"
-              placeholder="Discount"
-            />
+            <nz-input-number formControlName="discount" placeholder="Discount" [(ngModel)]="modalForm.value.discount"
+              [nzMin]="250" [nzStep]="1" style="width: 100%"></nz-input-number>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
@@ -56,38 +54,23 @@
       </div>
       <div nz-col nzSpan="20">
         <!-- <div class="float-right">
-            <button 
+            <button
             *ngIf="!isEdit && mode ==='detail'"
-             nz-button nzType="primary" 
+             nz-button nzType="primary"
             (click)="changeEdit(true)">Edit</button>
           </div>
        -->
         <div class="float-right ml-2">
-          <button *ngIf="mode ==='detail'"
-           nz-button 
-           (click)="deleteItem()"
-           [nzLoading]="isLoading"
-          nzType="primary" nzDanger
-          >Delete</button>
+          <button *ngIf="mode ==='detail'" nz-button (click)="deleteItem()" [nzLoading]="isLoading" nzType="primary"
+            nzDanger>Delete</button>
         </div>
         <div class="float-right ml-2">
-          <button
-            *ngIf="isEdit"
-            nz-button
-            nzType="primary"
-            (click)="submitForm()"
-            [nzLoading]="isLoading"
-          >
+          <button *ngIf="isEdit" nz-button nzType="primary" (click)="submitForm()" [nzLoading]="isLoading">
             Save
           </button>
         </div>
         <div class="float-right">
-          <button
-            *ngIf="isEdit && mode === 'detail'"
-            nz-button
-            nzType="default"
-            (click)="changeEdit(false)"
-          >
+          <button *ngIf="isEdit && mode === 'detail'" nz-button nzType="default" (click)="changeEdit(false)">
             Cancel
           </button>
         </div>

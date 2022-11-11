@@ -62,16 +62,26 @@ namespace API.Controllers
         }
 
         [HttpDelete("delete/promotion")]
-        public async Task<ActionResult> DeletePromotion(Guid id)
+        public async Task<Response<PromotionDto>> DeletePromotion(Guid id)
         {
             var dp_params = new DynamicParameters();
+            Response<PromotionDto> response = new Response<PromotionDto>();
             dp_params.Add("@Id", id, DbType.Guid);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                string sqlCommand = "delete from Promotion where Id = @Id";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                string sqlCommand = "select * from Promotion where Id = @Id";
+                var oldData = await db.QueryFirstAsync<PromotionDto>(sqlCommand, dp_params, null, null, CommandType.Text);
+                if(oldData != null)
+                {
+                    response.Data = oldData;
+                }
+                sqlCommand = "delete from Promotion where Id = @Id";
+                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                {
+                    response.Code = 200;
+                }
             };
-            return Ok("Success");
+            return response;
         }
 
         [HttpPost("check/expiredpromotion")]

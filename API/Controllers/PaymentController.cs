@@ -47,19 +47,29 @@ namespace API.Controllers
         {
             var dp_params = new DynamicParameters();
             Response<PaymentDto> response = new Response<PaymentDto>();
-            dp_params.Add("@PaymentName", name, DbType.String);
+            dp_params.Add("@PaymentType", name.Trim(), DbType.String);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                string sqlCommand = "insert into Location(PaymentName)" +
-                    "values (@PaymentName)";
-                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                string sqlCommand = "select * from Payment where PaymentType = @PaymentType";
+                if((await db.QueryAsync(sqlCommand, dp_params, null, null, CommandType.Text)).AsList().Count == 1)
                 {
-                    sqlCommand = "select top 1 * from Payment order by Id desc";
-                    var newData = await db.QueryFirstAsync<PaymentDto>(sqlCommand, null, null, null, CommandType.Text);
-                    if(newData != null)
+                    response.Code = 500;
+                    response.Data = null;
+                    return response;
+                }
+                else 
+                { 
+                    sqlCommand = "insert into Payment(PaymentType)" +
+                        "values (@PaymentType)";
+                    if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                     {
-                        response.Code = 200;
-                        response.Data = newData;
+                        sqlCommand = "select top 1 * from Payment order by Id desc";
+                        var newData = await db.QueryFirstAsync<PaymentDto>(sqlCommand, null, null, null, CommandType.Text);
+                        if(newData != null)
+                        {
+                            response.Code = 200;
+                            response.Data = newData;
+                        }
                     }
                 }
             };

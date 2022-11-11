@@ -1,3 +1,4 @@
+import { finalize } from 'rxjs/operators';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -26,7 +27,7 @@ export class AirlineListComponent extends ListBaseComponent {
     super(router, message);
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.calculateHeightBodyTable();
   }
 
@@ -42,17 +43,19 @@ export class AirlineListComponent extends ListBaseComponent {
     this.scrollY = `calc(100vh - 300px)`;
   }
 
-  trackByMethod(index:number, el:any): number {
+  trackByMethod(index: number, el: any): number {
     return el.id;
   }
 
   fetchData(): void {
     this.isLoading = true;
-    this.airlineService.getAirline().subscribe((res) => {
-      if (res) {
-        this.listOfData = res;
-        this.isLoading = false;
-      }
-    });
+    this.airlineService
+      .getAirline()
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe((res) => {
+        if (res.code === 200) {
+          this.listOfData = res.data;
+        }
+      });
   }
 }

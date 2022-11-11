@@ -4,14 +4,17 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-airline-modal',
   templateUrl: './airline-modal.component.html',
-  styleUrls: ['./airline-modal.component.css']
+  styleUrls: ['./airline-modal.component.css'],
 })
-export class AirlineModalComponent extends ModelBaseComponent implements OnInit {
-
+export class AirlineModalComponent
+  extends ModelBaseComponent
+  implements OnInit
+{
   constructor(
     protected http: HttpClient,
     protected fb: FormBuilder,
@@ -36,11 +39,16 @@ export class AirlineModalComponent extends ModelBaseComponent implements OnInit 
     this.isLoading = true;
     this.airlineService
       .deleteAirline(this.modalForm.value.id)
+      .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((response) => {
-    this.isLoading = false;
+        if (response.code === 200) {
           this.msg.success('Successfully');
           this.handleCancel();
-          this.onDeleteItem.emit(response);
+          this.onDeleteItem.emit(response.data);
+        } else {
+          this.msg.warning('Failed');
+          this.handleCancel();
+        }
       });
   }
 
@@ -50,14 +58,19 @@ export class AirlineModalComponent extends ModelBaseComponent implements OnInit 
     if (this.mode === 'create') {
       this.airlineService
         .createAirline(this.modalForm.value.airlineName)
+        .pipe(finalize(() => (this.isLoading = false)))
         .subscribe((res) => {
-            this.isLoading = false;
+          if (res.code === 200) {
             this.modalForm.reset();
             this.msg.success('Successfully');
             this.checkEditForm();
-            this.onCreateItem.emit(res);
+            this.onCreateItem.emit(res.data);
+          } else {
+            this.modalForm.reset();
+            this.msg.warning('Hãng hàng không này đã tồn tại:)');
+            this.checkEditForm();
+          }
         });
     }
   }
-
 }

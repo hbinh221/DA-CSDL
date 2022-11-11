@@ -1,3 +1,4 @@
+import { finalize } from 'rxjs/operators';
 import { PaymentService } from './../../../../services/payment.service';
 import { ModelBaseComponent } from './../../../shared/modal-base/modal-base.component';
 import { Component, OnInit } from '@angular/core';
@@ -35,13 +36,15 @@ export class PaymentModalComponent extends ModelBaseComponent implements OnInit 
   deleteItem(): void {
     this.isLoading = true;
     this.paymentService
-      .deletePayment(this.modalForm.value.id)
+      .deletePayment(this.modalForm.value.id).pipe(finalize(() => this.isLoading = false))
       .subscribe((response) => {
-        if(response.code) {
-          this.isLoading = false;
+        if(response.code === 200) {
           this.msg.success('Successfully');
           this.handleCancel();
           this.onDeleteItem.emit(response.data);
+        } else {
+          this.msg.success('Failed');
+          this.handleCancel();
         }
       });
   }
@@ -51,14 +54,17 @@ export class PaymentModalComponent extends ModelBaseComponent implements OnInit 
     this.isLoading = true;
     if (this.mode === 'create') {
       this.paymentService
-        .createPayment(this.modalForm.value.paymentType)
+        .createPayment(this.modalForm.value.paymentType).pipe(finalize(() => this.isLoading = false))
         .subscribe((res) => {
           if (res.code == 200) {
-            this.isLoading = false;
             this.modalForm.reset();
             this.msg.success('Successfully');
             this.checkEditForm();
             this.onCreateItem.emit(res.data);
+          } else {
+            this.modalForm.reset();
+            this.msg.warning('Loại thanh toán này đã tồn tại:)');
+            this.checkEditForm();
           }
         });
     }

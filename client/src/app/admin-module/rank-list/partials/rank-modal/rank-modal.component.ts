@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-rank-modal',
@@ -37,12 +38,16 @@ export class RankModalComponent extends ModelBaseComponent implements OnInit {
   deleteItem(): void {
     this.isLoading = true;
     this.rankService
-      .deleteRank(this.modalForm.value.id)
+      .deleteRank(this.modalForm.value.id).pipe(finalize(() => this.isLoading = false))
       .subscribe((response) => {
-    this.isLoading = false;
+        if(response.code === 200) {
           this.msg.success('Successfully');
           this.handleCancel();
-          this.onDeleteItem.emit(response);
+          this.onDeleteItem.emit(response.data);
+        } else {
+          this.msg.success('Failed');
+          this.handleCancel();
+        }
       });
   }
 
@@ -51,13 +56,18 @@ export class RankModalComponent extends ModelBaseComponent implements OnInit {
     this.isLoading = true;
     if (this.mode === 'create') {
       this.rankService
-        .createRank(this.modalForm.value)
+        .createRank(this.modalForm.value).pipe(finalize(() => this.isLoading = false))
         .subscribe((res) => {
-            this.isLoading = false;
+          if(res.code === 200) {
             this.modalForm.reset();
             this.msg.success('Successfully');
             this.checkEditForm();
-            this.onCreateItem.emit(res);
+            this.onCreateItem.emit(res.data);
+          } else {
+            this.modalForm.reset();
+            this.msg.warning('Hạng này đã tồn tại:)');
+            this.checkEditForm();
+          }
         });
     }
   }

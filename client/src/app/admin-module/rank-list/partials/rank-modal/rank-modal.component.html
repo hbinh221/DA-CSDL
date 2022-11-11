@@ -6,7 +6,7 @@
   <ng-container *nzModalContent>
     <form nz-form [formGroup]="modalForm">
       <nz-form-item>
-        <nz-form-label [nzRequired]="true">Rank Name</nz-form-label>
+        <nz-form-label [nzRequired]="true" style="width: 27%; text-align: left;">Rank Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input rank name!">
           <nz-input-group nzPrefixIcon="environment">
             <input
@@ -20,29 +20,21 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="true">Cost</nz-form-label>
+        <nz-form-label [nzRequired]="true" style="width: 27%; text-align: left;">Cost</nz-form-label>
         <nz-form-control nzErrorTip="Please input cost!">
           <nz-input-group nzPrefixIcon="environment">
-            <input
-              type="number"
-              nz-input
-              formControlName="cost"
-              placeholder="Cost"
-            />
+            <nz-input-number formControlName="cost" placeholder="Cost" [(ngModel)]="modalForm.value.cost"
+              [nzMin]="1" [nzStep]="100000" style="width: 100%"></nz-input-number>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="true">Baggage Weight</nz-form-label>
+        <nz-form-label [nzRequired]="true" style="width: 27%; text-align: left;">Baggage Weight</nz-form-label>
         <nz-form-control nzErrorTip="Please input baggage weight!">
           <nz-input-group nzPrefixIcon="environment">
-            <input
-              type="number"
-              nz-input
-              formControlName="baggageWeight"
-              placeholder="Baggage Weight"
-            />
+            <nz-input-number formControlName="baggageWeight" placeholder="Baggage Weight" [(ngModel)]="modalForm.value.baggageWeight"
+              [nzMin]="1" [nzStep]="1" style="width: 100%"></nz-input-number>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
@@ -59,15 +51,15 @@
       </div>
       <div nz-col nzSpan="20">
         <!-- <div class="float-right">
-            <button 
+            <button
             *ngIf="!isEdit && mode ==='detail'"
-             nz-button nzType="primary" 
+             nz-button nzType="primary"
             (click)="changeEdit(true)">Edit</button>
           </div>
        -->
         <div class="float-right ml-2">
           <button *ngIf="mode ==='detail'"
-           nz-button 
+           nz-button
            (click)="deleteItem()"
            [nzLoading]="isLoading"
           nzType="primary" nzDanger
