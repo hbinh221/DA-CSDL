@@ -26,11 +26,20 @@ namespace API.Controllers
         }
 
         [HttpGet("get/payment")]
-        public async Task<IEnumerable<PaymentDto>> GetPayment(Guid? id)
+        public async Task<Response<IEnumerable<PaymentDto>>> GetPayment(Guid? id)
         {
             var dp_params = new DynamicParameters();
+            Response<IEnumerable<PaymentDto>> response = new Response<IEnumerable<PaymentDto>>();
+            
             dp_params.Add("@Id ", id, DbType.Guid);
-            return await _db.GetAll<PaymentDto>("GetPayment", dp_params);
+            var newData = await _db.GetAll<PaymentDto>("GetPayment", dp_params);
+
+            if (newData != null)
+            {
+                response.Code = 200;
+                response.Data = newData;
+            }
+            return response;
         }
 
         [HttpPost("create/payment")]
@@ -58,16 +67,26 @@ namespace API.Controllers
         }
 
         [HttpDelete("delete/payment")]
-        public async Task<ActionResult> DeletePayment(Guid id)
+        public async Task<Response<PaymentDto>> DeletePayment(Guid id)
         {
             var dp_params = new DynamicParameters();
+            Response<PaymentDto> response = new Response<PaymentDto>();
             dp_params.Add("@Id", id, DbType.Guid);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                string sqlCommand = "delete from Payment where Id = @Id";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                string sqlCommand = "select * from Payment where Id = @Id";
+                var oldData = await db.QueryFirstAsync<PaymentDto>(sqlCommand, dp_params, null, null, CommandType.Text);
+                if (oldData != null)
+                {
+                    sqlCommand = "delete from Payment where Id = @Id";
+                    await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+
+                    response.Code = 200;
+                    response.Data = oldData;
+                }
             };
-            return Ok("Success");
+
+            return response;
         }
     }
 }

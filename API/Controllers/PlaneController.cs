@@ -26,12 +26,22 @@ namespace API.Controllers
         }
 
         [HttpGet("get/plane")]
-        public async Task<IEnumerable<PlaneDto>> GetPlane(Guid? id, Guid airlineId)
+        public async Task<Response<IEnumerable<PlaneDto>>> GetPlane(Guid? id, Guid airlineId)
         {
             var dp_params = new DynamicParameters();
+            Response<IEnumerable<PlaneDto>> response = new Response<IEnumerable<PlaneDto>>();
+
             dp_params.Add("@Id", id, DbType.Guid);
             dp_params.Add("@AirlineId", airlineId, DbType.Guid);
-            return await _db.GetAll<PlaneDto>("GetPlane", dp_params);
+
+            var newData = await _db.GetAll<PlaneDto>("GetPlane", dp_params);
+
+            if (newData != null)
+            {
+                response.Code = 200;
+                response.Data = newData;
+            }
+            return response;
         }
 
         [HttpPost("create/plane")]
@@ -62,16 +72,28 @@ namespace API.Controllers
         }
 
         [HttpDelete("delete/plane")]
-        public async Task<ActionResult> DeletePlane(Guid id)
+        public async Task<Response<PlaneDto>> DeletePlane(Guid id)
         {
             var dp_params = new DynamicParameters();
+            Response<PlaneDto> response = new Response<PlaneDto>();
+
             dp_params.Add("@Id", id, DbType.Guid);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
-                string sqlCommand = "delete from Plane where Id = @Id";
-                await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+
+                string sqlCommand = "select * from Plane where Id = @Id";
+                var oldData = await db.QueryFirstAsync<PlaneDto>(sqlCommand, dp_params, null, null, CommandType.Text);
+
+                if (oldData != null)
+                {
+                    sqlCommand = "delete from Plane where Id = @Id";
+                    await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+
+                    response.Code = 200;
+                    response.Data = oldData;
+                }
             };
-            return Ok("Success");
+            return response;
         }
     }
 }
