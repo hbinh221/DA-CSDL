@@ -1,1 +1,47 @@
-<p>flight-list works!</p>
+<nz-page-header class="site-page-header" nzTitle="Flight Management"></nz-page-header>
+<div nz-row>
+  <div nzSpan="8">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input type="text" nz-input placeholder="Search..." />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search"></span>
+    </ng-template>
+  </div>
+</div>
+<nz-table #filterTable [nzData]="listOfData" nzTableLayout="fixed" [nzFrontPagination]="true" [nzShowPagination]="true"
+  [nzLoading]="isLoading" [nzScroll]="{ y: scrollY }">
+  <thead>
+    <tr>
+      <th *ngFor="let column of listOfColumns">
+        {{ column.name }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let data of filterTable.data">
+      <tr (click)="goToDetail(data)">
+        <td>{{ data.airlineName }}</td>
+        <td>{{ data.planeName }}</td>
+        <td>{{ data.flightNo }}</td>
+        <td>{{ data.seatQuantity }}</td>
+        <td>{{ data.fromLocation }}</td>
+        <td>{{ data.toLocation }}</td>
+        <td>{{ data.departureTime | date: "hh:mm:ss a" }} in
+          {{ data.departureTime | date: "dd/MM/yyyy" }}</td>
+        <td>{{ data.landedTime | date: "hh:mm:ss a" }} in
+          {{ data.landedTime | date: "dd/MM/yyyy" }}</td>
+        <td>{{ data.cost }}</td>
+        <td>{{ data.remark }}</td>
+      </tr>
+    </ng-container>
+
+  </tbody>
+</nz-table>
+
+<div class="btn--fab" (click)="goToCreate()">
+  <span nz-icon nzType="plus" nzTheme="outline"></span>
+  <!-- <i class="fas fa-plus-circle cursor-pointer"></i> -->
+</div>
+<app-flight-modal #modalBase (onDeleteItem)="onDeleteItem($event)" (onCreateItem)="onCreateItem($event)"
+  (onUpdateItem)="onUpdateItem($event)"></app-flight-modal>

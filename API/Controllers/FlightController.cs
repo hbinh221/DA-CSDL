@@ -27,7 +27,7 @@ namespace API.Controllers
         }
 
         [HttpGet("get/flight")]
-        public async Task<Response<IEnumerable<FlightDto>>> GetFlight(Guid? id, Guid airlineId)
+        public async Task<Response<IEnumerable<FlightDto>>> GetFlight(Guid? id, Guid? airlineId)
         {
             var dp_params = new DynamicParameters();
             Response<IEnumerable<FlightDto>> response = new Response<IEnumerable<FlightDto>>();
@@ -71,10 +71,12 @@ namespace API.Controllers
             var dp_params = new DynamicParameters();
             Response<FlightDto> response = new Response<FlightDto>();
             dp_params.Add("@FlightNo", input.FlightNo, DbType.String);
-            dp_params.Add("@DepartureTime", input.DepartureTime, DbType.DateTime2);
-            dp_params.Add("@LandedTime", input.LandedTime, DbType.DateTime2);
+            dp_params.Add("@DepartureTime", DateTime.ParseExact(input.DepartureTime,
+                "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture), DbType.DateTime2);
+            dp_params.Add("@LandedTime", DateTime.ParseExact(input.LandedTime,
+                "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture), DbType.DateTime2);
             dp_params.Add("@Cost", input.Cost, DbType.Decimal);
-            dp_params.Add("@Remark", input.Cost, DbType.String);
+            dp_params.Add("@Remark", input.Remark, DbType.String);
             dp_params.Add("@FromLocationId", input.FromLocationId, DbType.Guid);
             dp_params.Add("@ToLocationId", input.ToLocationId, DbType.Guid);
             dp_params.Add("@PlaneId", input.PlaneId, DbType.Guid);
@@ -82,10 +84,16 @@ namespace API.Controllers
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 string sqlCommand = "insert into Flight(FlightNo, DepartureTime, LandedTime, Cost, Remark, FromLocationId, ToLocationId, PlaneId)" +
-                    "values (@FlightNo, @DepartureTime, @LandedTime, @Cost, @Remark, @FromLocationId, @ToLocationId, @AirlineId)";
-                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                    "values (@FlightNo, @DepartureTime, @LandedTime, @Cost, @Remark, @FromLocationId, @ToLocationId, @PlaneId)";
+                if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) > 1)
                 {
-                    sqlCommand = "select top 1 * from Flight order by Id desc";
+                    sqlCommand = "select f.Id, a.AirlineName, f.FlightNo, p.PlaneName, p.SeatQuantity, fl.LocationName as FromLocation, tl.LocationName as ToLocation, f.DepartureTime, f.LandedTime, f.Cost, f.Remark " +
+                        "from Airline a " +
+                        "inner join Plane p on a.Id = p.AirlineId" +
+                        "inner join Flight f on p.Id = f.PlaneId" +
+                        "inner join Location fl on f.FromLocationId = fl.Id" +
+                        "inner join Location tl on f.ToLocationId = tl.Id" +
+                        "order by f.Id desc";
                     var newData = await db.QueryFirstAsync<FlightDto>(sqlCommand, null, null, null, CommandType.Text);
                     if(newData != null)
                     {
@@ -98,13 +106,14 @@ namespace API.Controllers
         }
 
         [HttpPost("check/create-flight")]
-        public async Task<Response<bool>> CheckCreateFlight(Guid planeId, DateTime departureTime)
+        public async Task<Response<bool>> CheckCreateFlight(CheckCreateFlightInput input)
         {
             var dp_params = new DynamicParameters();
             Response<bool> response = new Response<bool>();
 
-            dp_params.Add("@PlaneId", planeId, DbType.Guid);
-            dp_params.Add("@DepartureTime", departureTime, DbType.DateTime2);
+            dp_params.Add("@PlaneId", input.PlaneId, DbType.Guid);
+            dp_params.Add("@DepartureTime", DateTime.ParseExact(input.DepartureTime, 
+                "dd-MM-yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture), DbType.DateTime2);
             var newData = await _db.Get<bool>("CheckCreateFlight", dp_params);
 
             response.Code = 200;

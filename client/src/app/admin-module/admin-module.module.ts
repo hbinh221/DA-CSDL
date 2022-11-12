@@ -26,6 +26,7 @@ import { PaymentModalComponent } from './payment-list/partials/payment-modal/pay
 import { PromotionModalComponent } from './promotion-list/partials/promotion-modal/promotion-modal.component';
 import { RankModalComponent } from './rank-list/partials/rank-modal/rank-modal.component';
 import { PlaneModalComponent } from './plane-list/partials/plane-modal/plane-modal.component';
+import { AdminModalComponent } from './passenger-list/partials/admin-modal/admin-modal.component';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import { PlaneModalComponent } from './plane-list/partials/plane-modal/plane-mod
     PromotionModalComponent,
     RankModalComponent,
     PlaneModalComponent,
+    AdminModalComponent,
   ],
   imports: [
     CommonModule,

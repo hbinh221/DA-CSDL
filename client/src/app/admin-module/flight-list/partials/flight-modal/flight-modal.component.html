@@ -1,1 +1,139 @@
-<p>flight-modal works!</p>
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()">
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="modalForm">
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Flight No</nz-form-label>
+        <nz-form-control nzErrorTip="Please input flight no!">
+          <nz-input-group nzPrefixIcon="environment">
+            <input type="text" nz-input formControlName="flightNo" placeholder="Flight No" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Airline Name</nz-form-label>
+        <nz-form-control nzErrorTip="Please input airline name!">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a airline name" [(ngModel)]="airlineIdFilter"
+            (ngModelChange)="getPlane()" formControlName="airlineId">
+            <nz-option *ngFor="let data of airlineList" nzLabel="{{data.airlineName}}" nzValue="{{data.id}}">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Plane Name</nz-form-label>
+        <nz-form-control nzErrorTip="Please input plane name!">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a plane name" [(ngModel)]="modalForm.value.planeId"
+            formControlName="planeId">
+            <nz-option *ngFor="let data of planeList" nzLabel="{{data.planeName}}" nzValue="{{data.id}}">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">From Location</nz-form-label>
+        <nz-form-control nzErrorTip="Please input from location name!">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a from location name"
+            [(ngModel)]="modalForm.value.fromLocationId" formControlName="fromLocationId">
+            <nz-option *ngFor="let data of fromLocationList" nzLabel="{{data.locationName}}" nzValue="{{data.id}}">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">To Location</nz-form-label>
+        <nz-form-control nzErrorTip="Please input to location name!">
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a to location name"
+            [(ngModel)]="modalForm.value.toLocationId" formControlName="toLocationId">
+            <nz-option *ngFor="let data of toLocationList" nzLabel="{{data.locationName}}" nzValue="{{data.id}}">
+            </nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Departure Time</nz-form-label>
+        <nz-form-control nzErrorTip="Please input departure time!">
+          <nz-input-group nzPrefixIcon="environment">
+            <nz-date-picker formControlName="departureTime" placeholder="Departure Time"
+              [(ngModel)]="modalForm.value.departureTime" style="width: 50%"></nz-date-picker>
+            <nz-time-picker (ngModelChange)="log()" formControlName="time1" [(ngModel)]="modalForm.value.time1"
+              nzSize="large" style="width: 50%"></nz-time-picker>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Landed Time</nz-form-label>
+        <nz-form-control nzErrorTip="Please input landed time!">
+          <nz-input-group nzPrefixIcon="environment">
+            <nz-date-picker formControlName="landedTime" placeholder="Landed Time"
+              [(ngModel)]="modalForm.value.landedTime" style="width: 50%"></nz-date-picker>
+            <nz-time-picker (ngModelChange)="log()" formControlName="time2" [(ngModel)]="modalForm.value.time2"
+              nzSize="large" style="width: 50%"></nz-time-picker>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="true" style="width: 27%; text-align: left;">Cost</nz-form-label>
+        <nz-form-control nzErrorTip="Please input cost!">
+          <nz-input-group nzPrefixIcon="environment">
+            <nz-input-number formControlName="cost" placeholder="Cost" [(ngModel)]="modalForm.value.cost" [nzMin]="1"
+              [nzStep]="100000" style="width: 100%"></nz-input-number>
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <nz-form-label [nzRequired]="false" style="width: 27%; text-align: left;">Remark</nz-form-label>
+        <nz-form-control nzErrorTip="Please input remark!">
+          <nz-input-group nzPrefixIcon="environment">
+            <input type="text" nz-input formControlName="remark" placeholder="Remark" />
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+
+    </form>
+  </ng-container>
+  <div *nzModalFooter>
+    <div nz-row>
+      <div nz-col nzSpan="4">
+        <div class="float-left">
+          <button nz-button nzType="default" (click)="handleCancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+      <div nz-col nzSpan="20">
+        <!-- <div class="float-right">
+            <button
+            *ngIf="!isEdit && mode ==='detail'"
+             nz-button nzType="primary"
+            (click)="changeEdit(true)">Edit</button>
+          </div>
+       -->
+        <div class="float-right ml-2">
+          <button *ngIf="mode === 'detail'" nz-button (click)="deleteItem()" [nzLoading]="isLoading" nzType="primary"
+            nzDanger>
+            Delete
+          </button>
+        </div>
+        <div class="float-right ml-2">
+          <button *ngIf="isEdit" nz-button nzType="primary" (click)="submitForm()" [nzLoading]="isLoading">
+            Save
+          </button>
+        </div>
+        <div class="float-right">
+          <button *ngIf="isEdit && mode === 'detail'" nz-button nzType="default" (click)="changeEdit(false)">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-modal>

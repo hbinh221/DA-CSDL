@@ -99,15 +99,13 @@ end;
 go
 -- get plane by airline
 create or alter procedure GetPlane 
-@Id uniqueidentifier
---, @AirlineId uniqueidentifier
+@Id uniqueidentifier, @AirlineId uniqueidentifier
 with recompile
 as
 begin
 	select p.Id, p.PlaneName, p.SeatQuantity, a.AirlineName, p.AirlineId from Airline a
 	inner join Plane p on a.Id = p.AirlineId
-	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or p.Id = @Id)
-	--and AirlineId = @AirlineId;
+	where a.Id = @AirlineId and (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or p.Id = @Id)
 end;
 go
 create or alter procedure GetService
@@ -152,13 +150,13 @@ create or alter procedure GetFlight
 with recompile
 as
 begin
-	(select f.Id, f.FlightNo, p.PlaneName, p.SeatQuantity, fl.LocationName as FromLocation, tl.LocationName as ToLocation, f.DepartureTime, f.LandedTime, f.Cost, f.Remark 
-	from (select * from Airline where Id = @AirlineId) a
+	select f.Id, a.AirlineName, f.FlightNo, p.PlaneName, p.SeatQuantity, fl.LocationName as FromLocation, tl.LocationName as ToLocation, f.DepartureTime, f.LandedTime, f.Cost, f.Remark 
+	from (select * from Airline where isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @AirlineId) a
 	inner join Plane p on a.Id = p.AirlineId
 	inner join Flight f on p.Id = f.PlaneId
 	inner join Location fl on f.FromLocationId = fl.Id
 	inner join Location tl on f.ToLocationId = tl.Id
-	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or f.Id = @Id))
+	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or f.Id = @Id
 end;
 go
 create or alter procedure GetRemaningTicket
@@ -230,8 +228,12 @@ with recompile
 as
 begin
 	declare @MaxLandedTime datetime2, @IsCreate bit;
-	set @MaxLandedTime = (select max(LandedTime) from Flight where PlaneId = @PlaneId and LandedTime >= getdate())
-	if(@DepartureTime >= @MaxLandedTime)
+	set @MaxLandedTime = (select max(LandedTime) from Flight where PlaneId = @PlaneId);
+	if (isnull(@MaxLandedTime, 1) = 1)
+	begin
+		set @IsCreate = 1;
+	end;
+	else if(@DepartureTime >= @MaxLandedTime)
 	begin
 		set @IsCreate = 1;
 	end
@@ -239,11 +241,18 @@ begin
 	begin
 		set @IsCreate = 0;
 	end;
+	select @IsCreate as IsCreate;
 end
 go
-
-declare @PageNum int, @PageSize int;
-set @PageNum = 6
-set @PageSize = 2
-select * from Location order by Id asc offset (@PageNum - 1) * @PageSize rows fetch next @PageSize rows only
-select * from Location order by Id asc
+exec CheckCreateFlight '8d00b154-9f61-ed11-be83-484d7ef0b796','2022-11-13T11:49:46.567Z'
+create or alter procedure GetAdmin
+@Id uniqueidentifier
+with recompile
+as
+begin
+	select * from Passenger
+	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id
+	and IsAdmin = 1;
+end;
+go
+select * from Flight

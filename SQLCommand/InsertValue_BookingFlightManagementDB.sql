@@ -50,6 +50,12 @@ values (N'FlightNo2', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()),
 @FromLocationId, @ToLocationId, @PlaneId);
 select * from Passenger
 insert into Promotion(PromotionName, StartDate, EndDate, Discount) values
-(N'Promotion1',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),
+(N'Promotion4',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),
 (N'Promotion2',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),
 (N'Promotion3',GETDATE(), DATEADD(HH, 2, GETDATE()), 10);
+
+select * from Airline 
+select * from Plane 
+select * from Location 
+select top 1 p.Id, p.PlaneName, p.SeatQuantity, a.AirlineName, p.AirlineId 
+from Airline a inner join Plane p on a.Id = p.AirlineId where p.Id = @Id order by p.Id desc

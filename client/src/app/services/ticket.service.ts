@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TicketService {
   baseUrl: string = 'ticket';
@@ -18,11 +18,9 @@ export class TicketService {
     );
   }
   createTicket(payload: any): Observable<any> {
-    return this.http.post(environment.baseUrl + this.baseUrl + '/create/ticket', payload);
-  }
-  deleteTicket(id: string): Observable<any> {
-    return this.http.delete(
-      environment.baseUrl + this.baseUrl + '/delete/ticket' + '?id=' + id
+    return this.http.post(
+      environment.baseUrl + this.baseUrl + '/create/ticket',
+      payload
     );
   }
 }

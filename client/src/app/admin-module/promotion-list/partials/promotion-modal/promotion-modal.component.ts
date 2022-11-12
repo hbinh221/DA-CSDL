@@ -16,8 +16,6 @@ export class PromotionModalComponent
   extends ModelBaseComponent
   implements OnInit
 {
-  startDate: Date = new Date();
-  endDate: Date = new Date();
 
   constructor(
     protected http: HttpClient,

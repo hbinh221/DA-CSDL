@@ -14,7 +14,7 @@ export class PlaneService {
     let idString = '';
     if (id) idString = '?id=' + id;
     let airlineIdString = '';
-    if (id) airlineIdString = '?airlineId=' + ailineId;
+    if (ailineId) airlineIdString = '?airlineId=' + ailineId;
     return this.http.get(
       environment.baseUrl + this.baseUrl + '/get/plane' + idString + airlineIdString
     );

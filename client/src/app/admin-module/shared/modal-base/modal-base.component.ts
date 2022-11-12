@@ -59,7 +59,7 @@ export class ModelBaseComponent implements OnInit {
     }
   }
 
-  
+
   openModal(data:any,mode: string, isEdit: boolean){
     this.isVisible = true;
     this.isEdit = isEdit;

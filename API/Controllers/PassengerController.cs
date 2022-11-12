@@ -24,6 +24,22 @@ namespace API.Controllers
             _db = db;
         }
 
+        [HttpGet("get/admin")]
+        public async Task<Response<IEnumerable<AdminDto>>> GetAdmin(Guid id)
+        {
+            var dp_params = new DynamicParameters();
+            Response<IEnumerable<AdminDto>> response = new Response<IEnumerable<AdminDto>>();
+            dp_params.Add("@Id", id, DbType.Guid);
+            var data = await _db.GetAll<AdminDto>("GetAdmin", dp_params);
+            if(data.Count != 0)
+            {
+                response.Code = 200;
+                response.Data = data;
+            }
+
+            return response;
+        }
+
         [HttpPost("login")]
         public async Task<Response<LoginDto>> Login(LoginInput input)
         {
@@ -49,10 +65,10 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<Response<LoginDto>> Register(RegisterDto input)
+        public async Task<Response<AdminDto>> Register(RegisterDto input)
         {
             var dp_params = new DynamicParameters();
-            Response<LoginDto> response = new Response<LoginDto>();
+            Response<AdminDto> response = new Response<AdminDto>();
             dp_params.Add("@FirstName", input.FirstName, DbType.String);
             dp_params.Add("@LastName", input.LastName, DbType.String);
             dp_params.Add("@IdCard", input.IdCard, DbType.String);
@@ -69,7 +85,7 @@ namespace API.Controllers
                 if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                 {
                     sqlCommand = "select top 1 * from Passenger where IsAdmin = 1 order by Id desc";
-                    var newData = await db.QueryFirstAsync<LoginDto>(sqlCommand, null, null, null, CommandType.Text);
+                    var newData = await db.QueryFirstAsync<AdminDto>(sqlCommand, null, null, null, CommandType.Text);
                     if(newData != null)
                     {
                         response.Code = 200;
@@ -111,7 +127,7 @@ namespace API.Controllers
         }
 
         [HttpPost("checkemail")]
-        public async Task<bool> CheckDuplicateEmail([FromForm] string email)
+        public async Task<bool> CheckDuplicateEmail(string email)
         {
             var dp_params = new DynamicParameters();
             dp_params.Add("@Email", email, DbType.String);
@@ -119,6 +135,29 @@ namespace API.Controllers
             return isDuplicate;
         }
 
-        
+        [HttpDelete("delete/admin")]
+        public async Task<Response<AdminDto>> DeleteAdmin(Guid id)
+        {
+            var dp_params = new DynamicParameters();
+            Response<AdminDto> response = new Response<AdminDto>();
+
+            dp_params.Add("@Id", id, DbType.Guid);
+            using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            {
+
+                string sqlCommand = "select * from Passenger where Id = @Id and IsAdmin = 1 ";
+                var oldData = await db.QueryFirstAsync<AdminDto>(sqlCommand, dp_params, null, null, CommandType.Text);
+
+                if (oldData != null)
+                {
+                    sqlCommand = "delete from Passenger where Id = @Id";
+                    await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+
+                    response.Code = 200;
+                    response.Data = oldData;
+                }
+            };
+            return response;
+        }
     }
 }

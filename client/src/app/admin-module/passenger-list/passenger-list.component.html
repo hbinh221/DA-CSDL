@@ -1,1 +1,55 @@
-<p>passenger-list works!</p>
+<nz-page-header
+  class="site-page-header"
+  nzTitle="Admin Management"
+></nz-page-header>
+<div nz-row>
+  <div nzSpan="8">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input type="text" nz-input placeholder="Search..." />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search"></span>
+    </ng-template>
+  </div>
+</div>
+<nz-table
+  #filterTable
+  [nzData]="listOfData"
+  nzTableLayout="fixed"
+  [nzFrontPagination]="true"
+  [nzShowPagination]="true"
+  [nzLoading]="isLoading"
+  [nzScroll]="{ y: scrollY }"
+>
+  <thead>
+    <tr>
+      <th *ngFor="let column of listOfColumns">
+        {{ column.name }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let data of filterTable.data">
+      <tr (click)="goToDetail(data)">
+        <td>{{ data.firstName + ' ' + data.lastName }}</td>
+        <td>{{ data.idCard }}</td>
+        <td>{{ data.birthDay | date}}</td>
+        <td>{{ data.gender == 1 ? 'Nam' : 'Nữ' }}</td>
+        <td>{{ data.phone }}</td>
+        <td>{{ data.email }}</td>
+      </tr>
+    </ng-container>
+
+  </tbody>
+</nz-table>
+
+<div class="btn--fab" (click)="goToCreate()">
+  <span nz-icon nzType="plus" nzTheme="outline"></span>
+  <!-- <i class="fas fa-plus-circle cursor-pointer"></i> -->
+</div>
+<app-admin-modal
+  #modalBase
+  (onDeleteItem)="onDeleteItem($event)"
+  (onCreateItem)="onCreateItem($event)"
+  (onUpdateItem)="onUpdateItem($event)"
+></app-admin-modal>
