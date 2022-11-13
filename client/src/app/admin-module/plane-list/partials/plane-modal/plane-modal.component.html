@@ -16,7 +16,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Plane Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input plane name!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input type="text" nz-input formControlName="planeName" placeholder="Plane Name" />
           </nz-input-group>
         </nz-form-control>
@@ -25,7 +25,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Seat Quantity</nz-form-label>
         <nz-form-control nzErrorTip="Please input seat quantity!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <nz-input-number formControlName="seatQuantity" placeholder="Seat Quantity"
               [(ngModel)]="modalForm.value.seatQuantity" [nzMin]="250" [nzStep]="1" style="width: 100%"></nz-input-number>
           </nz-input-group>

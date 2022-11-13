@@ -57,11 +57,11 @@ namespace API.Controllers
             {
                 string sqlCommand = "insert into Plane(PlaneName, SeatQuantity, AirlineId)" +
                     "values (@PlaneName, @SeatQuantity, @AirlineId)";
-                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                 {
                     sqlCommand = "select top 1 * from Airline a inner join Plane p on a.Id = p.AirlineId where AirlineId = @AirlineId order by p.Id desc";
                     var newData = await db.QueryFirstAsync<PlaneDto>(sqlCommand, dp_params, null, null, CommandType.Text);
-                    if(newData != null)
+                    if (newData != null)
                     {
                         response.Code = 200;
                         response.Data = newData;
@@ -87,11 +87,18 @@ namespace API.Controllers
 
                 if (oldData != null)
                 {
-                    sqlCommand = "delete from Plane where Id = @Id";
-                    await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                    try
+                    {
+                        sqlCommand = "delete from Plane where Id = @Id";
+                        await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
 
-                    response.Code = 200;
-                    response.Data = oldData;
+                        response.Code = 200;
+                        response.Data = oldData;
+                    }
+                    catch
+                    {
+                        return response;
+                    }
                 }
             };
             return response;

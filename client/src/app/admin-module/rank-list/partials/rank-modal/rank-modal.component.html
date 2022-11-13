@@ -8,7 +8,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 27%; text-align: left;">Rank Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input rank name!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input
               type="text"
               nz-input
@@ -22,7 +22,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 27%; text-align: left;">Cost</nz-form-label>
         <nz-form-control nzErrorTip="Please input cost!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <nz-input-number formControlName="cost" placeholder="Cost" [(ngModel)]="modalForm.value.cost"
               [nzMin]="1" [nzStep]="100000" style="width: 100%"></nz-input-number>
           </nz-input-group>
@@ -32,7 +32,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 27%; text-align: left;">Baggage Weight</nz-form-label>
         <nz-form-control nzErrorTip="Please input baggage weight!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <nz-input-number formControlName="baggageWeight" placeholder="Baggage Weight" [(ngModel)]="modalForm.value.baggageWeight"
               [nzMin]="1" [nzStep]="1" style="width: 100%"></nz-input-number>
           </nz-input-group>

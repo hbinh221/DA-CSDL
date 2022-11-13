@@ -67,7 +67,7 @@ export class LocationModalComponent
             this.onCreateItem.emit(res.data);
           } else {
             this.modalForm.reset();
-            this.msg.warning('Địa điểm này đã tồn tại:)');
+            this.msg.error('Failed');
             this.checkEditForm();
           }
         });

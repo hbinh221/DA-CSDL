@@ -62,7 +62,7 @@ export class PlaneModalComponent extends ModelBaseComponent implements OnInit {
           this.handleCancel();
           this.onDeleteItem.emit(response.data);
         } else {
-          this.msg.warning('Failed');
+          this.msg.error('This plane exists in a flight');
           this.handleCancel();
         }
       });

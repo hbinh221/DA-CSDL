@@ -49,7 +49,7 @@ namespace API.Controllers
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 string sqlCommand = "select * from Airline where AirlineName = @AirlineName";
-                if((await db.QueryAsync(sqlCommand, dp_params, null, null, CommandType.Text)).AsList().Count == 1)
+                if ((await db.QueryAsync(sqlCommand, dp_params, null, null, CommandType.Text)).AsList().Count == 1)
                 {
                     response.Code = 500;
                     response.Data = null;
@@ -86,11 +86,19 @@ namespace API.Controllers
 
                 if (oldData != null)
                 {
-                    sqlCommand = "delete from Airline where Id = @Id";
-                    await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                    try
+                    {
 
-                    response.Code = 200;
-                    response.Data = oldData;
+                        sqlCommand = "delete from Airline where Id = @Id";
+                        await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+
+                        response.Code = 200;
+                        response.Data = oldData;
+                    }
+                    catch
+                    {
+                        return response;
+                    }
                 }
             };
             return response;

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {map } from 'rxjs/operators';
@@ -14,15 +15,16 @@ export class AuthenticationService {
   currentUserSource = new BehaviorSubject<any>(null);
   currentUser =  this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient, private message: NzMessageService) { }
+  constructor(private http: HttpClient, private message: NzMessageService, private router: Router) { }
 
   login(payload: LoginModel):Observable<any>{
     return this.http.post(environment.baseUrl + this.baseUrl + '/login', payload).pipe(
       map((response: any) => {
         const user = response;
         if(user) {
-          // this.message.success("Logged In");
+          this.message.success("Logged In");
           this.setCurrentUser(user);
+          if(user.data.isAdmin) this.router.navigateByUrl('/admin');
         }
       })
     );

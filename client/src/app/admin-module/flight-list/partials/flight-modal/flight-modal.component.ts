@@ -18,11 +18,13 @@ import { DatePipe } from '@angular/common';
 export class FlightModalComponent extends ModelBaseComponent implements OnInit {
   airlineList: any = [];
   planeList: any = [];
-  toLocationList: any = [];
-  fromLocationList: any = [];
+
   airlineIdFilter: string = '00000000-0000-0000-0000-000000000000';
   departureTime: Date = new Date();
   landedTime: Date = new Date();
+  desLocation: any[] = [];
+  listLocation: any = [];
+  sourceLocation: any[] = [];
 
   constructor(
     protected http: HttpClient,
@@ -85,8 +87,9 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         if (res.code === 200) {
-          this.toLocationList = res.data;
-          this.fromLocationList = res.data;
+          this.listLocation = [...res.data];
+          this.sourceLocation = [...this.listLocation];
+          this.desLocation = [...this.listLocation];
         }
       });
   }
@@ -101,6 +104,24 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
           this.planeList = res.data;
         }
       });
+  }
+
+  onChangeSourceLocation(ev: any){
+    this.desLocation = [...this.listLocation];
+      const index = this.listLocation.findIndex((item:any) => item.id === ev);
+      if(index !== -1){
+        this.desLocation.splice(index, 1);
+        this.desLocation = [...this.desLocation];
+      }
+  }
+
+  onChangeDesLocation(ev:any){
+    this.sourceLocation = [...this.listLocation];
+    const index = this.listLocation.findIndex((item:any) => item.id === ev);
+    if(index !== -1){
+      this.sourceLocation.splice(index, 1);
+      this.sourceLocation = [...this.sourceLocation];
+    }
   }
 
   // deleteItem(): void {

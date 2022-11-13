@@ -46,7 +46,7 @@ export class AirlineModalComponent
           this.handleCancel();
           this.onDeleteItem.emit(response.data);
         } else {
-          this.msg.warning('Failed');
+          this.msg.error('You must delete all related plane');
           this.handleCancel();
         }
       });
