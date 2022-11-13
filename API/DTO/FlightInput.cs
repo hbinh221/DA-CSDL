@@ -10,8 +10,8 @@ namespace API.DTO
         public int SeatQuantity { get; set; }
         public Guid FromLocationId { get; set; }
         public Guid ToLocationId { get; set; }
-        public string DepartureTime { get; set; }
-        public string LandedTime { get; set; }
+        public DateTime DepartureTime { get; set; }
+        public DateTime LandedTime { get; set; }
         public float Cost { get; set; }
         public string Remark { get; set; }
     }

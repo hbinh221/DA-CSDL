@@ -59,10 +59,8 @@
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Departure Time</nz-form-label>
         <nz-form-control nzErrorTip="Please input departure time!">
           <nz-input-group nzPrefixIcon="environment">
-            <nz-date-picker formControlName="departureTime" placeholder="Departure Time"
-              [(ngModel)]="modalForm.value.departureTime" style="width: 50%"></nz-date-picker>
-            <nz-time-picker (ngModelChange)="log()" formControlName="time1" [(ngModel)]="modalForm.value.time1"
-              nzSize="large" style="width: 50%"></nz-time-picker>
+            <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" formControlName="departureTime"
+              placeholder="Departure Time" style="width: 100%"></nz-date-picker>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
@@ -71,16 +69,14 @@
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Landed Time</nz-form-label>
         <nz-form-control nzErrorTip="Please input landed time!">
           <nz-input-group nzPrefixIcon="environment">
-            <nz-date-picker formControlName="landedTime" placeholder="Landed Time"
-              [(ngModel)]="modalForm.value.landedTime" style="width: 50%"></nz-date-picker>
-            <nz-time-picker (ngModelChange)="log()" formControlName="time2" [(ngModel)]="modalForm.value.time2"
-              nzSize="large" style="width: 50%"></nz-time-picker>
+            <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" formControlName="landedTime"
+              placeholder="Landed Time" style="width: 100%"></nz-date-picker>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="true" style="width: 27%; text-align: left;">Cost</nz-form-label>
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Cost</nz-form-label>
         <nz-form-control nzErrorTip="Please input cost!">
           <nz-input-group nzPrefixIcon="environment">
             <nz-input-number formControlName="cost" placeholder="Cost" [(ngModel)]="modalForm.value.cost" [nzMin]="1"
@@ -90,7 +86,7 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="false" style="width: 27%; text-align: left;">Remark</nz-form-label>
+        <nz-form-label [nzRequired]="false" style="width: 25%; text-align: left;">Remark</nz-form-label>
         <nz-form-control nzErrorTip="Please input remark!">
           <nz-input-group nzPrefixIcon="environment">
             <input type="text" nz-input formControlName="remark" placeholder="Remark" />

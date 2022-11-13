@@ -18,13 +18,9 @@ import { DatePipe } from '@angular/common';
 export class FlightModalComponent extends ModelBaseComponent implements OnInit {
   airlineList: any = [];
   planeList: any = [];
-
+  toLocationList: any = [];
+  fromLocationList: any = [];
   airlineIdFilter: string = '00000000-0000-0000-0000-000000000000';
-  departureTime: Date = new Date();
-  landedTime: Date = new Date();
-  desLocation: any[] = [];
-  listLocation: any = [];
-  sourceLocation: any[] = [];
 
   constructor(
     protected http: HttpClient,
@@ -56,8 +52,6 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
       toLocationId: [null, Validators.required],
       departureTime: [null, Validators.required],
       landedTime: [null, Validators.required],
-      time1: [null, Validators.required],
-      time2: [null, Validators.required],
       cost: [null, Validators.required],
       remark: [null, Validators.required],
     });
@@ -75,10 +69,6 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
         }
       });
   }
-  log(): void {
-    // this.modalForm.value.time1 = this.datePipe.transform(this.modalForm.value.time1, 'hh:mm:ss');
-    // this.modalForm.value.time2 = this.datePipe.transform(this.modalForm.value.time2, 'hh:mm:ss');
-  }
 
   getLocation(): void {
     this.isLoading = true;
@@ -87,9 +77,8 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         if (res.code === 200) {
-          this.listLocation = [...res.data];
-          this.sourceLocation = [...this.listLocation];
-          this.desLocation = [...this.listLocation];
+          this.toLocationList = res.data;
+          this.fromLocationList = res.data;
         }
       });
   }
@@ -106,40 +95,22 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
       });
   }
 
-  onChangeSourceLocation(ev: any){
-    this.desLocation = [...this.listLocation];
-      const index = this.listLocation.findIndex((item:any) => item.id === ev);
-      if(index !== -1){
-        this.desLocation.splice(index, 1);
-        this.desLocation = [...this.desLocation];
-      }
+  deleteItem(): void {
+    this.isLoading = true;
+    this.flightService
+      .deleteFlight(this.modalForm.value.id)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe((response) => {
+        if (response.code === 200) {
+          this.msg.success('Successfully');
+          this.handleCancel();
+          this.onDeleteItem.emit(response.data);
+        } else {
+          this.msg.warning('Failed');
+          this.handleCancel();
+        }
+      });
   }
-
-  onChangeDesLocation(ev:any){
-    this.sourceLocation = [...this.listLocation];
-    const index = this.listLocation.findIndex((item:any) => item.id === ev);
-    if(index !== -1){
-      this.sourceLocation.splice(index, 1);
-      this.sourceLocation = [...this.sourceLocation];
-    }
-  }
-
-  // deleteItem(): void {
-  //   this.isLoading = true;
-  //   this.flightService
-  //     .deleteAdmin(this.modalForm.value.id)
-  //     .pipe(finalize(() => (this.isLoading = false)))
-  //     .subscribe((response) => {
-  //       if (response.code === 200) {
-  //         this.msg.success('Successfully');
-  //         this.handleCancel();
-  //         this.onDeleteItem.emit(response.data);
-  //       } else {
-  //         this.msg.warning('Failed');
-  //         this.handleCancel();
-  //       }
-  //     });
-  // }
 
   submitForm(): void {
     this.validateForm();
@@ -147,7 +118,8 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
     if (this.mode === 'create') {
       let payload = {
         planeId: this.modalForm.value.planeId,
-        departureTime: this.createDate(this.modalForm.value.departureTime, this.modalForm.value.time1),
+        departureTime: this.modalForm.value.departureTime,
+        landedTime: this.modalForm.value.landedTime
       };
 
       this.flightService
@@ -155,10 +127,6 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe((response) => {
           if (Boolean(response.data) == true) {
-
-            this.modalForm.value.departureTime = this.createDate(this.modalForm.value.departureTime, this.modalForm.value.time1);
-            this.modalForm.value.landedTime = this.createDate(this.modalForm.value.landedTime, this.modalForm.value.time2);
-
             this.flightService
               .createFlight(this.modalForm.value)
               .pipe(finalize(() => (this.isLoading = false)))
@@ -175,14 +143,5 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
           }
         });
     }
-  }
-
-  createDate(date: any, time: any): any {
-    let dateString = '';
-    dateString =
-      this.datePipe.transform(date, 'dd-MM-yyyy') +
-      ' ' +
-      this.datePipe.transform(time, 'HH:mm:ss');
-    return dateString;
   }
 }
