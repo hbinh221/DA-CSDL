@@ -36,4 +36,8 @@ export class FlightService {
       payload
     );
   }
+
+  deleteFlight(id: string): Observable<any> {
+    return this.http.delete(environment.baseUrl + this.baseUrl + '/delete/flight'+'?id=' + id);
+  }
 }

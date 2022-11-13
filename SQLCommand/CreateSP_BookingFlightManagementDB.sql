@@ -258,11 +258,3 @@ begin
 end;
 go
 select * from Flight where PlaneId = '8d00b154-9f61-ed11-be83-484d7ef0b796'
-select top 1 f.Id, a.AirlineName, f.FlightNo, p.PlaneName, p.SeatQuantity, 
-fl.LocationName as FromLocation, tl.LocationName as ToLocation, f.DepartureTime, f.LandedTime, f.Cost, f.Remark
-                        from Airline a 
-                        inner join Plane p on a.Id = p.AirlineId
-                        inner join Flight f on p.Id = f.PlaneId
-                        inner join Location fl on f.FromLocationId = fl.Id
-                        inner join Location tl on f.ToLocationId = tl.Id
-                        order by f.Id desc

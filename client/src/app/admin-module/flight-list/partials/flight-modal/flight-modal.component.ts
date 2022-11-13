@@ -95,22 +95,22 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
       });
   }
 
-  // deleteItem(): void {
-  //   this.isLoading = true;
-  //   this.flightService
-  //     .deleteAdmin(this.modalForm.value.id)
-  //     .pipe(finalize(() => (this.isLoading = false)))
-  //     .subscribe((response) => {
-  //       if (response.code === 200) {
-  //         this.msg.success('Successfully');
-  //         this.handleCancel();
-  //         this.onDeleteItem.emit(response.data);
-  //       } else {
-  //         this.msg.warning('Failed');
-  //         this.handleCancel();
-  //       }
-  //     });
-  // }
+  deleteItem(): void {
+    this.isLoading = true;
+    this.flightService
+      .deleteFlight(this.modalForm.value.id)
+      .pipe(finalize(() => (this.isLoading = false)))
+      .subscribe((response) => {
+        if (response.code === 200) {
+          this.msg.success('Successfully');
+          this.handleCancel();
+          this.onDeleteItem.emit(response.data);
+        } else {
+          this.msg.warning('Failed');
+          this.handleCancel();
+        }
+      });
+  }
 
   submitForm(): void {
     this.validateForm();
