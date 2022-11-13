@@ -31,8 +31,7 @@
           {{ data.departureTime | date: "dd/MM/yyyy" }}</td>
         <td>{{ data.landedTime | date: "hh:mm:ss a" }} in
           {{ data.landedTime | date: "dd/MM/yyyy" }}</td>
-        <td>{{ data.cost }}</td>
-        <td>{{ data.remark }}</td>
+        <td>{{ data.cost | number}}</td>
       </tr>
     </ng-container>
 

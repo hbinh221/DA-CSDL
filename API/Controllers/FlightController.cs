@@ -85,7 +85,22 @@ namespace API.Controllers
                     "values (@FlightNo, @DepartureTime, @LandedTime, @Cost, @Remark, @FromLocationId, @ToLocationId, @PlaneId)";
                 if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) > 1)
                 {
-                    sqlCommand = "select top 1 f.Id, a.AirlineName, f.FlightNo, p.PlaneName, p.SeatQuantity, fl.LocationName as FromLocation, tl.LocationName as ToLocation, f.DepartureTime, f.LandedTime, f.Cost, f.Remark " +
+                    sqlCommand = "select top 1 " +
+                            "f.Id, " +
+                            "a.Id as AirlineId, " +
+                            "a.AirlineName, " +
+                            "f.FlightNo, " +
+                            "f.PlaneId, " +
+                            "p.PlaneName, " +
+                            "p.SeatQuantity, " +
+                            "f.FromLocationId, " +
+                            "f.ToLocationId, " +
+                            "fl.LocationName as FromLocation, " +
+                            "tl.LocationName as ToLocation, " +
+                            "f.DepartureTime, " +
+                            "f.LandedTime, " +
+                            "f.Cost, " +
+                            "f.Remark " +
                         " from Airline a " +
                         " inner join Plane p on a.Id = p.AirlineId" +
                         " inner join Flight f on p.Id = f.PlaneId" +

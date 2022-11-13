@@ -1,11 +1,11 @@
-<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()">
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" (nzOnCancel)="handleCancel()" [nzBodyStyle]="{'max-height': '365px', 'overflow': 'hidden scroll'}">
   <ng-container *nzModalContent>
     <form nz-form [formGroup]="modalForm">
 
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Flight No</nz-form-label>
         <nz-form-control nzErrorTip="Please input flight no!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input type="text" nz-input formControlName="flightNo" placeholder="Flight No" />
           </nz-input-group>
         </nz-form-control>
@@ -14,7 +14,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Airline Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input airline name!">
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a airline name" [(ngModel)]="airlineIdFilter"
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a airline name" 
             (ngModelChange)="getPlane()" formControlName="airlineId">
             <nz-option *ngFor="let data of airlineList" nzLabel="{{data.airlineName}}" nzValue="{{data.id}}">
             </nz-option>
@@ -25,7 +25,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Plane Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input plane name!">
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a plane name" [(ngModel)]="modalForm.value.planeId"
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a plane name" 
             formControlName="planeId">
             <nz-option *ngFor="let data of planeList" nzLabel="{{data.planeName}}" nzValue="{{data.id}}">
             </nz-option>
@@ -37,8 +37,11 @@
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">From Location</nz-form-label>
         <nz-form-control nzErrorTip="Please input from location name!">
           <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a from location name"
-            [(ngModel)]="modalForm.value.fromLocationId" formControlName="fromLocationId">
-            <nz-option *ngFor="let data of fromLocationList" nzLabel="{{data.locationName}}" nzValue="{{data.id}}">
+          (ngModelChange)="onChangeSourceLocation($event)"
+            formControlName="fromLocationId">
+            <nz-option *ngFor="let data of sourceLocation" 
+            nzLabel="{{data.locationName}}" nzValue="{{data.id}}"
+            >
             </nz-option>
           </nz-select>
         </nz-form-control>
@@ -48,38 +51,32 @@
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">To Location</nz-form-label>
         <nz-form-control nzErrorTip="Please input to location name!">
           <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a to location name"
-            [(ngModel)]="modalForm.value.toLocationId" formControlName="toLocationId">
-            <nz-option *ngFor="let data of toLocationList" nzLabel="{{data.locationName}}" nzValue="{{data.id}}">
+          (ngModelChange)="onChangeDesLocation($event)"
+             formControlName="toLocationId">
+            <nz-option *ngFor="let data of desLocation" nzLabel="{{data.locationName}}"
+             nzValue="{{data.id}}"
+             >
             </nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Departure Time</nz-form-label>
-        <nz-form-control nzErrorTip="Please input departure time!">
-          <nz-input-group nzPrefixIcon="environment">
-            <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" formControlName="departureTime"
-              placeholder="Departure Time" style="width: 100%"></nz-date-picker>
-          </nz-input-group>
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Flight Time</nz-form-label>
+        <nz-form-control nzErrorTip="Please input flight time!">
+          <nz-range-picker class="w-100" 
+          nzFormat="yyyy-MM-dd HH:mm:ss"
+          formControlName="flightTime" [nzRanges]="ranges" 
+          [nzShowTime]="{ nzHideDisabledOptions: true, nzDefaultOpenValue: timeDefaultValue }"></nz-range-picker>
         </nz-form-control>
       </nz-form-item>
 
-      <nz-form-item>
-        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Landed Time</nz-form-label>
-        <nz-form-control nzErrorTip="Please input landed time!">
-          <nz-input-group nzPrefixIcon="environment">
-            <nz-date-picker nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" formControlName="landedTime"
-              placeholder="Landed Time" style="width: 100%"></nz-date-picker>
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
 
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Cost</nz-form-label>
         <nz-form-control nzErrorTip="Please input cost!">
-          <nz-input-group nzPrefixIcon="environment">
-            <nz-input-number formControlName="cost" placeholder="Cost" [(ngModel)]="modalForm.value.cost" [nzMin]="1"
+          <nz-input-group >
+            <nz-input-number formControlName="cost" placeholder="Cost"  [nzMin]="1"
               [nzStep]="100000" style="width: 100%"></nz-input-number>
           </nz-input-group>
         </nz-form-control>
@@ -88,7 +85,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="false" style="width: 25%; text-align: left;">Remark</nz-form-label>
         <nz-form-control nzErrorTip="Please input remark!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input type="text" nz-input formControlName="remark" placeholder="Remark" />
           </nz-input-group>
         </nz-form-control>

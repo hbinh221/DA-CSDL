@@ -25,13 +25,13 @@ export class FlightListComponent extends ListBaseComponent {
       name: 'SeatQuantity',
     },
     {
-      name: 'FromLocation',
+      name: 'From',
     },
     {
-      name: 'ToLocation',
+      name: 'To',
     },
     {
-      name: 'DepartureTime',
+      name: 'StartTime',
     },
     {
       name: 'LandedTime',
@@ -39,9 +39,7 @@ export class FlightListComponent extends ListBaseComponent {
     {
       name: 'Cost',
     },
-    {
-      name: 'Remark',
-    },
+   
   ];
 
   scrollY!: string;

@@ -9,7 +9,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { finalize } from 'rxjs/operators';
 import { DatePipe } from '@angular/common';
-
+import { endOfMonth , setHours} from 'date-fns'
 @Component({
   selector: 'app-flight-modal',
   templateUrl: './flight-modal.component.html',
@@ -18,10 +18,12 @@ import { DatePipe } from '@angular/common';
 export class FlightModalComponent extends ModelBaseComponent implements OnInit {
   airlineList: any = [];
   planeList: any = [];
-  toLocationList: any = [];
-  fromLocationList: any = [];
+  sourceLocation: any = [];
+  desLocation: any = [];
+  listLocation: any = [];
   airlineIdFilter: string = '00000000-0000-0000-0000-000000000000';
-
+  ranges = { Today: [new Date(), new Date()], 'This Month': [new Date(), endOfMonth(new Date())] };
+  timeDefaultValue = setHours(new Date(), 0);
   constructor(
     protected http: HttpClient,
     protected fb: FormBuilder,
@@ -38,7 +40,7 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.getAirline();
-    //this.getPlane();
+    this.getPlane();
     this.getLocation();
   }
 
@@ -50,12 +52,27 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
       flightNo: [null, Validators.required],
       fromLocationId: [null, Validators.required],
       toLocationId: [null, Validators.required],
-      departureTime: [null, Validators.required],
-      landedTime: [null, Validators.required],
+      flightTime: [null, Validators.required],
       cost: [null, Validators.required],
       remark: [null, Validators.required],
     });
   }
+
+  openModal(data:any,mode: string, isEdit: boolean){
+    this.isVisible = true;
+    this.isEdit = isEdit;
+    this.mode = mode;
+    this.data = data;
+    if(mode === 'create'){
+      this.modalForm.reset();
+    }
+    else{
+      this.modalForm.patchValue(data);
+      this.modalForm.get('flightTime')?.setValue([data.departureTime, data.landedTime]);
+    }
+    this.checkEditForm();
+  }
+
 
   getAirline(): void {
     this.isLoading = true;
@@ -77,8 +94,9 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         if (res.code === 200) {
-          this.toLocationList = res.data;
-          this.fromLocationList = res.data;
+          this.listLocation = [...res.data];
+          this.sourceLocation = [...this.listLocation];
+          this.desLocation = [...this.listLocation];
         }
       });
   }
@@ -118,8 +136,8 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
     if (this.mode === 'create') {
       let payload = {
         planeId: this.modalForm.value.planeId,
-        departureTime: this.modalForm.value.departureTime,
-        landedTime: this.modalForm.value.landedTime
+        departureTime: this.modalForm.value.flightTime[0],
+        landedTime: this.modalForm.value.flightTime[1]
       };
 
       this.flightService
@@ -135,6 +153,7 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
                   this.modalForm.reset();
                   this.msg.success('Successfully');
                   this.checkEditForm();
+                  this.handleCancel();
                   this.onCreateItem.emit(res.data);
                 }
               });
@@ -142,6 +161,24 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
             this.msg.warning('Trùng giờ bay!');
           }
         });
+    }
+  }
+
+  onChangeSourceLocation(ev: any){
+    this.desLocation = [...this.listLocation];
+      const index = this.listLocation.findIndex((item:any) => item.id === ev);
+      if(index !== -1){
+        this.desLocation.splice(index, 1);
+        this.desLocation = [...this.desLocation];
+      }
+  }
+
+  onChangeDesLocation(ev:any){
+    this.sourceLocation = [...this.listLocation];
+    const index = this.listLocation.findIndex((item:any) => item.id === ev);
+    if(index !== -1){
+      this.sourceLocation.splice(index, 1);
+      this.sourceLocation = [...this.sourceLocation];
     }
   }
 }
