@@ -51,6 +51,6 @@ export class ListBaseComponent implements OnInit {
       1,
       data,
     );
-    this.listOfData = [...data];
+    this.listOfData = [...this.listOfData];
   }
 }

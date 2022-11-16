@@ -5,7 +5,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 30%; text-align: left;">Promotion Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input promotion name!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input type="text" nz-input formControlName="promotionName" placeholder="Promotion Name" />
           </nz-input-group>
         </nz-form-control>
@@ -14,7 +14,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 30%; text-align: left;">Start Date</nz-form-label>
         <nz-form-control nzErrorTip="Please input start date!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <nz-date-picker formControlName="startDate" placeholder="Start Date" [(ngModel)]="modalForm.value.startDate"
               style="width: 100%"></nz-date-picker>
           </nz-input-group>
@@ -24,7 +24,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 30%; text-align: left;">End Date</nz-form-label>
         <nz-form-control nzErrorTip="Please input end date!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <nz-date-picker formControlName="endDate" placeholder="End Date" [(ngModel)]="modalForm.value.endDate"
               style="width: 100%"></nz-date-picker>
           </nz-input-group>
@@ -34,7 +34,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 30%; text-align: left;">Discount</nz-form-label>
         <nz-form-control nzErrorTip="Please input discount!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <nz-input-number formControlName="discount" placeholder="Discount" [(ngModel)]="modalForm.value.discount"
               [nzMin]="250" [nzStep]="1" style="width: 100%"></nz-input-number>
           </nz-input-group>

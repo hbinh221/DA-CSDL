@@ -5,7 +5,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">First Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input first name!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input type="text" nz-input formControlName="firstName" placeholder="First Name" />
           </nz-input-group>
         </nz-form-control>
@@ -14,7 +14,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Last Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input last name!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input type="text" nz-input formControlName="lastName" placeholder="Last Name" />
           </nz-input-group>
         </nz-form-control>
@@ -23,7 +23,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Id Card</nz-form-label>
         <nz-form-control nzErrorTip="Please input id card!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input type="text" nz-input formControlName="idCard" placeholder="Id Card" maxlength="12"/>
           </nz-input-group>
         </nz-form-control>
@@ -32,7 +32,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Birth Day</nz-form-label>
         <nz-form-control nzErrorTip="Please input birth day!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <nz-date-picker formControlName="birthDay" placeholder="Birth Day" [(ngModel)]="modalForm.value.birthDay"
               style="width: 100%"></nz-date-picker>
           </nz-input-group>
@@ -53,7 +53,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Phone</nz-form-label>
         <nz-form-control nzErrorTip="Please input phone!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input type="text" nz-input formControlName="phone" placeholder="Phone"
               pattern="([+]?84|0[3|5|7|8|9])+([0-9]{8})" />
           </nz-input-group>
@@ -63,7 +63,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Email</nz-form-label>
         <nz-form-control nzErrorTip="Please input email!">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input type="text" nz-input formControlName="email" placeholder="Email"
               pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" />
           </nz-input-group>
@@ -73,7 +73,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Password</nz-form-label>
         <nz-form-control nzErrorTip="Please input password">
-          <nz-input-group nzPrefixIcon="environment">
+          <nz-input-group >
             <input type="password" nz-input formControlName="password" placeholder="Password" />
           </nz-input-group>
         </nz-form-control>
@@ -91,13 +91,13 @@
         </div>
       </div>
       <div nz-col nzSpan="20">
-        <!-- <div class="float-right">
+        <div class="float-right">
             <button
             *ngIf="!isEdit && mode ==='detail'"
              nz-button nzType="primary"
             (click)="changeEdit(true)">Edit</button>
           </div>
-       -->
+      
         <div class="float-right ml-2">
           <button *ngIf="mode === 'detail'" nz-button (click)="deleteItem()" [nzLoading]="isLoading" nzType="primary"
             nzDanger>

@@ -31,12 +31,39 @@ namespace API.Controllers
             Response<IEnumerable<AdminDto>> response = new Response<IEnumerable<AdminDto>>();
             dp_params.Add("@Id", id, DbType.Guid);
             var data = await _db.GetAll<AdminDto>("GetAdmin", dp_params);
-            if(data.Count != 0)
+            if (data.Count != 0)
             {
                 response.Code = 200;
                 response.Data = data;
             }
 
+            return response;
+        }
+        ///
+        [HttpPut("update/{id}")]
+
+        public async Task<Response<PassengerDto>> Update(Guid id,[FromBody] PassengerDto input)
+        {
+            var dp_params = new DynamicParameters();
+            Response<PassengerDto> response = new Response<PassengerDto>();
+            dp_params.Add("@Id", id, DbType.Guid);
+            dp_params.Add("@FirstName", input.FirstName, DbType.String);
+            dp_params.Add("@LastName", input.LastName, DbType.String);
+            dp_params.Add("@IdCard", input.IdCard, DbType.String);
+            dp_params.Add("@BirthDay", input.BirthDay, DbType.DateTime2);
+            dp_params.Add("@Gender", input.Gender, DbType.Boolean);
+            dp_params.Add("@Phone", input.Phone, DbType.String);
+            dp_params.Add("@Email", input.Email, DbType.String);
+            dp_params.Add("@Password", input.Password, DbType.String);
+            using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            {
+                PassengerDto passenger = await _db.Get<PassengerDto>("UpdatePassenger", dp_params);
+                if (passenger != null)
+                {
+                    response.Code = 200;
+                    response.Data = passenger;
+                }
+            }
             return response;
         }
 
@@ -47,13 +74,13 @@ namespace API.Controllers
             Response<LoginDto> response = new Response<LoginDto>();
             dp_params.Add("@Email", input.Email, DbType.String);
             LoginDto user = await _db.Get<LoginDto>("Signin", dp_params);
-            if(user == null)
+            if (user == null)
             {
                 response.Code = 400;
                 response.Data = null;
                 return response;
             }
-            else if(user.Password != input.Password)
+            else if (user.Password != input.Password)
             {
                 response.Code = 400;
                 response.Data = null;
@@ -63,7 +90,6 @@ namespace API.Controllers
             response.Data = user;
             return response;
         }
-
         [HttpPost("register")]
         public async Task<Response<AdminDto>> Register(RegisterDto input)
         {
@@ -82,11 +108,11 @@ namespace API.Controllers
             {
                 string sqlCommand = "insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin)" +
                     "values (@FirstName, @LastName,@IdCard,@BirthDay,@Gender,@Phone,@Email,@Password,@IsAdmin)";
-                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
+                if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                 {
                     sqlCommand = "select top 1 * from Passenger where IsAdmin = 1 order by Id desc";
                     var newData = await db.QueryFirstAsync<AdminDto>(sqlCommand, null, null, null, CommandType.Text);
-                    if(newData != null)
+                    if (newData != null)
                     {
                         response.Code = 200;
                         response.Data = newData;
@@ -101,7 +127,7 @@ namespace API.Controllers
         {
             var dp_params = new DynamicParameters();
             Response<string> response = new Response<string>();
-            foreach(PassengerDto passenger in input)
+            foreach (PassengerDto passenger in input)
             {
                 dp_params.Add("@FirstName", passenger.FirstName, DbType.String);
                 dp_params.Add("@LastName", passenger.LastName, DbType.String);
@@ -116,7 +142,7 @@ namespace API.Controllers
                 {
                     string sqlCommand = "insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin)" +
                         "values (@FirstName, @LastName,@IdCard,@BirthDay,@Gender,@Phone,@Email,@Password,@IsAdmin)";
-                    if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == input.Count)
+                    if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == input.Count)
                     {
                         response.Code = 200;
                         response.Data = "Success";
