@@ -151,13 +151,29 @@ create or alter procedure GetFlight
 with recompile
 as
 begin
-	select f.Id, a.AirlineName, f.FlightNo, p.PlaneName, p.SeatQuantity, fl.LocationName as FromLocation, tl.LocationName as ToLocation, f.DepartureTime, f.LandedTime, f.Cost, f.Remark 
+	select 
+		f.Id, 
+		a.Id as AirlineId, 
+		a.AirlineName, 
+		f.FlightNo, 
+		p.Id as PlaneId, 
+		p.PlaneName, 
+		p.SeatQuantity, 
+		fl.Id as FromLocationId, 
+		fl.LocationName as FromLocation, 
+		tl.Id as ToLocationId, 
+		tl.LocationName as ToLocation, 
+		f.DepartureTime, 
+		f.LandedTime, 
+		p.SeatQuantity,
+		f.Cost, 
+		Remark 
 	from (select * from Airline where isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @AirlineId) a
 	inner join Plane p on a.Id = p.AirlineId
 	inner join Flight f on p.Id = f.PlaneId
 	inner join Location fl on f.FromLocationId = fl.Id
 	inner join Location tl on f.ToLocationId = tl.Id
-	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or f.Id = @Id order by Id desc
+	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or f.Id = @Id
 end;
 go
 create or alter procedure GetRemaningTicket

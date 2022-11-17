@@ -57,6 +57,14 @@ begin
 	insert into Ticket(Code, Price, Remark, Gate, PromotionId, FlightId, ReservationId, PassengerId, PaymentId, PaymentDate)
 	values (@Code, @Price, N'', @Gate, null, (select FlightId from inserted), (select Id from inserted), null, null, null);
 end;
-
-
-
+go
+create or alter trigger Trg_Delete_Reservation 
+	on Flight 
+	instead of delete 
+as
+begin
+	delete from Ticket where FlightId = (select Id from deleted);
+	delete from Reservation where FlightId = (select Id from deleted);
+	delete from Flight where Id = (select Id from deleted);
+end;
+go

@@ -59,3 +59,4 @@ select * from Plane
 select * from Location 
 select top 1 p.Id, p.PlaneName, p.SeatQuantity, a.AirlineName, p.AirlineId 
 from Airline a inner join Plane p on a.Id = p.AirlineId where p.Id = @Id order by p.Id desc
+select * from Ticket

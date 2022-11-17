@@ -59,6 +59,7 @@ create table Plane(
 	Id uniqueidentifier primary key default newsequentialid(),
 	PlaneName nvarchar(20) not null,
 	SeatQuantity int not null,
+	Code nvarchar(8) not null,
 	AirlineId uniqueidentifier not null,
 	constraint Plane_AirlineId_Foreign foreign key (AirlineId) references Airline(Id),
 	constraint Chk_SeatQuantity check (SeatQuantity>=250)
