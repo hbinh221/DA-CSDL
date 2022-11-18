@@ -12,6 +12,7 @@ import { CustomerViewComponent } from './customer-view/customer-view.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { FlightSelectionComponent } from './flight-selection/flight-selection.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
     PersonalFlightComponent,
     RegisterComponent,
     CustomerViewComponent,
+    FlightSelectionComponent,
   ],
   imports: [
     CommonModule,

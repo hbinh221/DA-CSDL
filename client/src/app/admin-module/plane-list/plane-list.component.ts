@@ -13,6 +13,9 @@ import { finalize } from 'rxjs/operators';
 export class PlaneListComponent extends ListBaseComponent {
   listOfColumns: any[] = [
     {
+      name: 'Code',
+    },
+    {
       name: 'Airline Name',
     },
     {

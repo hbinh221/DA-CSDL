@@ -25,19 +25,7 @@ const routes: Routes = [
   },
   {
     path: 'customer',
-    component: CustomerLayoutComponent,
-    children: [
-      {
-        path: '',
-        redirectTo: 'customer',
-        pathMatch: 'full'
-},
-
-      {
-        path: '',
-        loadChildren: () => import('./customer-module/customer-module.module').then((m) => m.CustomerModuleModule),
-    },
-  ]
+    loadChildren: () => import('./customer-module/customer-module.module').then((m) => m.CustomerModuleModule),
   }
 ]
 @NgModule({
