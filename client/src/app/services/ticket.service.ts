@@ -8,13 +8,19 @@ import { environment } from 'src/environments/environment';
 })
 export class TicketService {
   baseUrl: string = 'ticket';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getTicket(id?: string): Observable<any> {
     let idString = '';
     if (id) idString = '?id=' + id;
     return this.http.get(
       environment.baseUrl + this.baseUrl + '/get/ticket' + idString
+    );
+  }
+  updateAdmin(id: string, payload: any): Observable<any> {
+    return this.http.put(
+      environment.baseUrl + this.baseUrl + '/update/' + id,
+      payload
     );
   }
   createTicket(payload: any): Observable<any> {

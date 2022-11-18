@@ -70,6 +70,33 @@ namespace API.Controllers
             return response;
         }
 
+        [HttpPut("update/{id}")]
+        public async Task<Response<RankDto>> UpdateRank(Guid id, RankInput input)
+        {
+            var dp_params = new DynamicParameters();
+            Response<RankDto> response = new Response<RankDto>();
+            dp_params.Add("@Id", id, DbType.Guid);
+            dp_params.Add("@RankName", input.RankName.Trim(), DbType.String);
+            dp_params.Add("@Cost", input.Cost, DbType.Decimal);
+            dp_params.Add("@BaggageWeight", input.BaggageWeight, DbType.Decimal);
+            try
+            {
+                var newData = await _db.Get<RankDto>("UpdateRank", dp_params);
+                if (newData != null)
+                {
+                    response.Code = 200;
+                    response.Data = newData;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = 500;
+                response.Data = null;
+                return response;
+            }
+            return response;
+        }
+
         [HttpDelete("delete/rank")]
         public async Task<Response<RankDto>> DeleteRank(Guid id)
         {

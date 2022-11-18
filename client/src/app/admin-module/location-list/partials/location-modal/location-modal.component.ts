@@ -13,8 +13,7 @@ import { LocationService } from 'src/app/services/location.service';
 })
 export class LocationModalComponent
   extends ModelBaseComponent
-  implements OnInit
-{
+  implements OnInit {
   constructor(
     protected http: HttpClient,
     protected fb: FormBuilder,
@@ -71,6 +70,19 @@ export class LocationModalComponent
             this.checkEditForm();
           }
         });
+    } else {
+      this.locationService.updateLocation(this.modalForm.value.id, this.modalForm.value.locationName)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe(res => {
+        if(res.code=== 200){
+          this.msg.success("Success");
+          this.onUpdateItem.emit(res.data);
+          this.modalForm.disable();
+          this.isEdit = false;
+        }else{
+          this.msg.error("Failed");
+        }
+      })
     }
   }
 }

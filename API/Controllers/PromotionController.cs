@@ -61,6 +61,34 @@ namespace API.Controllers
             return response;
         }
 
+        [HttpPut("update/{id}")]
+        public async Task<Response<PromotionDto>> UpdatePromotion(Guid id, PromotionInput input)
+        {
+            var dp_params = new DynamicParameters();
+            Response<PromotionDto> response = new Response<PromotionDto>();
+            dp_params.Add("@Id", id, DbType.Guid);
+            dp_params.Add("@PromotionName", input.PromotionName.Trim(), DbType.String);
+            dp_params.Add("@StartDate", input.StartDate, DbType.DateTime2);
+            dp_params.Add("@EndDate", input.EndDate, DbType.DateTime2);
+            dp_params.Add("@Discount", input.Discount, DbType.Decimal);
+            try
+            {
+                var newData = await _db.Get<PromotionDto>("UpdatePromotion", dp_params);
+                if (newData != null)
+                {
+                    response.Code = 200;
+                    response.Data = newData;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = 500;
+                response.Data = null;
+                return response;
+            }
+            return response;
+        }
+
         [HttpDelete("delete/promotion")]
         public async Task<Response<PromotionDto>> DeletePromotion(Guid id)
         {

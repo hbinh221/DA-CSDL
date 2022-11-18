@@ -20,6 +20,12 @@ export class RankService {
   createRank(payload: any): Observable<any> {
     return this.http.post(environment.baseUrl + this.baseUrl + '/create/rank', payload);
   }
+  updateAdmin(id: string, payload: any): Observable<any> {
+    return this.http.put(
+      environment.baseUrl + this.baseUrl + '/update/' + id,
+      payload
+    );
+  }
   deleteRank(id: string): Observable<any> {
     return this.http.delete(
       environment.baseUrl + this.baseUrl + '/delete/rank' + '?id=' + id

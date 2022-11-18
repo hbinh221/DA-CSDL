@@ -71,6 +71,33 @@ namespace API.Controllers
             return response;
         }
 
+        [HttpPut("update/{id}")]
+        public async Task<Response<PlaneDto>> UpdatePlane(Guid id, PlaneInput input)
+        {
+            var dp_params = new DynamicParameters();
+            Response<PlaneDto> response = new Response<PlaneDto>();
+            dp_params.Add("@Id", id, DbType.Guid);
+            dp_params.Add("@PlaneName", input.PlaneName.Trim(), DbType.String);
+            dp_params.Add("@SeatQuantity", input.SeatQuantity, DbType.Int64);
+            dp_params.Add("@AirlineId", input.AirlineId, DbType.Guid);
+            try
+            {
+                var newData = await _db.Get<PlaneDto>("UpdatePlane", dp_params);
+                if (newData != null)
+                {
+                    response.Code = 200;
+                    response.Data = newData;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = 500;
+                response.Data = null;
+                return response;
+            }
+            return response;
+        }
+
         [HttpDelete("delete/plane")]
         public async Task<Response<PlaneDto>> DeletePlane(Guid id)
         {

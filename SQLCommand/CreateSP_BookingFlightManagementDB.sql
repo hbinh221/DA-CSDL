@@ -261,8 +261,6 @@ begin
 	select @IsCreate as IsCreate;
 end
 go
-exec CheckCreateFlight '88ea7e3d-925e-ed11-be82-484d7ef0b796', '2022-11-13T02:30:49.766Z', '2022-11-13T03:30:52.671Z'
-go
 create or alter procedure GetAdmin
 @Id uniqueidentifier
 with recompile
@@ -273,4 +271,8 @@ begin
 	and IsAdmin = 1;
 end;
 go
-select * from Flight where PlaneId = '8d00b154-9f61-ed11-be83-484d7ef0b796'
+create or alter procedure GetTicket
+as
+begin
+	select * from Ticket
+end

@@ -23,6 +23,12 @@ export class PaymentService {
       null
     );
   }
+  updatePayment(id: string, payload: any): Observable<any> {
+    return this.http.put(
+      environment.baseUrl + this.baseUrl + '/update/' + id + '?name=' + payload,
+      null
+    );
+  }
   deletePayment(id: string): Observable<any> {
     return this.http.delete(
       environment.baseUrl + this.baseUrl + '/delete/payment' + '?id=' + id

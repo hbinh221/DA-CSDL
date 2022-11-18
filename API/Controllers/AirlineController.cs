@@ -73,6 +73,35 @@ namespace API.Controllers
             return response;
         }
 
+        [HttpPut("update/{id}")]
+        public async Task<Response<AirlineDto>> UpdatePlane(Guid id, string name)
+        {
+            var dp_params = new DynamicParameters();
+            Response<AirlineDto> response = new Response<AirlineDto>();
+            dp_params.Add("@Id", id, DbType.Guid);
+            dp_params.Add("@AirlineName", name.Trim(), DbType.String);
+            using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            {
+                try
+                {
+                    var newData = await _db.Get<AirlineDto>("UpdateAirline", dp_params);
+                    if (newData != null)
+                    {
+                        response.Code = 200;
+                        response.Data = newData;
+                    }
+                }
+                 catch (Exception ex)
+                {
+                    response.Code = 500;
+                    response.Data = null;
+                    return response;
+                }
+                
+            };
+            return response;
+        }
+
         [HttpDelete("delete/airline")]
         public async Task<Response<AirlineDto>> DeleteAirline(Guid id)
         {

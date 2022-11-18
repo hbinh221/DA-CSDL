@@ -76,6 +76,31 @@ namespace API.Controllers
             return response;
         }
 
+        [HttpPut("update/{id}")]
+        public async Task<Response<LocationDto>> UpdateLocation(Guid id, string name)
+        {
+            var dp_params = new DynamicParameters();
+            Response<LocationDto> response = new Response<LocationDto>();
+            dp_params.Add("@Id", id, DbType.Guid);
+            dp_params.Add("@LocationName", name.Trim(), DbType.String);
+            try
+            {
+                var newData = await _db.Get<LocationDto>("UpdateLocation", dp_params);
+                if (newData != null)
+                {
+                   response.Code = 200;
+                    response.Data = newData;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = 500;
+                response.Data = null;
+                return response;
+            }
+            return response;
+        }
+
         [HttpDelete("delete/location")]
         public async Task<Response<LocationDto>> DeleteLocation(Guid id)
         {

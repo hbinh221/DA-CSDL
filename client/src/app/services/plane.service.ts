@@ -25,6 +25,12 @@ export class PlaneService {
       payload
     );
   }
+  updatePlane(id: string, payload: any): Observable<any> {
+    return this.http.put(
+      environment.baseUrl + this.baseUrl + '/update/' + id,
+      payload
+    );
+  }
   deletePlane(id: string): Observable<any> {
     return this.http.delete(
       environment.baseUrl + this.baseUrl + '/delete/plane' + '?id=' + id
