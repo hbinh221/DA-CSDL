@@ -1,11 +1,11 @@
 <form nz-form [formGroup]="form" nzLayout="vertical">
-  <nz-radio-group formControlName="type" nzButtonStyle="solid" class="mb-3">
+  <nz-radio-group formControlName="type" nzButtonStyle="solid" class="mb-2">
     <label nz-radio-button nzValue="one-way">One Way</label>
     <label nz-radio-button nzValue="round-trip">Round-Trip</label>
   </nz-radio-group>
   <div nz-row nzGutter="16">
     <div nz-col nzSpan="8">
-      <nz-form-item>
+      <nz-form-item class="mb-2">
         <nz-form-control>
           <nz-form-label [nzRequired]="true">From</nz-form-label>
           <nz-select
@@ -26,7 +26,7 @@
       </nz-form-item>
     </div>
     <div nz-col nzSpan="8">
-      <nz-form-item>
+      <nz-form-item class="mb-2">
         <nz-form-control>
           <nz-form-label [nzRequired]="true">To</nz-form-label>
           <nz-select
@@ -47,7 +47,7 @@
       </nz-form-item>
     </div>
     <div nz-col nzSpan="8">
-      <nz-form-item>
+      <nz-form-item class="mb-2">
         <nz-form-control>
           <nz-form-label [nzRequired]="true">Date</nz-form-label>
           <nz-range-picker
@@ -61,7 +61,7 @@
 
   <div nz-row nzGutter="16">
     <div nz-col nzSpan="8">
-      <nz-form-item>
+      <nz-form-item class="mb-2">
         <nz-form-control>
           <nz-form-label [nzRequired]="true">Passengers</nz-form-label>
           <nz-input-number
@@ -75,20 +75,41 @@
       </nz-form-item>
     </div>
     <div nz-col nzSpan="8">
-      <nz-form-item>
+      <nz-form-item class="mb-2">
         <nz-form-control>
           <nz-form-label>Promotion</nz-form-label>
           <input nz-input placeholder="Promotion" formControlName="promotion" />
         </nz-form-control>
       </nz-form-item>
     </div>
+    <div nz-col nzSpan="8">
+      <nz-form-item class="mb-2">
+        <nz-form-control>
+          <nz-form-label [nzRequired]="true">Airline</nz-form-label>
+          <nz-select
+            class="w-100"
+            nzShowSearch
+            nzAllowClear
+            nzPlaceHolder="Select a airline"
+            formControlName="airlineId"
+          >
+            <nz-option
+              *ngFor="let airline of listAirline"
+              [nzLabel]="airline.airlineName"
+              [nzValue]="airline.id"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
   </div>
 
   <button
-    [disabled]="!form.controls.fromLocationId.valid"
+    [disabled]="!form.valid"
     nz-button
     nzType="primary"
     class="float-right d-flex align-center"
+    (click)="goToSelectFlight()"
   >
     Go forward
     <span nz-icon nzType="right"></span>

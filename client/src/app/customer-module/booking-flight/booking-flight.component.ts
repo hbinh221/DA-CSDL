@@ -1,64 +1,102 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { endOfMonth } from 'date-fns'
+import { Router } from '@angular/router';
+import { endOfMonth } from 'date-fns';
+import { forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AirlineService } from 'src/app/services/airline.service';
 import { LocationService } from 'src/app/services/location.service';
 @Component({
   selector: 'app-booking-flight',
   templateUrl: './booking-flight.component.html',
-  styleUrls: ['./booking-flight.component.css']
+  styleUrls: ['./booking-flight.component.css'],
 })
 export class BookingFlightComponent implements OnInit {
   listLocation: any[] = [];
   sourceLocation: any[] = [];
   desLocation: any[] = [];
   form!: FormGroup;
+  listAirline: any[] = [];
 
-  ranges = { Today: [new Date(), new Date()], 'This Month': [new Date(), endOfMonth(new Date())] };
-  constructor(private locationService: LocationService,
-    private fb: FormBuilder) { }
+  ranges = {
+    Today: [new Date(), new Date()],
+    'This Month': [new Date(), endOfMonth(new Date())],
+  };
+  constructor(
+    private locationService: LocationService,
+    private airlineService: AirlineService,
+    private fb: FormBuilder,
+    private router: Router,
+    private datepipe: DatePipe,
+  ) {}
 
   ngOnInit(): void {
-    this.fetchLocation();
     this.initForm();
+    forkJoin([
+      this.locationService.getLocation(),
+      this.airlineService.getAirline(),
+    ])
+    .subscribe((result) => {
+      this.fetchLocation(result[0]);
+      this.fetchAirline(result[1]);
+    });
   }
 
-  initForm(){
+  initForm() {
     this.form = this.fb.group({
       type: [null],
       fromLocationId: [null, Validators.required],
       toLocationId: [null, Validators.required],
       flightTime: [null, Validators.required],
       passenger: [1],
-      promotion: [null]
-
-    })
+      promotion: [null],
+      airlineId: [null, Validators.required],
+    });
     this.form.get('type')?.setValue('one-way');
   }
 
-  fetchLocation(){
-    this.locationService.getLocation().subscribe(res => {
-        this.listLocation = res;
+  fetchLocation(res:any) {
+      if (res.code === 200) {
+        this.listLocation = res.data;
         this.sourceLocation = [...this.listLocation];
         this.desLocation = [...this.listLocation];
-    })
-  }
-
-  onChangeSourceLocation(ev: any){
-    this.desLocation = [...this.listLocation];
-      const index = this.listLocation.findIndex(item => item.id === ev);
-      if(index !== -1){
-        this.desLocation.splice(index, 1);
-        this.desLocation = [...this.desLocation];
       }
   }
 
-  onChangeDesLocation(ev:any){
+  fetchAirline(res:any){
+    if(res.code===200){
+      this.listAirline = [...res.data];
+    }
+  }
+
+  onChangeSourceLocation(ev: any) {
+    this.desLocation = [...this.listLocation];
+    const index = this.listLocation.findIndex((item) => item.id === ev);
+    if (index !== -1) {
+      this.desLocation.splice(index, 1);
+      this.desLocation = [...this.desLocation];
+    }
+  }
+
+  onChangeDesLocation(ev: any) {
     this.sourceLocation = [...this.listLocation];
-    const index = this.listLocation.findIndex(item => item.id === ev);
-    if(index !== -1){
+    const index = this.listLocation.findIndex((item) => item.id === ev);
+    if (index !== -1) {
       this.sourceLocation.splice(index, 1);
       this.sourceLocation = [...this.sourceLocation];
     }
   }
-
+  goToSelectFlight() {
+    this.router.navigate([
+      'customer/flight-selection',
+      this.form.value.type,
+      this.form.value.fromLocationId,
+      this.form.value.toLocationId,
+      this.datepipe.transform(this.form.value.flightTime[0], 'YYYY-MM-dd%20HH%3Amm%3Ass'),
+      this.datepipe.transform(this.form.value.flightTime[1], 'YYYY-MM-dd%20HH%3Amm%3Ass'),
+      this.form.value.passenger,
+      this.form.value.airlineId
+    ]);
+  }
 }

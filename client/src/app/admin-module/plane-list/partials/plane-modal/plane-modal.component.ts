@@ -33,6 +33,7 @@ export class PlaneModalComponent extends ModelBaseComponent implements OnInit {
   initForm() {
     this.modalForm = this.fb.group({
       id: [null],
+      code: [null, Validators.required],
       airlineId: [null, Validators.required],
       planeName: [null, Validators.required],
       seatQuantity: [null, Validators.required],

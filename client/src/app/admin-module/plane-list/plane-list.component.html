@@ -31,6 +31,7 @@
   <tbody>
     <ng-container *ngFor="let data of filterTable.data">
       <tr (click)="goToDetail(data)">
+        <td>{{ data.code }}</td>
         <td>{{ data.airlineName }}</td>
         <td>{{ data.planeName }}</td>
         <td>{{ data.seatQuantity }}</td>
