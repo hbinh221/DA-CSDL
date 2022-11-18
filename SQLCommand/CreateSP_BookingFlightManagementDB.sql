@@ -216,5 +216,5 @@ go
 create or alter procedure GetTicket
 as
 begin
-	select * from Ticket
+	select * from Service
 end

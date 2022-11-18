@@ -45,7 +45,7 @@ namespace API.Controllers
         public async Task<Response<ServiceDto>> CreateService(ServiceInput input)
         {
             var dp_params = new DynamicParameters();
-            Response<ServiceDto> response = new Response<ServiceDto>();
+            Response<ServiceDto> response = new();
             dp_params.Add("@ServiceName", input.ServiceName, DbType.String);
             dp_params.Add("@Cost", input.Cost, DbType.Decimal);
             dp_params.Add("@AirlineId", input.AirlineId, DbType.Guid);
@@ -68,6 +68,41 @@ namespace API.Controllers
                         }
                     }
                 } catch(Exception ex)
+                {
+                    response.Code = 500;
+                    response.Data = null;
+                    return response;
+                }
+            };
+            return response;
+        }
+
+        [HttpPost("add-service-for-passenger")]
+        public async Task<Response<IEnumerable<AddServiceForPassengerDto>>> AddServiceForPassenger(AddServiceForPassengerInput input)
+        {
+
+            Response<IEnumerable<AddServiceForPassengerDto>> response = new();
+            using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            {
+                var sqlCommand = "insert into ServiceDetail(ServiceId, TicketId) values (@ServiceId, @TicketId)";
+                try
+                {
+                    foreach(var serviceId in input.ServiceIdList)
+                    {
+                        var dp_params = new DynamicParameters();
+                        dp_params.Add("TicketId", input.TicketId, DbType.Guid);
+                        dp_params.Add("@ServiceId", serviceId, DbType.Guid);
+                        await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
+                    }
+                    sqlCommand = "select s.Id, s.ServiceName, s.Cost, sd.TicketId from Service s inner join ServiceDetail sd on s.Id = sd.ServiceId";
+                    var data = await db.QueryAsync<AddServiceForPassengerDto>(sqlCommand, null, null, null, CommandType.Text);
+                    if(data.AsList().Count == input.ServiceIdList.Count)
+                    {
+                        response.Code = 200;
+                        response.Data = data;
+                    }
+                }
+                catch(Exception ex)
                 {
                     response.Code = 500;
                     response.Data = null;
