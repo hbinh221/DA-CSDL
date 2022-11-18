@@ -8,5 +8,6 @@ namespace API.DTO
         public string ServiceName { get; set; }
         public float Cost { get; set; }
         public Guid AirlineId { get; set; }
+        public string AirlineName { get; set; }
     }
 }

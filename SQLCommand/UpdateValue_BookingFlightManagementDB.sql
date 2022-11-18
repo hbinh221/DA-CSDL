@@ -47,7 +47,7 @@ create or alter procedure UpdateService
 as
 begin
 	update Service set ServiceName = @ServiceName, Cost = @Cost, AirlineId = @AirlineId where Id = @Id;
-	select * from Service where Id = @Id;
+	select s.Id, s.ServiceName, s.Cost, s.AirlineId, a.AirlineName from Airline a inner join Service s on a.Id = s.AirlineId where s.Id = @Id;
 end
 go
 create or alter procedure UpdatePlane

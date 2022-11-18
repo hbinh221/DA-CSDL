@@ -15,11 +15,11 @@ export class AdminModalComponent extends ModelBaseComponent implements OnInit {
 
   gender: any = [
     {
-      value: 1,
+      value: true,
       label: 'Nam'
     },
     {
-      value: 0,
+      value: false,
       label: 'Nữ'
     }
   ]
@@ -74,7 +74,7 @@ export class AdminModalComponent extends ModelBaseComponent implements OnInit {
     if (this.mode === 'create') {
       this.passengerService.checkEmail(this.modalForm.value.email).pipe(finalize(() => (this.isLoading = false))).subscribe(response => {
         if(Boolean(response) == true) {
-          this.modalForm.value.gender == "1" ? this.modalForm.value.gender = true : this.modalForm.value.gender = false;
+          this.modalForm.value.gender == "true" ? this.modalForm.value.gender = true : this.modalForm.value.gender = false;
           this.passengerService
             .createAdmin(this.modalForm.value)
             .pipe(finalize(() => (this.isLoading = false)))
@@ -92,6 +92,7 @@ export class AdminModalComponent extends ModelBaseComponent implements OnInit {
       })
     }
     else{
+      this.modalForm.value.gender == "true" ? this.modalForm.value.gender = true : this.modalForm.value.gender = false;
       this.passengerService.updateAdmin(this.modalForm.value.id, this.modalForm.value)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {

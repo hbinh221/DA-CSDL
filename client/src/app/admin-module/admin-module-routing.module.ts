@@ -1,3 +1,4 @@
+import { ServiceListComponent } from './service-list/service-list.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AirlineListComponent } from './airline-list/airline-list.component';
@@ -46,6 +47,10 @@ const routes: Routes = [
   {
     path: 'rank',
     component: RankListComponent
+  },
+  {
+    path: 'service',
+    component: ServiceListComponent
   },
 ];
 
