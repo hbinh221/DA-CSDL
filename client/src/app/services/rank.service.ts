@@ -20,7 +20,7 @@ export class RankService {
   createRank(payload: any): Observable<any> {
     return this.http.post(environment.baseUrl + this.baseUrl + '/create/rank', payload);
   }
-  updateAdmin(id: string, payload: any): Observable<any> {
+  updateRank(id: string, payload: any): Observable<any> {
     return this.http.put(
       environment.baseUrl + this.baseUrl + '/update/' + id,
       payload

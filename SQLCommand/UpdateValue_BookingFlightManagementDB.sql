@@ -38,7 +38,7 @@ create or alter procedure UpdatePayment
 @Id uniqueidentifier, @PaymentType nvarchar(20)
 as
 begin
-	update Payment set PaymentType = @PaymentType where Id = @Id;
+	update Payment set PaymentType = @PaymentType where Id = @Id;	
 	select * from Payment where Id = @Id;
 end
 go

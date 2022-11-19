@@ -135,6 +135,7 @@ begin
 	inner join Location tl on f.ToLocationId = tl.Id
 	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or f.Id = @Id
 end;
+exec GetFlight null, '88EA7E3D-925E-ED11-BE82-484D7EF0B796'
 go
 create or alter procedure GetRemaningTicket
 @FlightId uniqueidentifier
@@ -214,7 +215,8 @@ begin
 end;
 go
 create or alter procedure GetTicket
+@FlightId uniqueidentifier
 as
 begin
-	select * from Service
+	select * from Ticket where FlightId = @FlightId
 end

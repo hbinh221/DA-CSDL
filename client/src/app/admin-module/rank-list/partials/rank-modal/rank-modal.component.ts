@@ -70,7 +70,7 @@ export class RankModalComponent extends ModelBaseComponent implements OnInit {
           }
         });
     } else {
-      this.rankService.updateAdmin(this.modalForm.value.id, this.modalForm.value)
+      this.rankService.updateRank(this.modalForm.value.id, this.modalForm.value)
       .pipe(finalize(() => this.isLoading = false))
       .subscribe(res => {
         if(res.code=== 200){

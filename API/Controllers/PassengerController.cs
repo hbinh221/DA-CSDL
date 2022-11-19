@@ -101,7 +101,7 @@ namespace API.Controllers
             dp_params.Add("@Phone", input.Phone, DbType.String);
             dp_params.Add("@Email", input.Email, DbType.String);
             dp_params.Add("@Password", input.Password, DbType.String);
-            dp_params.Add("@IsAdmin", true, DbType.Boolean);
+            dp_params.Add("@IsAdmin", input.IsAdmin, DbType.Boolean);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 string sqlCommand = "insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin)" +
