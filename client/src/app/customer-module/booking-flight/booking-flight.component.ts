@@ -51,7 +51,6 @@ export class BookingFlightComponent implements OnInit {
       flightTime: [null, Validators.required],
       passenger: [1],
       promotion: [null],
-      airlineId: [null, Validators.required],
     });
     this.form.get('type')?.setValue('one-way');
   }
@@ -87,16 +86,21 @@ export class BookingFlightComponent implements OnInit {
       this.sourceLocation = [...this.sourceLocation];
     }
   }
+  
   goToSelectFlight() {
+    const fromDate = this.form.value.type === 'one-way' ? 
+    this.datepipe.transform(this.form.value.flightTime) : 
+    this.datepipe.transform(this.form.value.flightTime[0], 'YYYY-MM-dd%20HH%3Amm%3Ass');
+    const toDate = this.form.value.type === 'one-way' ? '' : 
+    this.datepipe.transform(this.form.value.flightTime[1], 'YYYY-MM-dd%20HH%3Amm%3Ass');
     this.router.navigate([
       'customer/flight-selection',
       this.form.value.type,
       this.form.value.fromLocationId,
       this.form.value.toLocationId,
-      this.datepipe.transform(this.form.value.flightTime[0], 'YYYY-MM-dd%20HH%3Amm%3Ass'),
-      this.datepipe.transform(this.form.value.flightTime[1], 'YYYY-MM-dd%20HH%3Amm%3Ass'),
+      fromDate,
+      toDate,
       this.form.value.passenger,
-      this.form.value.airlineId
     ]);
   }
 }

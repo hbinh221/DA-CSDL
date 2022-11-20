@@ -18,7 +18,7 @@ const routes: Routes = [
   canActivate: [LoggedInGuard],
  },
  {
-  path: 'flight-selection/:type/:from/:to/:fromDate/:toDate/:passenger/:airline',
+  path: 'flight-selection/:type/:fromLocationId/:toLocationId/:fromDate/:toDate/:passenger',
   component: FlightSelectionComponent,
   data: {}
  },

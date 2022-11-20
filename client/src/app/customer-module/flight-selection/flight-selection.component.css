@@ -1,0 +1,22 @@
+.flight__selection-header{
+    padding: 20px 20px 10px 22px;
+}
+.plr-12px{
+    padding: 0px 12px;
+}
+
+.flight__selection-rank{
+    border-radius: 4px;
+    background: #005f6e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    padding: 0 !important;
+}
+
+::ng-deep .ant-card-body{
+    border: 1px solid #c8c8c8;
+    border-radius: 4px;
+    box-shadow: 0px 2px 4px 0px rgb(0 0 0 / 18%);
+}

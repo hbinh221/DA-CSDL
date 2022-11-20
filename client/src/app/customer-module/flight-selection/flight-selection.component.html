@@ -1,0 +1,126 @@
+<div class="container">
+  <h2 class="text-primary">Chọn chuyến chiều đi</h2>
+  <span
+    >Chọn chuyến bay
+    <span class="text-primary">{{ fromLocationName }}</span> đến
+    <span class="text-primary">{{ toLocationName }}</span></span
+  >
+  <nz-card class="mt-5">
+    <div nz-row nzGutter="16" class="flight__selection-header">
+      <div nz-col nzSpan="3">
+        <span class="mr-3">{{ total }} result</span>
+      </div>
+      <div nz-col nzSpan="6">
+        <span
+          nz-dropdown
+          nzTrigger="click"
+          [nzDropdownMenu]="orderBy"
+          class="text-primary d-flex align-center"
+          >{{sortKey}}: <span nz-icon nzType="caret-down" nzTheme="outline"></span
+        ></span>
+        <nz-dropdown-menu #orderBy="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item (click)="onSortData('DepartureTime', 'ascending')">Departure time by ascending</li>
+            <li nz-menu-item (click)="onSortData('DepartureTime', 'descending')">Departure time by dscending</li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item (click)="onSortData('LandedTime', 'ascending')">Landed time by ascending</li>
+            <li nz-menu-item (click)="onSortData('LandedTime', 'descending')">Landed time by dscending</li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item (click)="onSortData('Cost', 'ascending')">Cost by ascending</li>
+            <li nz-menu-item (click)="onSortData('Cost', 'descending')">Cost by dscending</li>
+          </ul>
+        </nz-dropdown-menu>
+      </div>
+      <div nz-col nzSpan="5">
+        <span class="text-primary d-flex align-center"
+        nz-popover
+        nzPopoverTitle="Title"
+        [(nzPopoverVisible)]="isVisibleFilter"
+        nzPopoverTrigger="click"
+        [nzPopoverContent]="contentTemplate"
+        [nzPopoverOverlayStyle]="{'width': '320px'}"
+          >FILTER BY: <span nz-icon nzType="filter" nzTheme="outline"></span
+        ></span>
+        <ng-template #contentTemplate>
+          <form nz-form [formGroup]="filterForm">
+            <div nz-row>
+              <div nz-col nzSpan="12">
+                <nz-form-item>
+                <nz-form-label>Airline</nz-form-label>
+                  <nz-form-control >
+                    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a airline name" 
+                      formControlName="airlineId">
+                      <nz-option *ngFor="let data of listAirline" nzLabel="{{data.airlineName}}" nzValue="{{data.id}}">
+                      </nz-option>
+                    </nz-select>
+                  </nz-form-control>
+              </nz-form-item>
+              </div>
+              <div nz-col nzSpan="12"></div>
+  
+            </div>
+          </form>
+        </ng-template>
+      </div>
+      <div nz-col nzSpan="10">
+        <div nz-row nzGutter="16">
+          <div nz-col nzSpan="12">
+            <div class="text-center">
+              <span>PHỔ THÔNG</span>
+            </div>
+          </div>
+          <div nz-col nzSpan="12">
+            <div class="text-center">
+              <span>THƯƠNG GIA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nz-list [nzLoading]="isLoading">
+      <nz-list-item class="plr-12px" *ngFor="let item of listOfData">
+        <nz-card class="w-100">
+          <div nz-row nzGutter="16" class="w-100">
+            <div nz-col nzSpan="2">
+              <span>{{ item.departureTime | date: "shortTime" }}</span>
+              <br />
+              <span>{{ fromLocationCode }}</span>
+            </div>
+            <div nz-col nzSpan="3">
+              <span
+                class="w-100"
+                nz-icon
+                nzType="arrow-right"
+                nzTheme="outline"
+              ></span>
+            </div>
+            <div nz-col nzSpan="2">
+              <span>{{ item.landedTime | date: "shortTime" }}</span>
+              <br />
+              <span>{{ toLocationCode }}</span>
+            </div>
+            <div nz-col nzSpan="7">
+              <span class="d-flex align-center justify-center">
+                {{ item.flightNo }} &nbsp;
+                <span nz-icon nzType="info-circle" nzTheme="outline"></span
+                >&nbsp; {{ item.planeName }}</span
+              >
+            </div>
+            <div nz-col nzSpan="10">
+              <div nz-row>
+                <div nz-col nzSpan="12" class="text-center">
+                  <span>{{ item.cost * listRank[0]?.cost | number }} </span>
+                  <!-- {{listRank[0]?.cost }} -->
+                </div>
+                <div nz-col nzSpan="12" class="text-center">
+                  <span>{{ item.cost * listRank[1]?.cost | number }} </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nz-card>
+      </nz-list-item>
+    </nz-list>
+  </nz-card>
+</div>

@@ -23,6 +23,13 @@ export class FlightService {
         airlineIdString
     );
   }
+
+  getFlightForPassenger(payload: any){
+    return this.http.post(
+      environment.baseUrl + this.baseUrl + '/get/flight-for-passenger', payload);
+  }
+
+
   createFlight(payload: any): Observable<any> {
     return this.http.post(
       environment.baseUrl + this.baseUrl + '/create/flight',

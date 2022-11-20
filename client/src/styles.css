@@ -109,3 +109,7 @@
     align-items: center;
     align-self: center;
   }
+
+  .justify-center{
+    justify-content: center;
+  }
