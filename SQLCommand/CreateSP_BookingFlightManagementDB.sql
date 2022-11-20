@@ -107,8 +107,7 @@ begin
 end;
 go
 create or alter procedure GetFlight
-@Id uniqueidentifier, @AirlineId uniqueidentifier
-with recompile
+@Id uniqueidentifier, @AirlineId uniqueidentifier, @ValueSort varchar(20)
 as
 begin
 	select 
@@ -135,9 +134,14 @@ begin
 	on p.Id = f.PlaneId
 	inner join Location fl on f.FromLocationId = fl.Id
 	inner join Location tl on f.ToLocationId = tl.Id
+	order by 
+	case when @ValueSort = 'DepartureTime desc' then DepartureTime end desc,
+	case when @ValueSort = 'Cost desc' then Cost end desc ,
+	case when @ValueSort = 'AirlineName desc' then AirlineName end desc,
+	case when isnull(@ValueSort, 'asc') = 'asc' then DepartureTime end
 end;
-exec GetFlight null, '88EA7E3D-925E-ED11-BE82-484D7EF0B796'
-exec GetFlight null, null
+exec GetFlight null, '88EA7E3D-925E-ED11-BE82-484D7EF0B796', null
+exec GetFlight null, null, 'Cost desc'
 go
 create or alter procedure GetRemaningTicket
 @FlightId uniqueidentifier
@@ -152,8 +156,7 @@ end;
 go
 -- get all flight in day
 create or alter procedure GetFlightForPassenger
-@DepartureTime datetime2, @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @AirlineId uniqueidentifier
---,@ValueSort varchar(50)
+@DepartureTime datetime2, @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @AirlineId uniqueidentifier, @ValueSort varchar(20)
 with recompile
 as
 begin
@@ -171,7 +174,7 @@ begin
 		--convert(time(0), f.DepartureTime), convert(time(0), f.LandedTime)), 0), 114) as FlightTime,
 		f.Cost, 
 		f.Remark 
-	from (select Id from Airline where isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @AirlineId) a
+	from (select Id, AirlineName from Airline where isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @AirlineId) a
 	inner join Plane p on a.Id = p.AirlineId
 	inner join (select Id, FlightNo, DepartureTime, LandedTime, Cost, Remark, PlaneId, FromLocationId, ToLocationId
 	from Flight where convert(date, DepartureTime) = convert(date, @DepartureTime) 
@@ -179,7 +182,19 @@ begin
 	and FromLocationId = @FromLocationId and ToLocationId = @ToLocationId) f on p.Id = f.PlaneId
 	inner join Location fl on f.FromLocationId = fl.Id
 	inner join Location tl on f.ToLocationId = tl.Id
+	order by
+	case when @ValueSort = 'DepartureTime desc' then DepartureTime end desc,
+	case when @ValueSort = 'Cost desc' then Cost end desc ,
+	case when @ValueSort = 'AirlineName desc' then AirlineName end desc,
+	case when isnull(@ValueSort, 'asc') = 'asc' then DepartureTime end
 end;
+go
+exec GetFlightForPassenger 
+		'2022-11-18 13:32:41.0300000', 
+		'73CB409E-0A67-ED11-BE8B-484D7EF0B796', 
+		'78CB409E-0A67-ED11-BE8B-484D7EF0B796', 
+		'7CCB409E-0A67-ED11-BE8B-484D7EF0B796',
+		null;
 go
 -- check to create a flight that does not duplicate flight times on one plane
 create or alter procedure CheckCreateFlight
@@ -267,12 +282,7 @@ select
 		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime), a.Id, r1.IsReserved, t.Price, r1.RankId, f.Remark
 	order by f.DepartureTime desc
 		
-		exec GetFlightForPassenger 
-		'2022-11-18 13:32:41.0300000', 
-		'73CB409E-0A67-ED11-BE8B-484D7EF0B796', 
-		'78CB409E-0A67-ED11-BE8B-484D7EF0B796', 
-		'7CCB409E-0A67-ED11-BE8B-484D7EF0B796',
-		'f.DepartureTime desc';
+		
 
 	select * from Rank
 
