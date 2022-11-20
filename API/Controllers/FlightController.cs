@@ -36,7 +36,12 @@ namespace API.Controllers
             dp_params.Add("@AirlineId", airlineId, DbType.Guid);
 
             var newData = await _db.GetAll<FlightDto>("GetFlight", dp_params);
-
+            foreach(var item in newData)
+            {
+                dp_params = new DynamicParameters();
+                dp_params.Add("@FlightId", item.Id, DbType.Guid);
+                item.RankClass = await _db.GetAll<RankClassDto>("GetRankForFlight", dp_params);
+            }
             if (newData != null)
             {
                 response.Code = 200;
@@ -45,17 +50,24 @@ namespace API.Controllers
             return response;
         }
 
-        [HttpGet("get/flight-for-passenger")]
-        public async Task<Response<IEnumerable<GetFlightForPassengerDto>>> GetFlightForPassenger(DateTime departureTime ,Guid fromLocationId, Guid toLocationId, Guid airlineId)
+        [HttpPost("get/flight-for-passenger")]
+        public async Task<Response<IEnumerable<GetFlightForPassengerDto>>> GetFlightForPassenger(GetFlightForPassengerInput input)
         {
             var dp_params = new DynamicParameters();
-            Response<IEnumerable<GetFlightForPassengerDto>> response = new Response<IEnumerable<GetFlightForPassengerDto>>();
-            dp_params.Add("@DepartureTime", departureTime, DbType.DateTime2);
-            dp_params.Add("@FromLocationId", fromLocationId, DbType.Guid);
-            dp_params.Add("@ToLocationId", toLocationId, DbType.Guid);
-            dp_params.Add("@AirlineId", airlineId, DbType.Guid);
+            Response<IEnumerable<GetFlightForPassengerDto>> response = new();
+            dp_params.Add("@DepartureTime", input.DepartureTime, DbType.DateTime2);
+            dp_params.Add("@FromLocationId", input.FromLocationId, DbType.Guid);
+            dp_params.Add("@ToLocationId", input.ToLocationId, DbType.Guid);
+            dp_params.Add("@AirlineId", input.AirlineId, DbType.Guid);
+            /*dp_params.Add("@ValueSort", input.ValueSort, DbType.String);*/
 
             var newData = await _db.GetAll<GetFlightForPassengerDto>("GetFlightForPassenger", dp_params);
+            foreach(var data in newData)
+            {
+                dp_params = new DynamicParameters();
+                dp_params.Add("@FlightId", data.Id, DbType.Guid);
+                data.RankClass = await _db.GetAll<RankClassDto>("GetRankForFlight", dp_params);
+            }
 
             if (newData != null)
             {

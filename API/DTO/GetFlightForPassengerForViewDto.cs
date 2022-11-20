@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace API.DTO
 {
-    public class GetFlightForPassengerDto
+    public class GetFlightForPassengerForViewDto
     {
         public Guid Id { get; set; }
-        public string FlightNo { get; set; }    
+        public string FlightNo { get; set; }
         public string PlaneName { get; set; }
         public int SeatQuantity { get; set; }
         public string FromLocation { get; set; }
@@ -14,8 +14,7 @@ namespace API.DTO
         public DateTime DepartureTime { get; set; }
         public DateTime LandedTime { get; set; }
         public DateTime FlightTime { get; set; }
-        public int RemaningSeat { get; set; }
-        public float Cost { get; set; }
+        public float Price { get; set; }
         public string Remark { get; set; }
         public ICollection<RankClassDto> RankClass { get; set; }
     }
