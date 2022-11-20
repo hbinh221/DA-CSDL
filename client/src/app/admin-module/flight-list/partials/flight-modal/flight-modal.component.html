@@ -65,8 +65,10 @@
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Flight Time</nz-form-label>
         <nz-form-control nzErrorTip="Please input flight time!">
           <nz-range-picker class="w-100" 
+          [nzDisabledDate] = "disabledEndDate"
           nzFormat="yyyy-MM-dd HH:mm:ss"
-          formControlName="flightTime" [nzRanges]="ranges" 
+          formControlName="flightTime" 
+          [nzRanges]="ranges" 
           [nzShowTime]="{ nzHideDisabledOptions: true, nzDefaultOpenValue: timeDefaultValue }"></nz-range-picker>
         </nz-form-control>
       </nz-form-item>

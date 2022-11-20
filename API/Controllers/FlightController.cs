@@ -27,40 +27,92 @@ namespace API.Controllers
         }
 
         [HttpGet("get/flight")]
-        public async Task<Response<IEnumerable<FlightDto>>> GetFlight(Guid? id, Guid? airlineId)
+        public async Task<Response<IEnumerable<FlightForViewDto>>> GetFlight(Guid? id, Guid? airlineId)
         {
             var dp_params = new DynamicParameters();
-            Response<IEnumerable<FlightDto>> response = new Response<IEnumerable<FlightDto>>();
+            Response<IEnumerable<FlightForViewDto>> response = new Response<IEnumerable<FlightForViewDto>>();
 
             dp_params.Add("@Id", id, DbType.Guid);
             dp_params.Add("@AirlineId", airlineId, DbType.Guid);
 
             var newData = await _db.GetAll<FlightDto>("GetFlight", dp_params);
-
+            List<FlightForViewDto> result = new();
+            for (int i = 0; i < newData.Count; i+=2)
+            {
+                if(newData[i].Id == newData[i + 1].Id)
+                {
+                    FlightForViewDto data = new();
+                    data.Id = newData[i].Id;
+                    data.AirlineId = newData[i].AirlineId;
+                    data.AirlineName = newData[i].AirlineName;
+                    data.FlightNo = newData[i].FlightNo;
+                    data.PlaneId = newData[i].PlaneId;
+                    data.PlaneName = newData[i].PlaneName;
+                    data.FromLocationId = newData[i].FromLocationId;
+                    data.FromLocation = newData[i].FromLocation;
+                    data.ToLocationId = newData[i].ToLocationId;
+                    data.ToLocation = newData[i].ToLocation;
+                    data.DepartureTime = newData[i].DepartureTime;
+                    data.LandedTime = newData[i].LandedTime;
+                    data.FlightTime = newData[i].FlightTime;
+                    data.SeatQuantity = newData[i].SeatQuantity;
+                    data.EconomyCLass = newData[i].RankName;
+                    data.RemaningEconomyCLassSeat = newData[i].RemainingSeat;
+                    data.BusinessCLass = newData[i + 1].RankName;
+                    data.RemaningBusinessCLassSeat = newData[i + 1].RemainingSeat;
+                    data.Remark = newData[i].Remark;
+                    result.Add(data);
+                }
+            }
             if (newData != null)
             {
                 response.Code = 200;
-                response.Data = newData;
+                response.Data = result;
             }
             return response;
         }
 
-        [HttpGet("get/flight-for-passenger")]
-        public async Task<Response<IEnumerable<GetFlightForPassengerDto>>> GetFlightForPassenger(DateTime departureTime ,Guid fromLocationId, Guid toLocationId, Guid airlineId)
+        [HttpPost("get/flight-for-passenger")]
+        public async Task<Response<IEnumerable<GetFlightForPassengerForViewDto>>> GetFlightForPassenger(GetFlightForPassengerInput input)
         {
             var dp_params = new DynamicParameters();
-            Response<IEnumerable<GetFlightForPassengerDto>> response = new Response<IEnumerable<GetFlightForPassengerDto>>();
-            dp_params.Add("@DepartureTime", departureTime, DbType.DateTime2);
-            dp_params.Add("@FromLocationId", fromLocationId, DbType.Guid);
-            dp_params.Add("@ToLocationId", toLocationId, DbType.Guid);
-            dp_params.Add("@AirlineId", airlineId, DbType.Guid);
+            Response<IEnumerable<GetFlightForPassengerForViewDto>> response = new();
+            dp_params.Add("@DepartureTime", input.DepartureTime, DbType.DateTime2);
+            dp_params.Add("@FromLocationId", input.FromLocationId, DbType.Guid);
+            dp_params.Add("@ToLocationId", input.ToLocationId, DbType.Guid);
+            dp_params.Add("@AirlineId", input.AirlineId, DbType.Guid);
+            dp_params.Add("@ValueSort", input.ValueSort, DbType.String);
 
             var newData = await _db.GetAll<GetFlightForPassengerDto>("GetFlightForPassenger", dp_params);
+            List<GetFlightForPassengerForViewDto> result = new();
+
+
+            for (int i = 0; i < newData.Count; i += 2)
+            {
+                if (newData[i] == newData[i + 1])
+                {
+                    var data = new GetFlightForPassengerForViewDto();
+                    data.Id = newData[i].Id;
+                    data.FlightNo = newData[i].FlightNo;
+                    data.PlaneName = newData[i].PlaneName;
+                    data.SeatQuantity = newData[i].SeatQuantity;
+                    data.FromLocation = newData[i].FromLocation;
+                    data.ToLocation = newData[i].ToLocation;
+                    data.DepartureTime = newData[i].DepartureTime;
+                    data.LandedTime = newData[i].LandedTime;
+                    data.FlightTime = newData[i].FlightTime;
+                    data.RemaningEconomyCLassSeat = newData[i].RemaningSeat;
+                    data.RemaningBusinessCLassSeat = newData[i + 1].RemaningSeat;
+                    data.Price = newData[i].Price;
+                    data.Remark = newData[i].Remark;
+                    result.Add(data);
+                }
+            }
 
             if (newData != null)
             {
                 response.Code = 200;
-                response.Data = newData;
+                response.Data = result;
             }
             return response;
         }

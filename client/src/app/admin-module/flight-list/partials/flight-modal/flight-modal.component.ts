@@ -24,6 +24,12 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
   airlineIdFilter: string = '00000000-0000-0000-0000-000000000000';
   ranges = { Today: [new Date(), new Date()], 'This Month': [new Date(), endOfMonth(new Date())] };
   timeDefaultValue = setHours(new Date(), 0);
+  disabledEndDate = (endDate: Date): boolean => {
+    if (endDate > new Date()) {
+      return false;
+    }
+    return true;
+  }
   constructor(
     protected http: HttpClient,
     protected fb: FormBuilder,

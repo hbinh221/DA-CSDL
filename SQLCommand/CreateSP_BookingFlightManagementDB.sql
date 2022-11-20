@@ -151,10 +151,44 @@ go
 -- get all flight in day
 create or alter procedure GetFlightForPassenger
 @DepartureTime datetime2, @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @AirlineId uniqueidentifier
+--,@ValueSort varchar(50)
 with recompile
 as
 begin
-	select 
+	--declare @Query varchar(2000), @Sort varchar(50);
+	--if (isnull(@ValueSort, '') = '')
+	--begin
+	--	set @Sort = '';
+	--end
+	--else
+	--begin
+	--	set @Sort = 'order by ' + @ValueSort;
+	--end
+	--set @Query = select 
+	--	f.Id, 
+	--	f.FlightNo, 
+	--	p.PlaneName,
+	--	p.SeatQuantity, 
+	--	fl.LocationName as FromLocation, 
+	--	tl.LocationName as ToLocation, 
+	--	f.DepartureTime, 
+	--	f.LandedTime, 
+	--	dbo.CalcFlightTime(f.DepartureTime, f.LandedTime) as FlightTime, 
+	--	--convert(varchar(8),  dateadd(minute, datediff(minute, 
+	--	--convert(time(0), f.DepartureTime), convert(time(0), f.LandedTime)), 0), 114) as FlightTime,
+	--	f.Cost, 
+	--	f.Remark 
+	--from Airline a
+	--inner join Plane p on a.Id = p.AirlineId
+	--inner join (select Id, FlightNo, DepartureTime, LandedTime, Cost, Remark, PlaneId, FromLocationId, ToLocationId
+	--from Flight where convert(date, DepartureTime) = convert(date, @DepartureTime) 
+	----and convert(time, DepartureTime) >= convert(time(0), getdate())
+	--and FromLocationId = @FromLocationId and ToLocationId = @ToLocationId) f on p.Id = f.PlaneId
+	--inner join Location fl on f.FromLocationId = fl.Id
+	--inner join Location tl on f.ToLocationId = tl.Id 
+	--+ @ValueSort
+	--exec(@Query);
+	select
 		f.Id, 
 		f.FlightNo, 
 		p.PlaneName,
@@ -163,20 +197,26 @@ begin
 		tl.LocationName as ToLocation, 
 		f.DepartureTime, 
 		f.LandedTime, 
-		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime) as FlightTime, 
-		--convert(varchar(8),  dateadd(minute, datediff(minute, 
-		--convert(time(0), f.DepartureTime), convert(time(0), f.LandedTime)), 0), 114) as FlightTime,
-		f.Cost, 
+		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime) as FlightTime,
+		count (r.RankId) as RemainingSeat,
+		t.Price, 
 		f.Remark 
 	from Airline a
-	inner join Plane p on a.Id = p.AirlineId
+
+	inner join (select Id, PlaneName, AirlineId, SeatQuantity from Plane) p on a.Id = p.AirlineId
+
 	inner join (select Id, FlightNo, DepartureTime, LandedTime, Cost, Remark, PlaneId, FromLocationId, ToLocationId
+
 	from Flight where convert(date, DepartureTime) = convert(date, @DepartureTime) 
 	--and convert(time, DepartureTime) >= convert(time(0), getdate())
-	and FromLocationId = @FromLocationId and ToLocationId = @ToLocationId) f on p.Id = f.PlaneId
+	) f
 	inner join Location fl on f.FromLocationId = fl.Id
 	inner join Location tl on f.ToLocationId = tl.Id
-	order by Id
+	inner join (select Id, FlightId, IsReserved, RankId from Reservation where IsReserved = 0) r on f.Id = r.FlightId
+	inner join (select ReservationId, Price from Ticket) t on r.Id = t.ReservationId
+	group by f.Id, f.FlightNo, p.PlaneName,p.SeatQuantity, fl.LocationName, tl.LocationName, f.DepartureTime, f.LandedTime, 
+		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime), r.IsReserved, t.Price, r1.RankId, f.Remark
+	order by f.DepartureTime desc
 end;
 go
 -- check to create a flight that does not duplicate flight times on one plane
@@ -218,5 +258,39 @@ create or alter procedure GetTicket
 @FlightId uniqueidentifier
 as
 begin
-	select * from Ticket where FlightId = @FlightId
+	select * from Rank where FlightId = @FlightId
 end
+
+declare @RemainingSeat1 int, @RemainingSeat2 int;
+set @RemainingSeat1 = (select t.FlightId, count (r.RankId) from Ticket t inner join Reservation r on t.ReservationId = r.Id 
+where r.IsReserved = 0 group by r.RankId, t.FlightId ) 
+
+select
+		f.Id, 
+		f.FlightNo, 
+		p.PlaneName,
+		p.SeatQuantity, 
+		fl.LocationName as FromLocation, 
+		tl.LocationName as ToLocation, 
+		f.DepartureTime, 
+		f.LandedTime, 
+		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime) as FlightTime,
+		count (r1.RankId) as RemainingSeat1,
+		t.Price, 
+		f.Remark 
+	from Airline a
+	inner join (select Id, PlaneName, AirlineId, SeatQuantity from Plane) p on a.Id = p.AirlineId
+	inner join Flight f on p.Id = f.PlaneId
+	inner join Location fl on f.FromLocationId = fl.Id
+	inner join Location tl on f.ToLocationId = tl.Id
+	inner join (select Id, FlightId, IsReserved, RankId from Reservation where IsReserved = 0) r1 on f.Id = r1.FlightId
+	inner join (select ReservationId, Price from Ticket) t on r1.Id = t.ReservationId
+	group by f.Id, f.FlightNo, p.PlaneName,p.SeatQuantity, fl.LocationName, tl.LocationName, f.DepartureTime, f.LandedTime, 
+		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime), r1.IsReserved, t.Price, r1.RankId, f.Remark
+	order by f.DepartureTime desc
+		
+
+
+
+	select * from Rank
+
