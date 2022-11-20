@@ -110,11 +110,15 @@
             <div nz-col nzSpan="10">
               <div nz-row>
                 <div nz-col nzSpan="12" class="text-center">
-                  <span>{{ item.cost * listRank[0]?.cost | number }} </span>
+                  <span>{{ item.rankClass[0].price  | number }} </span>
+                  <br>
+                  <span>There are: {{item.rankClass[0].remainingSeat}}</span>
                   <!-- {{listRank[0]?.cost }} -->
                 </div>
                 <div nz-col nzSpan="12" class="text-center">
-                  <span>{{ item.cost * listRank[1]?.cost | number }} </span>
+                  <span>{{ item.rankClass[1].price | number }} </span>
+                  <br>
+                  <span>There are: {{item.rankClass[0].remainingSeat}}</span>
                 </div>
               </div>
             </div>

@@ -53,14 +53,15 @@ export class FlightSelectionComponent implements OnInit {
         switchMap((params: any) => {
           this.type = params['type'];
           this.passenger = params['passenger'];
-          this.request.fromDate = params['fromDate'];
+          this.request.departureTime = new Date(params['fromDate']);
           this.request.fromLocationId = params['fromLocationId'];
-          this.request.fromLocationId = params['toLocationId'];
+          this.request.toLocationId = params['toLocationId'];
+          this.request.airlineId = '7ccb409e-0a67-ed11-be8b-484d7ef0b796'
           return this.flightService.getFlightForPassenger(this.request);
         })
       )
       .subscribe((res: any) => {
-        if (res.code === 200) {
+        if (res.code === 200 && res.data && res.data.length > 0) {
           this.fromLocationName = res.data[0]?.fromLocation;
           this.toLocationName = res.data[0]?.toLocation;
           this.fromLocationCode = this.fromLocationName.substring(
@@ -87,9 +88,9 @@ export class FlightSelectionComponent implements OnInit {
 
   fetchData(){
     this.isLoading = true;
-    this.flightService.getFlight(this.request)
+    this.flightService.getFlightForPassenger(this.request)
     .pipe(finalize(() => (this.isLoading = false)))
-    .subscribe(res => {
+    .subscribe((res:any) => {
       if(res.code === 200){
         this.listOfData = res.data;
       }
