@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace API.DTO
 {
@@ -12,15 +13,14 @@ namespace API.DTO
         public string PlaneName { get; set; }
         public Guid FromLocationId { get; set; }
         public string FromLocation { get; set; }
-        public string ToLocation { get; set; }
         public Guid ToLocationId { get; set; }
+        public string ToLocation { get; set; }
         public DateTime DepartureTime { get; set; }
         public DateTime LandedTime { get; set; }
         public DateTime FlightTime { get; set; }
         public int SeatQuantity { get; set; }
-        public string RankName { get; set; }
-        public int RemainingSeat { get; set; }
-        public float Price { get; set; }
+        public float Cost { get; set; }
         public string Remark { get; set; }
+        public ICollection<RankClassDto> RankClass { get; set; }
     }
 }

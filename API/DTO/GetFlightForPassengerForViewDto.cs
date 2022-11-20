@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace API.DTO
 {
@@ -13,9 +14,8 @@ namespace API.DTO
         public DateTime DepartureTime { get; set; }
         public DateTime LandedTime { get; set; }
         public DateTime FlightTime { get; set; }
-        public int RemaningBusinessCLassSeat { get; set; }
-        public int RemaningEconomyCLassSeat { get; set; }
         public float Price { get; set; }
         public string Remark { get; set; }
+        public ICollection<RankClassDto> RankClass { get; set; }
     }
 }
