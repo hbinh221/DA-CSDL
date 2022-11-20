@@ -27,13 +27,14 @@ namespace API.Controllers
         }
 
         [HttpGet("get/flight")]
-        public async Task<Response<IEnumerable<FlightDto>>> GetFlight(Guid? id, Guid? airlineId)
+        public async Task<Response<IEnumerable<FlightDto>>> GetFlight(Guid? id, Guid? airlineId, string valueSort)
         {
             var dp_params = new DynamicParameters();
             Response<IEnumerable<FlightDto>> response = new Response<IEnumerable<FlightDto>>();
 
             dp_params.Add("@Id", id, DbType.Guid);
             dp_params.Add("@AirlineId", airlineId, DbType.Guid);
+            dp_params.Add("@ValueSort", valueSort, DbType.String);
 
             var newData = await _db.GetAll<FlightDto>("GetFlight", dp_params);
             foreach(var item in newData)
@@ -59,7 +60,7 @@ namespace API.Controllers
             dp_params.Add("@FromLocationId", input.FromLocationId, DbType.Guid);
             dp_params.Add("@ToLocationId", input.ToLocationId, DbType.Guid);
             dp_params.Add("@AirlineId", input.AirlineId, DbType.Guid);
-            /*dp_params.Add("@ValueSort", input.ValueSort, DbType.String);*/
+            dp_params.Add("@ValueSort", input.ValueSort, DbType.String);
 
             var newData = await _db.GetAll<GetFlightForPassengerDto>("GetFlightForPassenger", dp_params);
             foreach(var data in newData)
