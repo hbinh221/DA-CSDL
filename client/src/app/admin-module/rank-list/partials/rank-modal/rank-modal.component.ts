@@ -69,6 +69,19 @@ export class RankModalComponent extends ModelBaseComponent implements OnInit {
             this.checkEditForm();
           }
         });
+    } else {
+      this.rankService.updateRank(this.modalForm.value.id, this.modalForm.value)
+      .pipe(finalize(() => this.isLoading = false))
+      .subscribe(res => {
+        if(res.code=== 200){
+          this.msg.success("Success");
+          this.onUpdateItem.emit(res.data);
+          this.modalForm.disable();
+          this.isEdit = false;
+        }else{
+          this.msg.error("Failed");
+        }
+      })
     }
   }
 

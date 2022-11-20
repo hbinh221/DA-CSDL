@@ -155,19 +155,10 @@ namespace API.Controllers
                 {
                     response.Data = oldData;
                 }
-
-                sqlCommand = "delete from Ticket where FlightId = @Id";
-                if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) > 1)
+                sqlCommand = "delete from Flight where Id = @Id";
+                if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) >= 1)
                 {
-                    sqlCommand = "delete from Reservation where FlightId = @Id";
-                    if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) > 1)
-                    {
-                        sqlCommand = "delete from Flight where Id = @Id";
-                        if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) >= 1)
-                        {
-                            response.Code = 200;
-                        }
-                    }
+                    response.Code = 200;
                 }
             }
             return response;

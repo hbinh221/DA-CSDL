@@ -14,32 +14,24 @@
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Code</nz-form-label>
-        <nz-form-control nzErrorTip="Please input plane name!">
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">ServiceName</nz-form-label>
+        <nz-form-control nzErrorTip="Please input service name!">
           <nz-input-group >
-            <input type="text" nz-input formControlName="code" placeholder="Code" />
+            <input type="text" nz-input formControlName="serviceName" placeholder="Service Name" />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
 
       <nz-form-item>
-        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Plane Name</nz-form-label>
-        <nz-form-control nzErrorTip="Please input plane name!">
+        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Cost</nz-form-label>
+        <nz-form-control nzErrorTip="Please input cost!">
           <nz-input-group >
-            <input type="text" nz-input formControlName="planeName" placeholder="Plane Name" />
+            <nz-input-number formControlName="cost" placeholder="Cost" [(ngModel)]="modalForm.value.cost"
+              [nzMin]="1" [nzStep]="100000" style="width: 100%"></nz-input-number>
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>
 
-      <nz-form-item>
-        <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Seat Quantity</nz-form-label>
-        <nz-form-control nzErrorTip="Please input seat quantity!">
-          <nz-input-group >
-            <nz-input-number formControlName="seatQuantity" placeholder="Seat Quantity"
-              [(ngModel)]="modalForm.value.seatQuantity" [nzMin]="250" [nzStep]="1" style="width: 100%"></nz-input-number>
-          </nz-input-group>
-        </nz-form-control>
-      </nz-form-item>
     </form>
   </ng-container>
   <div *nzModalFooter>
@@ -58,7 +50,7 @@
              nz-button nzType="primary"
             (click)="changeEdit(true)">Edit</button>
           </div>
-      
+
         <div class="float-right ml-2">
           <button *ngIf="mode === 'detail'" nz-button (click)="deleteItem()" [nzLoading]="isLoading" nzType="primary"
             nzDanger>

@@ -23,6 +23,12 @@ export class PromotionService {
       payload
     );
   }
+  updatePromotion(id: string, payload: any): Observable<any> {
+    return this.http.put(
+      environment.baseUrl + this.baseUrl + '/update/' + id,
+      payload
+    );
+  }
   deletePromotion(id: string): Observable<any> {
     return this.http.delete(
       environment.baseUrl + this.baseUrl + '/delete/promotion' + '?id=' + id

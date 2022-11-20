@@ -1,54 +1,4 @@
 -- Create stored procedure
---make color
---create function dbo.MinutesToDuration(@minutes int)
---returns nvarchar(30)
---as
---begin
---	declare @hours  nvarchar(20)
---	set @hours = 
---    case when @minutes >= 60 then
---        (select cast((@minutes / 60) as varchar(2)) + 'h' +  
---                case when (@minutes % 60) > 0 then
---                    cast((@minutes % 60) as varchar(2)) + 'm'
---                else
---                    ''
---                end)
---		else 
---			cast((@minutes % 60) as varchar(2)) + 'm'
---		end
---	return @hours
---end
---go
---create function dbo.ConvertTimeToHHMMSS
---(
---    @time decimal(28,3), 
---    @unit varchar(20)
---)
---returns varchar(20)
---as
---begin
-
---    declare @seconds decimal(18,3), @minutes int, @hours int;
-
---    if(@unit = 'hour' or @unit = 'hh' )
---        set @seconds = @time * 60 * 60;
---    else if(@unit = 'minute' or @unit = 'mi' or @unit = 'n')
---        set @seconds = @time * 60;
---    else if(@unit = 'second' or @unit = 'ss' or @unit = 's')
---        set @seconds = @time;
---    else set @seconds = 0; -- unknown time units
-
---    set @hours = convert(int, @seconds /60 / 60);
---    set @minutes = convert(int, (@seconds / 60) - (@hours * 60 ));
---    set @seconds = @seconds % 60;
-
---    return 
---        convert(varchar(9), convert(int, @hours)) + ':' +
---        right('00' + convert(varchar(2), convert(int, @minutes)), 2) + ':' +
---        right('00' + convert(varchar(6), @seconds), 6)
-
---end
---go
 -- calculate flight time function
 create function dbo.CalcFlightTime(@DepartureDate datetime2, @LandedTime datetime2)
 returns nvarchar(8)
@@ -97,13 +47,22 @@ begin
 	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id ;
 end;
 go
+create or alter procedure GetRank
+@Id uniqueidentifier
+with recompile
+as
+begin
+	select * from Rank 
+	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id ;
+end;
+go
 -- get plane by airline
 create or alter procedure GetPlane 
 @Id uniqueidentifier, @AirlineId uniqueidentifier
 with recompile
 as
 begin
-	select p.Id, p.PlaneName, p.SeatQuantity, a.AirlineName, p.AirlineId from Airline a
+	select p.Id, p.PlaneName, p.SeatQuantity, p.Code, a.AirlineName, p.AirlineId from Airline a
 	inner join Plane p on a.Id = p.AirlineId
 	where (isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or a.Id = @AirlineId) 
 	and (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or p.Id = @Id)
@@ -114,9 +73,10 @@ create or alter procedure GetService
 with recompile
 as
 begin
-	select Id, ServiceName, Cost, AirlineId from Service 
-	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id)
-	and AirlineId = @AirlineId;
+	select s.Id, s.ServiceName, s.Cost, s.AirlineId, a.AirlineName from Airline a
+	inner join Service s on a.Id = s.AirlineId
+	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or s.Id = @Id)
+	and (isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or s.AirlineId = @AirlineId);
 end;
 go
 create or alter procedure Signin
@@ -175,6 +135,7 @@ begin
 	inner join Location tl on f.ToLocationId = tl.Id
 	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or f.Id = @Id
 end;
+exec GetFlight null, '88EA7E3D-925E-ED11-BE82-484D7EF0B796'
 go
 create or alter procedure GetRemaningTicket
 @FlightId uniqueidentifier
@@ -202,39 +163,21 @@ begin
 		tl.LocationName as ToLocation, 
 		f.DepartureTime, 
 		f.LandedTime, 
-		--dbo.MinutesToDuration(datediff(minute, convert(time, f.DepartureTime), convert(time, f.LandedTime))) as FlightTime, 
+		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime) as FlightTime, 
 		--convert(varchar(8),  dateadd(minute, datediff(minute, 
 		--convert(time(0), f.DepartureTime), convert(time(0), f.LandedTime)), 0), 114) as FlightTime,
-		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime) as FlightTime,
 		f.Cost, 
 		f.Remark 
 	from Airline a
 	inner join Plane p on a.Id = p.AirlineId
 	inner join (select Id, FlightNo, DepartureTime, LandedTime, Cost, Remark, PlaneId, FromLocationId, ToLocationId
-	from Flight where convert(date, DepartureTime) = convert(date, @DepartureTime) and convert(time, DepartureTime) >= convert(time(0), getdate())
+	from Flight where convert(date, DepartureTime) = convert(date, @DepartureTime) 
+	--and convert(time, DepartureTime) >= convert(time(0), getdate())
 	and FromLocationId = @FromLocationId and ToLocationId = @ToLocationId) f on p.Id = f.PlaneId
 	inner join Location fl on f.FromLocationId = fl.Id
 	inner join Location tl on f.ToLocationId = tl.Id
 	order by Id
 end;
-go
-select convert(
-	varchar(8), 
-	dateadd(minute, 
-		datediff(minute, 
-		convert(time(0) ,'2020-12-23 23:40:00.2756145'), 
-		convert(time(0) ,'2020-12-24 23:42:00.2756145')), 0), 114);
-go
-select datediff(minute, 
-		convert(time(0) ,'2020-12-23 23:40:00.2756145'), 
-		convert(time(0) ,'2021-12-24 01:40:00.2756145'))
-go
-select dateadd(minute, 
-		datediff(minute, 
-		convert(time(0) ,'2020-12-23 23:40:00.2756145'), 
-		convert(time(0) ,'2020-12-24 01:00:00.2756145')), 0)
-go
-select convert(time(0) ,'2020-12-23 23:40:00.2756145')
 go
 -- check to create a flight that does not duplicate flight times on one plane
 create or alter procedure CheckCreateFlight
@@ -261,8 +204,6 @@ begin
 	select @IsCreate as IsCreate;
 end
 go
-exec CheckCreateFlight '88ea7e3d-925e-ed11-be82-484d7ef0b796', '2022-11-13T02:30:49.766Z', '2022-11-13T03:30:52.671Z'
-go
 create or alter procedure GetAdmin
 @Id uniqueidentifier
 with recompile
@@ -273,4 +214,9 @@ begin
 	and IsAdmin = 1;
 end;
 go
-select * from Flight where PlaneId = '8d00b154-9f61-ed11-be83-484d7ef0b796'
+create or alter procedure GetTicket
+@FlightId uniqueidentifier
+as
+begin
+	select * from Ticket where FlightId = @FlightId
+end

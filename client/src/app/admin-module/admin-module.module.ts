@@ -27,6 +27,8 @@ import { PromotionModalComponent } from './promotion-list/partials/promotion-mod
 import { RankModalComponent } from './rank-list/partials/rank-modal/rank-modal.component';
 import { PlaneModalComponent } from './plane-list/partials/plane-modal/plane-modal.component';
 import { AdminModalComponent } from './passenger-list/partials/admin-modal/admin-modal.component';
+import { ServiceListComponent } from './service-list/service-list.component';
+import { ServiceModalComponent } from './service-list/partials/service-modal/service-modal.component';
 
 
 @NgModule({
@@ -51,6 +53,8 @@ import { AdminModalComponent } from './passenger-list/partials/admin-modal/admin
     RankModalComponent,
     PlaneModalComponent,
     AdminModalComponent,
+    ServiceListComponent,
+    ServiceModalComponent,
   ],
   imports: [
     CommonModule,

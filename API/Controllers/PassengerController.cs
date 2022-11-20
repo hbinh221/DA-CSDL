@@ -55,15 +55,13 @@ namespace API.Controllers
             dp_params.Add("@Phone", input.Phone, DbType.String);
             dp_params.Add("@Email", input.Email, DbType.String);
             dp_params.Add("@Password", input.Password, DbType.String);
-            using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
+            PassengerDto passenger = await _db.Get<PassengerDto>("UpdatePassenger", dp_params);
+            if (passenger != null)
             {
-                PassengerDto passenger = await _db.Get<PassengerDto>("UpdatePassenger", dp_params);
-                if (passenger != null)
-                {
-                    response.Code = 200;
-                    response.Data = passenger;
-                }
+                response.Code = 200;
+                response.Data = passenger;
             }
+            
             return response;
         }
 
@@ -103,7 +101,7 @@ namespace API.Controllers
             dp_params.Add("@Phone", input.Phone, DbType.String);
             dp_params.Add("@Email", input.Email, DbType.String);
             dp_params.Add("@Password", input.Password, DbType.String);
-            dp_params.Add("@IsAdmin", true, DbType.Boolean);
+            dp_params.Add("@IsAdmin", input.IsAdmin, DbType.Boolean);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 string sqlCommand = "insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin)" +

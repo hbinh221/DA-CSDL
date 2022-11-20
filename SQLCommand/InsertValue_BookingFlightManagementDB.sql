@@ -30,10 +30,15 @@ insert into Payment(PaymentType) values
 (N'Thẻ thanh toán quốc tế'),
 (N'Tại nhà');
 go
-declare @AirlineId uniqueidentifier;
+declare @Alphabet varchar(36) = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', @AirlineId uniqueidentifier,  @Code nvarchar(10);
+set @Code = (substring(@Alphabet, convert(int, rand()*36), 1) + 
+	substring(@Alphabet, convert(int, rand()*36), 1) +
+	substring(@Alphabet, convert(int, rand()*36), 1) +
+	substring(@Alphabet, convert(int, rand()*36), 1) +
+	substring(@Alphabet, convert(int, rand()*36), 1));
 set @AirlineId = (select top 1 Id from Airline);
-insert into Plane(PlaneName, SeatQuantity, AirlineId) values 
-(N'Plane1', 250, @AirlineId);
+insert into Plane(PlaneName, SeatQuantity, AirlineId, Code) values 
+(N'Plane1', 250, @AirlineId, @Code);
 go
 insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin) 
 values (N'NTD', N'Hunter', N'001201015778', '2001-09-17 16:12:25.113', 1, N'0392047428', N'bykmaimai@gmail.com', N'123456789',1);
@@ -48,7 +53,7 @@ set @ToLocationId = (select top 1 Id from Location order by Id desc);
 insert into Flight(FlightNo, Cost, Remark, DepartureTime, LandedTime, FromLocationId, ToLocationId, PlaneId)
 values (N'FlightNo2', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()), 
 @FromLocationId, @ToLocationId, @PlaneId);
-select * from Passenger
+go
 insert into Promotion(PromotionName, StartDate, EndDate, Discount) values
 (N'Promotion4',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),
 (N'Promotion2',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),
@@ -59,4 +64,4 @@ select * from Plane
 select * from Location 
 select top 1 p.Id, p.PlaneName, p.SeatQuantity, a.AirlineName, p.AirlineId 
 from Airline a inner join Plane p on a.Id = p.AirlineId where p.Id = @Id order by p.Id desc
-select * from Ticket
+select * from Flight

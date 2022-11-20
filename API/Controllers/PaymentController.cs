@@ -76,6 +76,31 @@ namespace API.Controllers
             return response;
         }
 
+        [HttpPut("update/{id}")]
+        public async Task<Response<PaymentDto>> UpdatePayment(Guid id, string name)
+        {
+            var dp_params = new DynamicParameters();
+            Response<PaymentDto> response = new Response<PaymentDto>();
+            dp_params.Add("@Id", id, DbType.Guid);
+            dp_params.Add("@PaymentType", name.Trim(), DbType.String);
+            try
+            {
+                var newData = await _db.Get<PaymentDto>("UpdatePayment", dp_params);
+                if (newData != null)
+                {
+                    response.Code = 200;
+                    response.Data = newData;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Code = 500;
+                response.Data = null;
+                return response;
+            }
+            return response;
+        }
+
         [HttpDelete("delete/payment")]
         public async Task<Response<PaymentDto>> DeletePayment(Guid id)
         {

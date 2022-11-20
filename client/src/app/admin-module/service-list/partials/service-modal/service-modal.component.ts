@@ -1,25 +1,28 @@
-import { AirlineService } from 'src/app/services/airline.service';
-import { PlaneService } from './../../../../services/plane.service';
-import { ModelBaseComponent } from './../../../shared/modal-base/modal-base.component';
+import { ModelBaseComponent } from 'src/app/admin-module/shared/modal-base/modal-base.component';
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { ServiceService } from 'src/app/services/service.service';
 import { finalize } from 'rxjs/operators';
+import { AirlineService } from 'src/app/services/airline.service';
 
 @Component({
-  selector: 'app-plane-modal',
-  templateUrl: './plane-modal.component.html',
-  styleUrls: ['./plane-modal.component.css'],
+  selector: 'app-service-modal',
+  templateUrl: './service-modal.component.html',
+  styleUrls: ['./service-modal.component.css'],
 })
-export class PlaneModalComponent extends ModelBaseComponent implements OnInit {
+export class ServiceModalComponent
+  extends ModelBaseComponent
+  implements OnInit
+{
   airlineList: any = [];
 
   constructor(
     protected http: HttpClient,
     protected fb: FormBuilder,
     protected msg: NzMessageService,
-    private planeService: PlaneService,
+    private serviceService: ServiceService,
     private airlineService: AirlineService
   ) {
     super(http, fb, msg);
@@ -33,10 +36,9 @@ export class PlaneModalComponent extends ModelBaseComponent implements OnInit {
   initForm() {
     this.modalForm = this.fb.group({
       id: [null],
-      code: [null, Validators.required],
+      serviceName: [null, Validators.required],
+      cost: [null, Validators.required],
       airlineId: [null, Validators.required],
-      planeName: [null, Validators.required],
-      seatQuantity: [null, Validators.required],
     });
   }
 
@@ -54,8 +56,8 @@ export class PlaneModalComponent extends ModelBaseComponent implements OnInit {
 
   deleteItem(): void {
     this.isLoading = true;
-    this.planeService
-      .deletePlane(this.modalForm.value.id)
+    this.serviceService
+      .deleteService(this.modalForm.value.id)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((response) => {
         if (response.code === 200) {
@@ -63,7 +65,7 @@ export class PlaneModalComponent extends ModelBaseComponent implements OnInit {
           this.handleCancel();
           this.onDeleteItem.emit(response.data);
         } else {
-          this.msg.error('This plane exists in a flight');
+          this.msg.warning('Failed');
           this.handleCancel();
         }
       });
@@ -73,8 +75,8 @@ export class PlaneModalComponent extends ModelBaseComponent implements OnInit {
     this.validateForm();
     this.isLoading = true;
     if (this.mode === 'create') {
-      this.planeService
-        .createPlane(this.modalForm.value)
+      this.serviceService
+        .createService(this.modalForm.value)
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe((res) => {
           if (res.code === 200) {
@@ -82,21 +84,27 @@ export class PlaneModalComponent extends ModelBaseComponent implements OnInit {
             this.msg.success('Successfully');
             this.checkEditForm();
             this.onCreateItem.emit(res.data);
+          } else {
+            this.msg.success('Dịch vụ đã tồn tại');
           }
         });
     } else {
-      this.planeService.updatePlane(this.modalForm.value.id, this.modalForm.value)
-      .pipe(finalize(() => this.isLoading = false))
-      .subscribe(res => {
-        if(res.code=== 200){
-          this.msg.success("Success");
-          this.onUpdateItem.emit(res.data);
-          this.modalForm.disable();
-          this.isEdit = false;
-        }else{
-          this.msg.error("Failed");
-        }
-      })
+      this.modalForm.value.gender == 'true'
+        ? (this.modalForm.value.gender = true)
+        : (this.modalForm.value.gender = false);
+      this.serviceService
+        .updateService(this.modalForm.value.id, this.modalForm.value)
+        .pipe(finalize(() => (this.isLoading = false)))
+        .subscribe((res) => {
+          if (res.code === 200) {
+            this.msg.success('Success');
+            this.onUpdateItem.emit(res.data);
+            this.modalForm.disable();
+            this.isEdit = false;
+          } else {
+            this.msg.error('Failded');
+          }
+        });
     }
   }
 }
