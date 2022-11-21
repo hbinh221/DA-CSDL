@@ -10,10 +10,12 @@ export class LocationService {
   baseUrl: string = 'Location';
   constructor(private http: HttpClient) { }
 
-  getLocation(id?:string): Observable<any>{
+   getLocation(id?:string, searchValue?: string): Observable<any>{
     let idString = '';
     if(id) idString = '?id=' + id;
-    return this.http.get(environment.baseUrl + this.baseUrl + '/get/location' + idString);
+    let searchValueString = '';
+    if(searchValue) searchValueString = '?searchValue=' + searchValue;
+    return this.http.get(environment.baseUrl + this.baseUrl + '/get/location' + idString + searchValueString);
   }
   createLocation(payload: any): Observable<any>{
     return this.http.post(environment.baseUrl + this.baseUrl +

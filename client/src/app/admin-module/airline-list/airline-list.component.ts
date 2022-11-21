@@ -18,7 +18,7 @@ export class AirlineListComponent extends ListBaseComponent {
   ];
 
   scrollY!: string;
-
+  searchValue: string = '';
   constructor(
     protected router: Router,
     protected message: NzMessageService,
@@ -47,15 +47,18 @@ export class AirlineListComponent extends ListBaseComponent {
     return el.id;
   }
 
-  fetchData(): void {
+  fetchData(search?: string): void {
     this.isLoading = true;
     this.airlineService
-      .getAirline()
+      .getAirline('', search)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         if (res.code === 200) {
           this.listOfData = res.data;
         }
       });
+  }
+  search() {
+    this.fetchData(this.searchValue);
   }
 }

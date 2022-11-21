@@ -4,10 +4,13 @@
 ></nz-page-header>
 <div nz-row style="padding: 0px 24px">
   <div nzSpan="8">
-    <nz-input-group [nzSuffix]="suffixIconSearch" class="mb-2">
-      <input type="text" nz-input placeholder="Search..." />
+    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+      <input type="text" nz-input placeholder="input search text" [(ngModel)]="searchValue" />
     </nz-input-group>
-    <ng-template #suffixIconSearch>
+    <ng-template #suffixIconButton>
+      <button nz-button nzType="primary" nzSearch (click)="search()"><span nz-icon nzType="search"></span></button>
+    </ng-template>
+    <ng-template #suffixIconSearch onclick="">
       <span nz-icon nzType="search"></span>
     </ng-template>
   </div>

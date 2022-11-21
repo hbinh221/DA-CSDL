@@ -10,11 +10,13 @@ export class RankService {
   baseUrl: string = 'rank';
   constructor(private http: HttpClient) {}
 
-  getRank(id?: string): Observable<any> {
+  getRank(id?: string, searchValue?: string): Observable<any> {
     let idString = '';
     if (id) idString = '?id=' + id;
+    let searchValueString = '';
+    if (searchValue) searchValueString = '?searchValue=' + searchValue;
     return this.http.get(
-      environment.baseUrl + this.baseUrl + '/get/rank' + idString
+      environment.baseUrl + this.baseUrl + '/get/rank' + idString + searchValueString
     );
   }
   createRank(payload: any): Observable<any> {

@@ -10,11 +10,13 @@ export class PaymentService {
   baseUrl: string = 'payment';
   constructor(private http: HttpClient) {}
 
-  getPayment(id?: string): Observable<any> {
+  getPayment(id?: string, searchValue?: string): Observable<any> {
     let idString = '';
     if (id) idString = '?id=' + id;
+    let valueSearchString = '';
+    if (searchValue) valueSearchString = '?searchValue=' + searchValue;
     return this.http.get(
-      environment.baseUrl + this.baseUrl + '/get/payment' + idString
+      environment.baseUrl + this.baseUrl + '/get/payment' + idString + valueSearchString
     );
   }
   createPayment(payload: any): Observable<any> {

@@ -10,11 +10,13 @@ export class PromotionService {
   baseUrl: string = 'promotion';
   constructor(private http: HttpClient) {}
 
-  getPromotion(id?: string): Observable<any> {
+  getPromotion(id?: string, searchValue?: string): Observable<any> {
     let idString = '';
     if (id) idString = '?id=' + id;
+    let searchValueString = '';
+    if (searchValue) searchValueString = '?searchValue=' + searchValue;
     return this.http.get(
-      environment.baseUrl + this.baseUrl + '/get/promotion' + idString
+      environment.baseUrl + this.baseUrl + '/get/promotion' + idString + searchValueString
     );
   }
   createPromotion(payload: any): Observable<any> {

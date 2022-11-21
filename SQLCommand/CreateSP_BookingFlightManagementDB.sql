@@ -138,6 +138,9 @@ begin
 	case when @ValueSort = 'DepartureTime desc' then DepartureTime end desc,
 	case when @ValueSort = 'Cost desc' then Cost end desc ,
 	case when @ValueSort = 'AirlineName desc' then AirlineName end desc,
+	case when @ValueSort = 'DepartureTime asc' then DepartureTime end asc,
+	case when @ValueSort = 'Cost asc' then Cost end asc ,
+	case when @ValueSort = 'AirlineName asc' then AirlineName end asc,
 	case when isnull(@ValueSort, 'asc') = 'asc' then DepartureTime end
 end;
 exec GetFlight null, '88EA7E3D-925E-ED11-BE82-484D7EF0B796', null
@@ -162,8 +165,10 @@ as
 begin
 	select 
 		f.Id, 
-		f.FlightNo, 
+		AirlineName,
 		p.PlaneName,
+		p.Code,
+		f.FlightNo, 
 		p.SeatQuantity, 
 		fl.LocationName as FromLocation, 
 		tl.LocationName as ToLocation, 
@@ -186,15 +191,18 @@ begin
 	case when @ValueSort = 'DepartureTime desc' then DepartureTime end desc,
 	case when @ValueSort = 'Cost desc' then Cost end desc ,
 	case when @ValueSort = 'AirlineName desc' then AirlineName end desc,
+	case when @ValueSort = 'DepartureTime asc' then DepartureTime end asc,
+	case when @ValueSort = 'Cost asc' then Cost end asc ,
+	case when @ValueSort = 'AirlineName asc' then AirlineName end asc,
 	case when isnull(@ValueSort, 'asc') = 'asc' then DepartureTime end
 end;
 go
 exec GetFlightForPassenger 
-		'2022-11-18 13:32:41.0300000', 
+		'2022-11-21 13:32:41.0300000', 
 		'73CB409E-0A67-ED11-BE8B-484D7EF0B796', 
 		'78CB409E-0A67-ED11-BE8B-484D7EF0B796', 
-		'7CCB409E-0A67-ED11-BE8B-484D7EF0B796',
-		null;
+		null,
+		'Cost asc';
 go
 -- check to create a flight that does not duplicate flight times on one plane
 create or alter procedure CheckCreateFlight

@@ -17,7 +17,7 @@ export class PaymentListComponent extends ListBaseComponent {
     },
   ];
   scrollY!: string;
-
+  searchValue: string = '';
   constructor(
     protected router: Router,
     protected message: NzMessageService,
@@ -46,13 +46,17 @@ export class PaymentListComponent extends ListBaseComponent {
     return el.id;
   }
 
-  fetchData() {
+  fetchData(search?: string) {
     this.isLoading = true;
-    this.paymentService.getPayment().subscribe((res) => {
+    this.paymentService.getPayment('', search).subscribe((res) => {
       if (res.code == 200) {
         this.listOfData = res.data;
         this.isLoading = false;
       }
     });
+  }
+
+  search() {
+    this.fetchData(this.searchValue);
   }
 }

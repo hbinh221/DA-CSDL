@@ -26,12 +26,13 @@ namespace API.Controllers
         }
 
         [HttpGet("get/payment")]
-        public async Task<Response<IEnumerable<PaymentDto>>> GetPayment(Guid? id)
+        public async Task<Response<IEnumerable<PaymentDto>>> GetPayment(Guid? id, string searchValue)
         {
             var dp_params = new DynamicParameters();
             Response<IEnumerable<PaymentDto>> response = new Response<IEnumerable<PaymentDto>>();
             
             dp_params.Add("@Id ", id, DbType.Guid);
+            dp_params.Add("@SearchValue ", searchValue, DbType.String);
             var newData = await _db.GetAll<PaymentDto>("GetPayment", dp_params);
 
             if (newData != null)

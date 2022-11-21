@@ -35,7 +35,7 @@ export class FlightSelectionComponent implements OnInit {
     fromLocationId:null,
     toLocationId: null,
     airlineId: null,
-    valueSort: 'DepartureTime ascending'
+    valueSort: 'Cost asc'
   };
   constructor(
     private route: ActivatedRoute,
@@ -56,7 +56,7 @@ export class FlightSelectionComponent implements OnInit {
           this.request.departureTime = new Date(params['fromDate']);
           this.request.fromLocationId = params['fromLocationId'];
           this.request.toLocationId = params['toLocationId'];
-          this.request.airlineId = '7ccb409e-0a67-ed11-be8b-484d7ef0b796'
+          this.request.airlineId = null;
           return this.flightService.getFlightForPassenger(this.request);
         })
       )
@@ -112,7 +112,7 @@ export class FlightSelectionComponent implements OnInit {
     this.fetchData();
   }
 
- 
+
 
   // fetchData(payload: any){
   //   this.flightService.getFlightForPassenger(payload);

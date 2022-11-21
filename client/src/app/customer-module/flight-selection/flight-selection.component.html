@@ -20,14 +20,14 @@
         ></span>
         <nz-dropdown-menu #orderBy="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item (click)="onSortData('DepartureTime', 'ascending')">Departure time by ascending</li>
-            <li nz-menu-item (click)="onSortData('DepartureTime', 'descending')">Departure time by dscending</li>
+            <li nz-menu-item (click)="onSortData('DepartureTime', 'asc')">Departure time by ascending</li>
+            <li nz-menu-item (click)="onSortData('DepartureTime', 'desc')">Departure time by descnding</li>
             <li nz-menu-divider></li>
-            <li nz-menu-item (click)="onSortData('LandedTime', 'ascending')">Landed time by ascending</li>
-            <li nz-menu-item (click)="onSortData('LandedTime', 'descending')">Landed time by dscending</li>
+            <li nz-menu-item (click)="onSortData('AirlineName', 'asc')">Airline name by ascending</li>
+            <li nz-menu-item (click)="onSortData('AirlineName', 'desc')">Airline name by descnding</li>
             <li nz-menu-divider></li>
-            <li nz-menu-item (click)="onSortData('Cost', 'ascending')">Cost by ascending</li>
-            <li nz-menu-item (click)="onSortData('Cost', 'descending')">Cost by dscending</li>
+            <li nz-menu-item (click)="onSortData('Cost', 'asc')">Cost by ascending</li>
+            <li nz-menu-item (click)="onSortData('Cost', 'desc')">Cost by descnding</li>
           </ul>
         </nz-dropdown-menu>
       </div>
@@ -48,7 +48,7 @@
                 <nz-form-item>
                 <nz-form-label>Airline</nz-form-label>
                   <nz-form-control >
-                    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a airline name" 
+                    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a airline name"
                       formControlName="airlineId">
                       <nz-option *ngFor="let data of listAirline" nzLabel="{{data.airlineName}}" nzValue="{{data.id}}">
                       </nz-option>
@@ -57,12 +57,12 @@
               </nz-form-item>
               </div>
               <div nz-col nzSpan="12"></div>
-  
+
             </div>
           </form>
         </ng-template>
       </div>
-      <div nz-col nzSpan="10">
+      <div nz-col nzSpan="9">
         <div nz-row nzGutter="16">
           <div nz-col nzSpan="12">
             <div class="text-center">
@@ -103,8 +103,8 @@
             <div nz-col nzSpan="7">
               <span class="d-flex align-center justify-center">
                 {{ item.flightNo }} &nbsp;
-                <span nz-icon nzType="info-circle" nzTheme="outline"></span
-                >&nbsp; {{ item.planeName }}</span
+                <span nz-icon nzType="info-circle" nzTheme="outline"></span>
+                &nbsp; {{ item.planeName }} ({{item.code}})</span
               >
             </div>
             <div nz-col nzSpan="10">
@@ -118,7 +118,7 @@
                 <div nz-col nzSpan="12" class="text-center">
                   <span>{{ item.rankClass[1].price | number }} </span>
                   <br>
-                  <span>There are: {{item.rankClass[0].remainingSeat}}</span>
+                  <span>There are: {{item.rankClass[1].remainingSeat}}</span>
                 </div>
               </div>
             </div>

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { LocationService } from 'src/app/services/location.service';
 import { ListBaseComponent } from '../shared/list-base/list-base.component';
-import { ModelBaseComponent } from '../shared/modal-base/modal-base.component';
 
 @Component({
   selector: 'app-location-list',
@@ -16,6 +15,7 @@ export class LocationListComponent extends ListBaseComponent {
       name: 'Location Name',
     },
   ];
+  searchValue: string = '';
   scrollY!: string;
   constructor(injector: Injector,protected router: Router,
     protected message: NzMessageService,
@@ -43,9 +43,9 @@ export class LocationListComponent extends ListBaseComponent {
     return el.id;
   }
 
-  fetchData() {
+  fetchData(search?: string) {
     this.isLoading = true;
-     this.locationService.getLocation().subscribe(res=>{
+     this.locationService.getLocation('',search).subscribe(res=>{
       if(res.code === 200){
         this.listOfData = res.data;
         this.isLoading = false;
@@ -53,6 +53,8 @@ export class LocationListComponent extends ListBaseComponent {
      });
   }
 
+  search() {
+    this.fetchData(this.searchValue);
+  }
 
-  
 }

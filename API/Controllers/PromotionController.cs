@@ -26,11 +26,19 @@ namespace API.Controllers
         }
 
         [HttpGet("get/promotion")]
-        public async Task<IEnumerable<PromotionDto>> GetPromotion(Guid? id)
+        public async Task<Response<IEnumerable<PromotionDto>>> GetPromotion(Guid? id, string searchValue)
         {
             var dp_params = new DynamicParameters();
+            Response<IEnumerable<PromotionDto>> response = new();
             dp_params.Add("@Id ", id, DbType.Guid);
-            return await _db.GetAll<PromotionDto>("GetPromotion", dp_params);
+            dp_params.Add("@SearchValue ", searchValue, DbType.String);
+            var newData = await _db.GetAll<PromotionDto>("GetPromotion", dp_params);
+            if (newData != null)
+            {
+                response.Code = 200;
+                response.Data = newData;
+            }
+            return response;
         }
 
         [HttpPost("create/promotion")]

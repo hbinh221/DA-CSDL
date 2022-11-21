@@ -26,11 +26,21 @@ namespace API.Controllers
         }
 
         [HttpGet("get/rank")]
-        public async Task<IEnumerable<RankDto>> GetRank(Guid? id)
+        public async Task<Response<IEnumerable<RankDto>>> GetRank(Guid? id, string searchValue)
         {
             var dp_params = new DynamicParameters();
+            Response<IEnumerable<RankDto>> response = new();
+
             dp_params.Add("@Id ", id, DbType.Guid);
-            return await _db.GetAll<RankDto>("GetRank", dp_params);
+            dp_params.Add("@SearchValue ", searchValue, DbType.String);
+            var newData = await _db.GetAll<RankDto>("GetRank", dp_params);
+
+            if (newData != null)
+            {
+                response.Code = 200;
+                response.Data = newData;
+            }
+            return response;
 
         }
 

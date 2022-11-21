@@ -27,11 +27,12 @@ namespace API.Controllers
 
 
         [HttpGet("get/location")]
-        public async Task<Response<IEnumerable<LocationDto>>> GetLocation(Guid? id)
+        public async Task<Response<IEnumerable<LocationDto>>> GetLocation(Guid? id, string searchValue)
         {
             var dp_params = new DynamicParameters();
-            Response<IEnumerable<LocationDto>> response = new Response<IEnumerable<LocationDto>>();
+            Response<IEnumerable<LocationDto>> response = new();
             dp_params.Add("@Id ", id, DbType.Guid);
+            dp_params.Add("@SearchValue ", searchValue, DbType.String);
             var newData = await _db.GetAll<LocationDto>("GetLocation", dp_params);
 
             if (newData != null)

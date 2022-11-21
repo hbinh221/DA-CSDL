@@ -7,7 +7,7 @@ namespace API.DTO
         public DateTime DepartureTime { get; set; }
         public Guid FromLocationId { get; set; }
         public Guid ToLocationId { get; set; }
-        public Guid AirlineId { get; set; }
+        public Guid? AirlineId { get; set; }
         public string ValueSort { get; set; }
     }
 }

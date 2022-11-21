@@ -51,8 +51,16 @@ set @PlaneId = (select top 1 Id from Plane);
 set @FromLocationId = (select top 1 Id from Location);
 set @ToLocationId = (select top 1 Id from Location order by Id desc);
 insert into Flight(FlightNo, Cost, Remark, DepartureTime, LandedTime, FromLocationId, ToLocationId, PlaneId)
-values (N'FlightNo2', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()), 
+values (N'FlightNo', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()), 
 @FromLocationId, @ToLocationId, @PlaneId);
+go
+--set @PlaneId = (select Id from Plane);
+declare @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @PlaneId uniqueidentifier;
+set @FromLocationId = (select top 1 Id from Location);
+set @ToLocationId = (select top 1 Id from Location order by Id desc);
+insert into Flight(FlightNo, Cost, Remark, DepartureTime, LandedTime, FromLocationId, ToLocationId, PlaneId)
+values (N'FlightNo2', 3000000, N'', DATEADD(HH, 6, GETDATE()), DATEADD(HH, 8, GETDATE()), 
+@FromLocationId, @ToLocationId, '58EF1951-7A69-ED11-BE8B-484D7EF0B796');
 go
 insert into Promotion(PromotionName, StartDate, EndDate, Discount) values
 (N'Promotion4',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),

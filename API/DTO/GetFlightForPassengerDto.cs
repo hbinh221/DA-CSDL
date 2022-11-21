@@ -6,8 +6,10 @@ namespace API.DTO
     public class GetFlightForPassengerDto
     {
         public Guid Id { get; set; }
-        public string FlightNo { get; set; }    
+        public string AirlineName { get; set; }
         public string PlaneName { get; set; }
+        public string Code { get; set; }
+        public string FlightNo { get; set; }    
         public int SeatQuantity { get; set; }
         public string FromLocation { get; set; }
         public string ToLocation { get; set; }
