@@ -112,6 +112,8 @@ export class FlightSelectionComponent implements OnInit {
     this.fetchData();
   }
 
+ 
+
   // fetchData(payload: any){
   //   this.flightService.getFlightForPassenger(payload);
   // }

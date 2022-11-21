@@ -89,10 +89,10 @@ export class BookingFlightComponent implements OnInit {
   
   goToSelectFlight() {
     const fromDate = this.form.value.type === 'one-way' ? 
-    this.datepipe.transform(this.form.value.flightTime) : 
-    this.datepipe.transform(this.form.value.flightTime[0], 'YYYY-MM-dd%20HH%3Amm%3Ass');
+    this.datepipe.transform(this.addHours(7, this.form.value.flightTime)) : 
+    this.datepipe.transform(this.addHours(7, this.form.value.flightTime[0]), 'YYYY-MM-dd%20HH%3Amm%3Ass');
     const toDate = this.form.value.type === 'one-way' ? '' : 
-    this.datepipe.transform(this.form.value.flightTime[1], 'YYYY-MM-dd%20HH%3Amm%3Ass');
+    this.datepipe.transform(this.addHours(7,this.form.value.flightTime[1]), 'YYYY-MM-dd%20HH%3Amm%3Ass');
     this.router.navigate([
       'customer/flight-selection',
       this.form.value.type,
@@ -102,5 +102,11 @@ export class BookingFlightComponent implements OnInit {
       toDate,
       this.form.value.passenger,
     ]);
+  }
+
+ addHours(numOfHours:any, date = new Date()) {
+    date.setTime(date.getTime() + numOfHours * 60 * 60 * 1000);
+  
+    return date;
   }
 }
