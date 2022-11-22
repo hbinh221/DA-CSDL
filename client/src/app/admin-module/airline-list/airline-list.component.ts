@@ -1,9 +1,10 @@
-import { finalize } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, switchMap, throttleTime } from 'rxjs/operators';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AirlineService } from 'src/app/services/airline.service';
 import { ListBaseComponent } from '../shared/list-base/list-base.component';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-airline-list',
@@ -11,6 +12,7 @@ import { ListBaseComponent } from '../shared/list-base/list-base.component';
   styleUrls: ['./airline-list.component.css'],
 })
 export class AirlineListComponent extends ListBaseComponent {
+ search$ = new Subject<string>();
   listOfColumns: any[] = [
     {
       name: 'Airline Name',
@@ -25,6 +27,20 @@ export class AirlineListComponent extends ListBaseComponent {
     private airlineService: AirlineService
   ) {
     super(router, message);
+  }
+
+  ngOnInit() {
+    this.search$.asObservable().pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((search: string) => this.airlineService.getAirline('', search).pipe(
+      finalize(() => this.isLoading = false))
+      )
+    ).subscribe(res => {
+      if(res.code === 200){
+        this.listOfData = [...res.data];
+      }
+    });
   }
 
   ngAfterViewInit() {
@@ -47,18 +63,20 @@ export class AirlineListComponent extends ListBaseComponent {
     return el.id;
   }
 
-  fetchData(search?: string): void {
-    this.isLoading = true;
-    this.airlineService
-      .getAirline('', search)
-      .pipe(finalize(() => (this.isLoading = false)))
-      .subscribe((res) => {
-        if (res.code === 200) {
-          this.listOfData = res.data;
-        }
-      });
-  }
-  search() {
-    this.fetchData(this.searchValue);
+  // fetchData(search?: string): void {
+  //   this.isLoading = true;
+  //   this.airlineService
+  //     .getAirline('', search)
+  //     .pipe(finalize(() => (this.isLoading = false)))
+  //     .subscribe((res) => {
+  //       if (res.code === 200) {
+  //         this.listOfData = res.data;
+  //       }
+  //     });
+  // }
+
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.search$.next(target.value);
   }
 }
