@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { AirlineService } from 'src/app/services/airline.service';
 import { ListBaseComponent } from '../shared/list-base/list-base.component';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-airline-list',
@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
   styleUrls: ['./airline-list.component.css'],
 })
 export class AirlineListComponent extends ListBaseComponent {
- search$ = new Subject<string>();
+ search$ = new BehaviorSubject<string>("");
   listOfColumns: any[] = [
     {
       name: 'Airline Name',
@@ -41,6 +41,8 @@ export class AirlineListComponent extends ListBaseComponent {
         this.listOfData = [...res.data];
       }
     });
+    // this.search$.next("");
+
   }
 
   ngAfterViewInit() {

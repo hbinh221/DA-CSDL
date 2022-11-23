@@ -16,29 +16,43 @@
           nzTrigger="click"
           [nzDropdownMenu]="orderBy"
           class="text-primary d-flex align-center"
-          >{{sortKey}}: <span nz-icon nzType="caret-down" nzTheme="outline"></span
+          >{{ sortKey }}:
+          <span nz-icon nzType="caret-down" nzTheme="outline"></span
         ></span>
         <nz-dropdown-menu #orderBy="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item (click)="onSortData('DepartureTime', 'asc')">Departure time by ascending</li>
-            <li nz-menu-item (click)="onSortData('DepartureTime', 'desc')">Departure time by descnding</li>
+            <li nz-menu-item (click)="onSortData('DepartureTime', 'asc')">
+              Departure time by ascending
+            </li>
+            <li nz-menu-item (click)="onSortData('DepartureTime', 'desc')">
+              Departure time by descending
+            </li>
             <li nz-menu-divider></li>
-            <li nz-menu-item (click)="onSortData('AirlineName', 'asc')">Airline name by ascending</li>
-            <li nz-menu-item (click)="onSortData('AirlineName', 'desc')">Airline name by descnding</li>
+            <li nz-menu-item (click)="onSortData('AirlineName', 'asc')">
+              Airline name by ascending
+            </li>
+            <li nz-menu-item (click)="onSortData('AirlineName', 'desc')">
+              Airline name by descnding
+            </li>
             <li nz-menu-divider></li>
-            <li nz-menu-item (click)="onSortData('Cost', 'asc')">Cost by ascending</li>
-            <li nz-menu-item (click)="onSortData('Cost', 'desc')">Cost by descnding</li>
+            <li nz-menu-item (click)="onSortData('Cost', 'asc')">
+              Cost by ascending
+            </li>
+            <li nz-menu-item (click)="onSortData('Cost', 'desc')">
+              Cost by descending
+            </li>
           </ul>
         </nz-dropdown-menu>
       </div>
       <div nz-col nzSpan="5">
-        <span class="text-primary d-flex align-center"
-        nz-popover
-        nzPopoverTitle="Title"
-        [(nzPopoverVisible)]="isVisibleFilter"
-        nzPopoverTrigger="click"
-        [nzPopoverContent]="contentTemplate"
-        [nzPopoverOverlayStyle]="{'width': '320px'}"
+        <span
+          class="text-primary d-flex align-center"
+          nz-popover
+          nzPopoverTitle="Title"
+          [(nzPopoverVisible)]="isVisibleFilter"
+          nzPopoverTrigger="click"
+          [nzPopoverContent]="contentTemplate"
+          [nzPopoverOverlayStyle]="{ width: '320px' }"
           >FILTER BY: <span nz-icon nzType="filter" nzTheme="outline"></span
         ></span>
         <ng-template #contentTemplate>
@@ -46,18 +60,25 @@
             <div nz-row>
               <div nz-col nzSpan="12">
                 <nz-form-item>
-                <nz-form-label>Airline</nz-form-label>
-                  <nz-form-control >
-                    <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a airline name"
-                      formControlName="airlineId">
-                      <nz-option *ngFor="let data of listAirline" nzLabel="{{data.airlineName}}" nzValue="{{data.id}}">
+                  <nz-form-label>Airline</nz-form-label>
+                  <nz-form-control>
+                    <nz-select
+                      nzShowSearch
+                      nzAllowClear
+                      nzPlaceHolder="Select a airline name"
+                      formControlName="airlineId"
+                    >
+                      <nz-option
+                        *ngFor="let data of listAirline"
+                        nzLabel="{{ data.airlineName }}"
+                        nzValue="{{ data.id }}"
+                      >
                       </nz-option>
                     </nz-select>
                   </nz-form-control>
-              </nz-form-item>
+                </nz-form-item>
               </div>
               <div nz-col nzSpan="12"></div>
-
             </div>
           </form>
         </ng-template>
@@ -80,7 +101,7 @@
 
     <nz-list [nzLoading]="isLoading">
       <nz-list-item class="plr-12px" *ngFor="let item of listOfData">
-        <nz-card class="w-100">
+        <nz-card class="w-100 mb-2">
           <div nz-row nzGutter="16" class="w-100">
             <div nz-col nzSpan="2">
               <span>{{ item.departureTime | date: "shortTime" }}</span>
@@ -104,27 +125,33 @@
               <span class="d-flex align-center justify-center">
                 {{ item.flightNo }} &nbsp;
                 <span nz-icon nzType="info-circle" nzTheme="outline"></span>
-                &nbsp; {{ item.planeName }} ({{item.code}})</span
+                &nbsp; {{ item.planeName }} ({{ item.code }})</span
               >
             </div>
             <div nz-col nzSpan="10">
               <div nz-row>
                 <div nz-col nzSpan="12" class="text-center">
-                  <span>{{ item.rankClass[0].price  | number }} </span>
-                  <br>
-                  <span>There are: {{item.rankClass[0].remainingSeat}}</span>
+                  <span>{{ item.rankClass[0].price | number }} </span>
+                  <br />
+                  <span>There are: {{ item.rankClass[0].remainingSeat }}</span>
                   <!-- {{listRank[0]?.cost }} -->
                 </div>
                 <div nz-col nzSpan="12" class="text-center">
                   <span>{{ item.rankClass[1].price | number }} </span>
-                  <br>
-                  <span>There are: {{item.rankClass[1].remainingSeat}}</span>
+                  <br />
+                  <span>There are: {{ item.rankClass[1].remainingSeat }}</span>
                 </div>
               </div>
             </div>
+            <app-flight-selection-detail [data]="item" [fromLocationName]="fromLocationName"
+            [toLocationName]="toLocationName" [listAirline]="listAirline" [isVisible]="isVisibleDetailTicket"
+            (onEmitVisible)="onChangeVisibleDetail($event)"></app-flight-selection-detail>
           </div>
         </nz-card>
+  
+        
       </nz-list-item>
     </nz-list>
   </nz-card>
 </div>
+

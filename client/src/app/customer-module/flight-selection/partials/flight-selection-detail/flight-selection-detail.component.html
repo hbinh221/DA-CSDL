@@ -1,0 +1,118 @@
+<nz-collapse>
+    <nz-collapse-panel
+    nzGhost
+    [nzActive]="isVisible"
+    nzHeader="View detail ticket"
+    (nzActiveChange)="onChangeActive($event)">
+    <div nz-row>
+      <div nz-col nzSpan="15">
+        <!-- <h4>{{data.departureTime}} &nbsp;, {{fromLocationName}}</h4>
+            <div class="d-flex align-center">
+                <span nz-icon nzType="dingding" nzTheme="outline"></span>
+                <p><p class="text-primary">{{data.flightNo}}</p> &nbsp; Airline provider: {{getAirlineName(data.airlineId)}}</p>
+            </div>
+                <p class="text-primary">Plane: {{ data.planeName }}</p>
+                <p class="text-primary">Flight time: {{ data.flightTime }}</p>
+            <h4>{{data.landedTime}}  &nbsp;, {{toLocationName}}</h4> -->
+        Hand Luggage
+      </div>
+      <div nz-col nzSpan="9">
+        <div nz-row>
+          <div nz-col nzSpan="12">
+            <p>
+              {{ getAirlineName(data.airlineId) }}:
+              {{ data.rankClass[0].baggageWeight }}
+            </p>
+            <nz-divider></nz-divider>
+          </div>
+          <div nz-col nzSpan="12">
+            <p>
+              {{ getAirlineName(data.airlineId) }}:
+              {{ data.rankClass[1].baggageWeight }}
+            </p>
+            <nz-divider></nz-divider>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div nz-row>
+        <div nz-col nzSpan="15">
+          <!-- <h4>{{data.departureTime}} &nbsp;, {{fromLocationName}}</h4>
+              <div class="d-flex align-center">
+                  <span nz-icon nzType="dingding" nzTheme="outline"></span>
+                  <p><p class="text-primary">{{data.flightNo}}</p> &nbsp; Airline provider: {{getAirlineName(data.airlineId)}}</p>
+              </div>
+                  <p class="text-primary">Plane: {{ data.planeName }}</p>
+                  <p class="text-primary">Flight time: {{ data.flightTime }}</p>
+              <h4>{{data.landedTime}}  &nbsp;, {{toLocationName}}</h4> -->
+            Signed Luggage
+            <nz-divider></nz-divider>
+        </div>
+        <div nz-col nzSpan="9">
+          <div nz-row>
+            <div nz-col nzSpan="12">
+              <p>23kg</p>
+              <nz-divider></nz-divider>
+            </div>
+            <div nz-col nzSpan="12">
+              <p>32kg</p>
+              <nz-divider></nz-divider>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div nz-row>
+        <div nz-col nzSpan="15">
+          <!-- <h4>{{data.departureTime}} &nbsp;, {{fromLocationName}}</h4>
+              <div class="d-flex align-center">
+                  <span nz-icon nzType="dingding" nzTheme="outline"></span>
+                  <p><p class="text-primary">{{data.flightNo}}</p> &nbsp; Airline provider: {{getAirlineName(data.airlineId)}}</p>
+              </div>
+                  <p class="text-primary">Plane: {{ data.planeName }}</p>
+                  <p class="text-primary">Flight time: {{ data.flightTime }}</p>
+              <h4>{{data.landedTime}}  &nbsp;, {{toLocationName}}</h4> -->
+            Refund Ticket
+            <nz-divider></nz-divider>
+        </div>
+        <div nz-col nzSpan="9">
+          <div nz-row>
+            <div nz-col nzSpan="12">
+              <p>500.000VND</p>
+              <nz-divider></nz-divider>
+            </div>
+            <div nz-col nzSpan="12">
+              <p>250.000VND</p>
+              <nz-divider></nz-divider>
+            </div>
+          </div>
+        </div>
+        
+        <div nz-row>
+          <div nz-col nzSpan="15">
+            <!-- <h4>{{data.departureTime}} &nbsp;, {{fromLocationName}}</h4>
+                <div class="d-flex align-center">
+                    <span nz-icon nzType="dingding" nzTheme="outline"></span>
+                    <p><p class="text-primary">{{data.flightNo}}</p> &nbsp; Airline provider: {{getAirlineName(data.airlineId)}}</p>
+                </div>
+                    <p class="text-primary">Plane: {{ data.planeName }}</p>
+                    <p class="text-primary">Flight time: {{ data.flightTime }}</p>
+                <h4>{{data.landedTime}}  &nbsp;, {{toLocationName}}</h4> -->
+              Change Ticket
+              <nz-divider></nz-divider>
+          </div>
+        <div nz-col nzSpan="9">
+            <div nz-row>
+              <div nz-col nzSpan="12">
+                <p>350.000VND</p>
+                <nz-divider></nz-divider>
+              </div>
+              <div nz-col nzSpan="12">
+                <p>Free</p>
+                <nz-divider></nz-divider>
+              </div>
+            </div>
+          </div>
+          </div>
+      </div>
+</nz-collapse-panel>
+</nz-collapse>

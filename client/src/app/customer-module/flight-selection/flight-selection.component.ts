@@ -18,6 +18,7 @@ export class FlightSelectionComponent implements OnInit {
   type: string = 'one-way';
   isLoading: boolean = false;
   isVisibleFilter: boolean = false;
+  isVisibleDetailTicket: boolean = false;
   passenger: number = 1;
   toDate: string = '';
   fromLocationName: string = '';
@@ -56,7 +57,7 @@ export class FlightSelectionComponent implements OnInit {
           this.request.departureTime = new Date(params['fromDate']);
           this.request.fromLocationId = params['fromLocationId'];
           this.request.toLocationId = params['toLocationId'];
-          this.request.airlineId = '7ccb409e-0a67-ed11-be8b-484d7ef0b796'
+          this.request.airlineId = null;
           return this.flightService.getFlightForPassenger(this.request);
         })
       )
@@ -118,4 +119,11 @@ export class FlightSelectionComponent implements OnInit {
   //   this.flightService.getFlightForPassenger(payload);
   // }
 
+  onClickViewTicket(){
+    this.isVisibleDetailTicket = true;
+  }
+
+  onChangeVisibleDetail(ev:any){
+    this.isVisibleDetailTicket = ev;
+  }
 }
