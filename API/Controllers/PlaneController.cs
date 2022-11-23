@@ -26,13 +26,14 @@ namespace API.Controllers
         }
 
         [HttpGet("get/plane")]
-        public async Task<Response<IEnumerable<PlaneDto>>> GetPlane(Guid? id, Guid? airlineId)
+        public async Task<Response<IEnumerable<PlaneDto>>> GetPlane(Guid? id, Guid? airlineId, string searchValue)
         {
             var dp_params = new DynamicParameters();
             Response<IEnumerable<PlaneDto>> response = new Response<IEnumerable<PlaneDto>>();
 
             dp_params.Add("@Id", id, DbType.Guid);
             dp_params.Add("@AirlineId", airlineId, DbType.Guid);
+            dp_params.Add("@SearchValue ", searchValue, DbType.String);
 
             var newData = await _db.GetAll<PlaneDto>("GetPlane", dp_params);
 

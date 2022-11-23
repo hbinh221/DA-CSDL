@@ -1,6 +1,8 @@
 import { Component, HostListener, Injector, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, switchMap } from 'rxjs/operators';
 import { LocationService } from 'src/app/services/location.service';
 import { ListBaseComponent } from '../shared/list-base/list-base.component';
 
@@ -15,7 +17,7 @@ export class LocationListComponent extends ListBaseComponent {
       name: 'Location Name',
     },
   ];
-  searchValue: string = '';
+  search$ = new BehaviorSubject<string>("");
   scrollY!: string;
   constructor(injector: Injector,protected router: Router,
     protected message: NzMessageService,
@@ -43,18 +45,25 @@ export class LocationListComponent extends ListBaseComponent {
     return el.id;
   }
 
-  fetchData(search?: string) {
+  fetchData() {
     this.isLoading = true;
-     this.locationService.getLocation('',search).subscribe(res=>{
+    this.search$.asObservable().pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((search: string) => this.locationService.getLocation('', search).pipe(
+      finalize(() => this.isLoading = false))
+      )
+    ).subscribe(res => {
       if(res.code === 200){
-        this.listOfData = res.data;
-        this.isLoading = false;
+        this.listOfData = [...res.data];
       }
-     });
+    });
   }
 
-  search() {
-    this.fetchData(this.searchValue);
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.isLoading = true;
+    this.search$.next(target.value);
   }
 
 }

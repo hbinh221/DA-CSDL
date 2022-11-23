@@ -3,6 +3,8 @@ import { ListBaseComponent } from './../shared/list-base/list-base.component';
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { PromotionService } from 'src/app/services/promotion.service';
+import { debounceTime, distinctUntilChanged, finalize, switchMap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-promotion-list',
@@ -25,7 +27,8 @@ export class PromotionListComponent extends ListBaseComponent {
     },
   ];
   scrollY!: string;
-  searchValue: string = '';
+  search$ = new BehaviorSubject<string>("");
+
   constructor(
     protected router: Router,
     protected message: NzMessageService,
@@ -56,15 +59,22 @@ export class PromotionListComponent extends ListBaseComponent {
 
   fetchData(search?: string) {
     this.isLoading = true;
-    this.promotionService.getPromotion('', search).subscribe((res) => {
-      if (res.code === 200) {
-        this.listOfData = res.data;
-        this.isLoading = false;
+    this.search$.asObservable().pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((search: string) => this.promotionService.getPromotion('', search).pipe(
+      finalize(() => this.isLoading = false))
+      )
+    ).subscribe(res => {
+      if(res.code === 200){
+        this.listOfData = [...res.data];
       }
     });
   }
 
-  search() {
-    this.fetchData(this.searchValue);
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.isLoading = true;
+    this.search$.next(target.value);
   }
 }

@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ListBaseComponent } from './../shared/list-base/list-base.component';
 import { Component, HostListener } from '@angular/core';
 import { RankService } from 'src/app/services/rank.service';
+import { debounceTime, distinctUntilChanged, finalize, switchMap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-rank-list',
@@ -22,7 +24,8 @@ export class RankListComponent extends ListBaseComponent {
     },
   ];
   scrollY!: string;
-  searchValue: string = '';
+  search$ = new BehaviorSubject<string>("");
+
   constructor(
     protected router: Router,
     protected message: NzMessageService,
@@ -53,15 +56,22 @@ export class RankListComponent extends ListBaseComponent {
 
   fetchData(search?: string) {
     this.isLoading = true;
-    this.rankService.getRank('', search).subscribe((res) => {
-      if (res.code === 200) {
-        this.listOfData = res.data;
-        this.isLoading = false;
+    this.search$.asObservable().pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((search: string) => this.rankService.getRank('', search).pipe(
+      finalize(() => this.isLoading = false))
+      )
+    ).subscribe(res => {
+      if(res.code === 200){
+        this.listOfData = [...res.data];
       }
     });
   }
 
-  search() {
-    this.fetchData(this.searchValue);
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.isLoading = true;
+    this.search$.next(target.value);
   }
 }

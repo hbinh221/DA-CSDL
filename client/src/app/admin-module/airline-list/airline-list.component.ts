@@ -12,7 +12,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
   styleUrls: ['./airline-list.component.css'],
 })
 export class AirlineListComponent extends ListBaseComponent {
- search$ = new BehaviorSubject<string>("");
+  search$ = new BehaviorSubject<string>("");
   listOfColumns: any[] = [
     {
       name: 'Airline Name',
@@ -20,7 +20,6 @@ export class AirlineListComponent extends ListBaseComponent {
   ];
 
   scrollY!: string;
-  searchValue: string = '';
   constructor(
     protected router: Router,
     protected message: NzMessageService,
@@ -30,19 +29,7 @@ export class AirlineListComponent extends ListBaseComponent {
   }
 
   ngOnInit() {
-    this.search$.asObservable().pipe(
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap((search: string) => this.airlineService.getAirline('', search).pipe(
-      finalize(() => this.isLoading = false))
-      )
-    ).subscribe(res => {
-      if(res.code === 200){
-        this.listOfData = [...res.data];
-      }
-    });
-    // this.search$.next("");
-
+    this.fetchData();
   }
 
   ngAfterViewInit() {
@@ -65,20 +52,24 @@ export class AirlineListComponent extends ListBaseComponent {
     return el.id;
   }
 
-  // fetchData(search?: string): void {
-  //   this.isLoading = true;
-  //   this.airlineService
-  //     .getAirline('', search)
-  //     .pipe(finalize(() => (this.isLoading = false)))
-  //     .subscribe((res) => {
-  //       if (res.code === 200) {
-  //         this.listOfData = res.data;
-  //       }
-  //     });
-  // }
+  fetchData(): void {
+    this.isLoading = true;
+    this.search$.asObservable().pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((search: string) => this.airlineService.getAirline('', search).pipe(
+      finalize(() => this.isLoading = false))
+      )
+    ).subscribe(res => {
+      if(res.code === 200){
+        this.listOfData = [...res.data];
+      }
+    });
+  }
 
   onSearch(event: Event) {
     const target = event.target as HTMLInputElement;
+    this.isLoading = true;
     this.search$.next(target.value);
   }
 }

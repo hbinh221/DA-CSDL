@@ -4,17 +4,17 @@
 ></nz-page-header>
 <div nz-row>
   <div nzSpan="8" style="padding: 0px 24px">
-    <!-- <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton"> -->
-      <input type="text" nz-input placeholder="input search text"
-      (input)="onSearch($event)"
-      />
-    <!-- </nz-input-group> -->
-    <!-- <ng-template #suffixIconButton>
-      <button nz-button nzType="primary" nzSearch (click)="search()"><span nz-icon nzType="search"></span></button>
-    </ng-template>
-    <ng-template #suffixIconSearch onclick="">
-      <span nz-icon nzType="search"></span>
-    </ng-template> -->
+    <input type="text" nz-input placeholder="input search text"
+    (input)="onSearch($event)"
+    />
+    <!-- <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+      <ng-template #suffixIconButton>
+        <button nz-button nzType="primary" nzSearch (click)="search()"><span nz-icon nzType="search"></span></button>
+      </ng-template>
+      <ng-template #suffixIconSearch onclick="">
+        <span nz-icon nzType="search"></span>
+      </ng-template>
+      </nz-input-group> -->
   </div>
 </div>
 <nz-table

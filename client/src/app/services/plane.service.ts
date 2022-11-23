@@ -10,13 +10,15 @@ export class PlaneService {
   baseUrl: string = 'plane';
   constructor(private http: HttpClient) {}
 
-  getPlane(id?: string, ailineId?: string): Observable<any> {
+  getPlane(id?: string, ailineId?: string, searchValue?: string): Observable<any> {
     let idString = '';
     if (id) idString = '?id=' + id;
     let airlineIdString = '';
     if (ailineId) airlineIdString = '?airlineId=' + ailineId;
+    let searchValueString = '';
+    if (searchValue) searchValueString = '?searchValue=' + searchValue;
     return this.http.get(
-      environment.baseUrl + this.baseUrl + '/get/plane' + idString + airlineIdString
+      environment.baseUrl + this.baseUrl + '/get/plane' + idString + airlineIdString + searchValueString
     );
   }
   createPlane(payload: any): Observable<any> {

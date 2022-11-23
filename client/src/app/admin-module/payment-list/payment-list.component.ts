@@ -3,6 +3,8 @@ import { PaymentService } from './../../services/payment.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
 import { Component, HostListener } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, finalize, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-payment-list',
@@ -17,7 +19,7 @@ export class PaymentListComponent extends ListBaseComponent {
     },
   ];
   scrollY!: string;
-  searchValue: string = '';
+  search$ = new BehaviorSubject<string>("");
   constructor(
     protected router: Router,
     protected message: NzMessageService,
@@ -48,15 +50,22 @@ export class PaymentListComponent extends ListBaseComponent {
 
   fetchData(search?: string) {
     this.isLoading = true;
-    this.paymentService.getPayment('', search).subscribe((res) => {
-      if (res.code == 200) {
-        this.listOfData = res.data;
-        this.isLoading = false;
+    this.search$.asObservable().pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((search: string) => this.paymentService.getPayment('', search).pipe(
+      finalize(() => this.isLoading = false))
+      )
+    ).subscribe(res => {
+      if(res.code === 200){
+        this.listOfData = [...res.data];
       }
     });
   }
 
-  search() {
-    this.fetchData(this.searchValue);
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.isLoading = true;
+    this.search$.next(target.value);
   }
 }

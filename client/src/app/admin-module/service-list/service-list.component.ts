@@ -3,7 +3,8 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ServiceService } from 'src/app/services/service.service';
-import { finalize } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, switchMap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-service-list',
@@ -25,6 +26,7 @@ export class ServiceListComponent extends ListBaseComponent implements OnInit {
   ];
 
   scrollY!: string;
+  search$ = new BehaviorSubject<string>("");
 
   constructor(
     protected router: Router,
@@ -56,14 +58,22 @@ export class ServiceListComponent extends ListBaseComponent implements OnInit {
 
   fetchData(): void {
     this.isLoading = true;
-    this.serviceService
-      .getService()
-      .pipe(finalize(() => (this.isLoading = false)))
-      .subscribe((res) => {
-        if (res.code === 200) {
-          this.listOfData = res.data;
-        }
-      });
+    this.search$.asObservable().pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((search: string) => this.serviceService.getService('', '',search).pipe(
+      finalize(() => this.isLoading = false))
+      )
+    ).subscribe(res => {
+      if(res.code === 200){
+        this.listOfData = [...res.data];
+      }
+    });
   }
 
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.isLoading = true;
+    this.search$.next(target.value);
+  }
 }

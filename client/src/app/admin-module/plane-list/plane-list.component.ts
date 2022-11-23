@@ -3,7 +3,8 @@ import { ListBaseComponent } from './../shared/list-base/list-base.component';
 import { Component, HostListener } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { Router } from '@angular/router';
-import { finalize } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, switchMap } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-plane-list',
@@ -27,6 +28,7 @@ export class PlaneListComponent extends ListBaseComponent {
   ];
 
   scrollY!: string;
+  search$ = new BehaviorSubject<string>("");
 
   constructor(
     protected router: Router,
@@ -58,13 +60,22 @@ export class PlaneListComponent extends ListBaseComponent {
 
   fetchData(): void {
     this.isLoading = true;
-    this.planeService
-      .getPlane()
-      .pipe(finalize(() => (this.isLoading = false)))
-      .subscribe((res) => {
-        if (res.code === 200) {
-          this.listOfData = res.data;
-        }
-      });
+    this.search$.asObservable().pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap((search: string) => this.planeService.getPlane('', '',search).pipe(
+      finalize(() => this.isLoading = false))
+      )
+    ).subscribe(res => {
+      if(res.code === 200){
+        this.listOfData = [...res.data];
+      }
+    });
+  }
+
+  onSearch(event: Event) {
+    const target = event.target as HTMLInputElement;
+    this.isLoading = true;
+    this.search$.next(target.value);
   }
 }

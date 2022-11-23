@@ -63,25 +63,36 @@ end;
 go
 -- get plane by airline
 create or alter procedure GetPlane 
-@Id uniqueidentifier, @AirlineId uniqueidentifier
+@Id uniqueidentifier, @AirlineId uniqueidentifier, @SearchValue nvarchar(50)
 with recompile
 as
 begin
 	select p.Id, p.PlaneName, p.SeatQuantity, p.Code, a.AirlineName, p.AirlineId from Airline a
 	inner join Plane p on a.Id = p.AirlineId
-	where (isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or a.Id = @AirlineId) 
-	and (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or p.Id = @Id)
+	where (isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000'
+	and isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' 
+	and isnull(@SearchValue, '') = '')
+	or a.Id = @AirlineId
+	or p.Id = @Id
+	or a.AirlineName like '%' + @SearchValue + '%'
+	or p.PlaneName like '%' + @SearchValue + '%' 
+	or p.Code like '%' + @SearchValue + '%';
 end;
 go
 create or alter procedure GetService
-@Id uniqueidentifier, @AirlineId uniqueidentifier
+@Id uniqueidentifier, @AirlineId uniqueidentifier, @SearchValue nvarchar(50)
 with recompile
 as
 begin
 	select s.Id, s.ServiceName, s.Cost, s.AirlineId, a.AirlineName from Airline a
 	inner join Service s on a.Id = s.AirlineId
-	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or s.Id = @Id)
-	and (isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or s.AirlineId = @AirlineId);
+	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' 
+	and isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000'
+	and isnull(@SearchValue, '') = '')
+	or s.AirlineId = @AirlineId
+	or s.Id = @Id
+	or a.AirlineName like '%' + @SearchValue + '%'
+	or s.ServiceName like '%' + @SearchValue + '%';
 end;
 go
 create or alter procedure Signin

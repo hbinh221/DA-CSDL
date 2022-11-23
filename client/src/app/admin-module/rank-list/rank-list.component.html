@@ -1,7 +1,10 @@
 <nz-page-header class="site-page-header" nzTitle="Rank Management"></nz-page-header>
 <div nz-row>
   <div nzSpan="8" style="padding: 0px 24px">
-    <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+    <input type="text" nz-input placeholder="input search text"
+    (input)="onSearch($event)"
+    />
+    <!-- <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
       <input type="text" nz-input placeholder="input search text" [(ngModel)]="searchValue" />
     </nz-input-group>
     <ng-template #suffixIconButton>
@@ -9,7 +12,7 @@
     </ng-template>
     <ng-template #suffixIconSearch onclick="">
       <span nz-icon nzType="search"></span>
-    </ng-template>
+    </ng-template> -->
   </div>
 </div>
 <nz-table #filterTable [nzData]="listOfData" nzTableLayout="fixed" [nzFrontPagination]="true" [nzShowPagination]="true"
