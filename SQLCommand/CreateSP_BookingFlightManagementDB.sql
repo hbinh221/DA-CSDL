@@ -11,49 +11,54 @@ end
 go
 -- SP getall if @Id parameter null or get by Id if @Id parameter is not null
 create or alter procedure GetLocation 
-@Id uniqueidentifier
+@Id uniqueidentifier, @SearchValue nvarchar(50)
 with recompile
 as
 begin
 	select * from Location 
-	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id ;
+	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' and isnull(@SearchValue, '') = '' 
+	or Id = @Id or LocationName like '%' + @SearchValue + '%';
 end;
 go
 create or alter procedure GetAirline
-@Id uniqueidentifier
+@Id uniqueidentifier, @SearchValue nvarchar(50)
 with recompile
 as
 begin
 	select * from Airline 
-	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id ;
+	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' and isnull(@SearchValue, '') = '' 
+	or Id = @Id or AirlineName like '%' + @SearchValue + '%';
 end;
 go
 create or alter procedure GetPromotion
-@Id uniqueidentifier
+@Id uniqueidentifier, @SearchValue nvarchar(50)
 with recompile
 as
 begin
 	select * from Promotion 
-	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000')
-	or Id = @Id and EndDate <= GETDATE();
+	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' and isnull(@SearchValue, '') = '' 
+	or Id = @Id or PromotionName like '%' + @SearchValue + '%'
+	--and EndDate <= GETDATE();
 end;
 go
 create or alter procedure GetPayment 
-@Id uniqueidentifier
+@Id uniqueidentifier, @SearchValue nvarchar(50)
 with recompile
 as
 begin
 	select * from Payment 
-	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id ;
+	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' and isnull(@SearchValue, '') = '' 
+	or Id = @Id or PaymentType like '%' + @SearchValue + '%';
 end;
 go
 create or alter procedure GetRank
-@Id uniqueidentifier
+@Id uniqueidentifier, @SearchValue nvarchar(50)
 with recompile
 as
 begin
 	select * from Rank 
-	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' or Id = @Id ;
+	where isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' and isnull(@SearchValue, '') = '' 
+	or Id = @Id or RankName like '%' + @SearchValue + '%';
 end;
 go
 -- get plane by airline
@@ -264,33 +269,3 @@ begin
 	group by ra.RankName, ra.BaggageWeight, t.Price, t.FlightId;
 end;
 exec GetRankForFlight 'ED55B8CC-0A67-ED11-BE8B-484D7EF0B796'
-
-select
-		f.Id, 
-		f.FlightNo, 
-		p.PlaneName,
-		p.SeatQuantity, 
-		a.Id,
-		fl.LocationName as FromLocation, 
-		tl.LocationName as ToLocation, 
-		f.DepartureTime, 
-		f.LandedTime, 
-		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime) as FlightTime,
-		count (r1.RankId) as RemainingSeat1,
-		t.Price, 
-		f.Remark 
-	from Airline a
-	inner join (select Id, PlaneName, AirlineId, SeatQuantity from Plane) p on a.Id = p.AirlineId
-	inner join Flight f on p.Id = f.PlaneId
-	inner join Location fl on f.FromLocationId = fl.Id
-	inner join Location tl on f.ToLocationId = tl.Id
-	inner join (select Id, FlightId, IsReserved, RankId from Reservation where IsReserved = 0) r1 on f.Id = r1.FlightId
-	inner join (select ReservationId, Price from Ticket) t on r1.Id = t.ReservationId
-	group by f.Id, f.FlightNo, p.PlaneName,p.SeatQuantity, fl.LocationName, tl.LocationName, f.DepartureTime, f.LandedTime, 
-		dbo.CalcFlightTime(f.DepartureTime, f.LandedTime), a.Id, r1.IsReserved, t.Price, r1.RankId, f.Remark
-	order by f.DepartureTime desc
-		
-		
-
-	select * from Rank
-
