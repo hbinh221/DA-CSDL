@@ -8,7 +8,7 @@ namespace API.DTO
     public class CheckCreateFlightInput
     {
         public Guid PlaneId { get; set; }
-        public DateTime DepartureTime { get; set; }
-        public DateTime LandedTime { get; set; }
+        public string DepartureTime { get; set; }
+        public string LandedTime { get; set; }
     }
 }

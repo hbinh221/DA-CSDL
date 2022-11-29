@@ -14,7 +14,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Airline Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input airline name!">
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a airline name" 
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a airline name"
             (ngModelChange)="getPlane()" formControlName="airlineId">
             <nz-option *ngFor="let data of airlineList" nzLabel="{{data.airlineName}}" nzValue="{{data.id}}">
             </nz-option>
@@ -25,7 +25,7 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Plane Name</nz-form-label>
         <nz-form-control nzErrorTip="Please input plane name!">
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a plane name" 
+          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a plane name"
             formControlName="planeId">
             <nz-option *ngFor="let data of planeList" nzLabel="{{data.planeName}}" nzValue="{{data.id}}">
             </nz-option>
@@ -39,7 +39,7 @@
           <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a from location name"
           (ngModelChange)="onChangeSourceLocation($event)"
             formControlName="fromLocationId">
-            <nz-option *ngFor="let data of sourceLocation" 
+            <nz-option *ngFor="let data of sourceLocation"
             nzLabel="{{data.locationName}}" nzValue="{{data.id}}"
             >
             </nz-option>
@@ -64,11 +64,11 @@
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Flight Time</nz-form-label>
         <nz-form-control nzErrorTip="Please input flight time!">
-          <nz-range-picker class="w-100" 
+          <nz-range-picker class="w-100"
           [nzDisabledDate] = "disabledEndDate"
-          nzFormat="yyyy-MM-dd HH:mm:ss"
-          formControlName="flightTime" 
-          [nzRanges]="ranges" 
+          nzFormat="dd-MM-YYYY HH:mm:ss"
+          formControlName="flightTime"
+          [nzRanges]="ranges"
           [nzShowTime]="{ nzHideDisabledOptions: true, nzDefaultOpenValue: timeDefaultValue }"></nz-range-picker>
         </nz-form-control>
       </nz-form-item>
@@ -127,8 +127,8 @@
             Delete
           </button>
         </div>
-   
-    
+
+
       </div>
     </div>
   </div>

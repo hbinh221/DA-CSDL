@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { finalize } from 'rxjs/operators';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { endOfMonth , setHours} from 'date-fns'
 @Component({
   selector: 'app-flight-modal',
@@ -46,7 +46,7 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.getAirline();
-    this.getPlane();
+    //this.getPlane();
     this.getLocation();
   }
 
@@ -60,7 +60,7 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
       toLocationId: [null, Validators.required],
       flightTime: [null, Validators.required],
       cost: [null, Validators.required],
-      remark: [null, Validators.required],
+      remark: [null],
     });
   }
 
@@ -110,11 +110,15 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
   getPlane(): void {
     this.isLoading = true;
     this.planeService
-      .getPlane('', this.airlineIdFilter)
+      .getPlane('', this.modalForm.value.airlineId ?? this.airlineIdFilter)
       .pipe(finalize(() => (this.isLoading = false)))
       .subscribe((res) => {
         if (res.code === 200) {
           this.planeList = res.data;
+          //challenging mindset
+          this.modalForm.get('planeId')?.setValidators([]);
+          this.modalForm.get('planeId')?.setValue(null);
+          this.modalForm.get('planeId')?.setValidators([Validators.required]);
         }
       });
   }
@@ -140,10 +144,12 @@ export class FlightModalComponent extends ModelBaseComponent implements OnInit {
     this.validateForm();
     this.isLoading = true;
     if (this.mode === 'create') {
+      this.modalForm.value.departureTime = this.datePipe.transform(this.modalForm.value.flightTime[0], 'yyyy-MM-dd HH:mm:ss');
+      this.modalForm.value.landedTime = this.datePipe.transform(this.modalForm.value.flightTime[1], 'yyyy-MM-dd HH:mm:ss');
       let payload = {
         planeId: this.modalForm.value.planeId,
-        departureTime: this.modalForm.value.flightTime[0],
-        landedTime: this.modalForm.value.flightTime[1]
+        departureTime: this.modalForm.value.departureTime,
+        landedTime: this.modalForm.value.landedTime
       };
 
       this.flightService

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -14,5 +15,6 @@ namespace API.Interface
         int Execute(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure);
         public Task<IEnumerable<T>> LoadData<T, U>(string storedProcedure, U parameters);
         public Task SaveData<T>(string storedProcedure, T parameters);
+        public DateTime ConvertStringToDate(string date);
     }
 }

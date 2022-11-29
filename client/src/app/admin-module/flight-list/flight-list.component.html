@@ -27,10 +27,10 @@
         <td>{{ data.seatQuantity }}</td>
         <td>{{ data.fromLocation }}</td>
         <td>{{ data.toLocation }}</td>
-        <td>{{ data.departureTime | date: "hh:mm:ss a" }} in
-          {{ data.departureTime | date: "dd/MM/yyyy" }}</td>
-        <td>{{ data.landedTime | date: "hh:mm:ss a" }} in
-          {{ data.landedTime | date: "dd/MM/yyyy" }}</td>
+        <td>{{ data.departureTime | date: "HH:mm:ss" }} in
+          {{ data.departureTime | date: "dd/MM/YYYY" }}</td>
+        <td>{{ data.landedTime | date: "HH:mm:ss" }} in
+          {{ data.landedTime | date: "dd/MM/YYYY" }}</td>
         <td>{{ data.cost | number}}</td>
       </tr>
     </ng-container>
