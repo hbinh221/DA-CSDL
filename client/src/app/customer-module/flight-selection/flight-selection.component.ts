@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
 import { AirlineService } from 'src/app/services/airline.service';
@@ -28,6 +28,7 @@ export class FlightSelectionComponent implements OnInit {
   listOfData: any[] = [];
   listRank: any[] = [];
   listAirline: any[] = [];
+  listLocation: any[] = [];
 
   total: number = 0;
   sortKey: string = 'Departure time by ascending';
@@ -43,7 +44,9 @@ export class FlightSelectionComponent implements OnInit {
     private flightService: FlightService,
     private rankService: RankService,
     private airlineService: AirlineService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private router: Router,
+    private locationService: LocationService
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +58,7 @@ export class FlightSelectionComponent implements OnInit {
           this.type = params['type'];
           this.passenger = params['passenger'];
           this.request.departureTime = new Date(params['fromDate']);
+          this.request.landedTime = new Date(params['toDate']);
           this.request.fromLocationId = params['fromLocationId'];
           this.request.toLocationId = params['toLocationId'];
           this.request.airlineId = null;
@@ -62,24 +66,37 @@ export class FlightSelectionComponent implements OnInit {
         })
       )
       .subscribe((res: any) => {
-        if (res.code === 200 && res.data && res.data.length > 0) {
-          this.fromLocationName = res.data[0]?.fromLocation;
-          this.toLocationName = res.data[0]?.toLocation;
-          this.fromLocationCode = this.fromLocationName.substring(
-            this.fromLocationName.indexOf('(') + 1,
-            this.fromLocationName.lastIndexOf(')')
-          );
-          this.toLocationCode = this.toLocationName.substring(
-            this.toLocationName.indexOf('(') + 1,
-            this.toLocationName.lastIndexOf(')')
-          );
-          this.listOfData = res.data;
-          this.total = res.data.length;
-        }
+        this.handleResponseData(res);
       });
+      this.fetchLocation();
       this.fetchAirline();
       this.isLoading = false;
   }
+
+  fetchLocation() {
+      this.locationService.getLocation().subscribe(res => {
+        if(res.code === 200){
+          this.listLocation = res.data
+        }
+      })
+}
+
+    handleResponseData(res: any){
+      if (res.code === 200 && res.data) {
+        this.fromLocationName = this.listLocation.find(location => location.id === this.request.fromLocationId)?.locationName;
+        this.toLocationName = this.listLocation.find(location => location.id === this.request.toLocationId)?.locationName;
+        this.fromLocationCode = this.fromLocationName.substring(
+          this.fromLocationName.indexOf('(') + 1,
+          this.fromLocationName.lastIndexOf(')')
+        );
+        this.toLocationCode = this.toLocationName.substring(
+          this.toLocationName.indexOf('(') + 1,
+          this.toLocationName.lastIndexOf(')')
+        );
+        this.listOfData = [...res.data];
+        this.total = res.data.length;
+      }
+    }
 
   initForm(){
     this.filterForm = this.fb.group({
@@ -125,5 +142,23 @@ export class FlightSelectionComponent implements OnInit {
 
   onChangeVisibleDetail(ev:any){
     this.isVisibleDetailTicket = ev;
+  }
+
+  goToInfo(data: any){
+    if(this.type === 'round-trip'){
+      localStorage.setItem('flight-info', JSON.stringify([data]));
+      this.request = {
+        ...this.request,
+        fromLocationId: this.request.toLocationId,
+        toLocationId: this.request.fromLocationId,
+        departureTime: this.request.landedTime,
+        airlineId: data.airlineId,
+      }
+      this.flightService.getFlightForPassenger(this.request).subscribe(res => {
+        this.handleResponseData(res);
+      });
+    }else{
+      this.router.navigateByUrl('passenger-info');
+    }
   }
 }

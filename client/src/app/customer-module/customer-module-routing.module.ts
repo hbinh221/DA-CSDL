@@ -4,6 +4,7 @@ import { LoggedInGuard } from '../guards/loggedIn.guard';
 import { CustomerLayoutComponent } from './customer-layout/customer-layout.component';
 import { CustomerViewComponent } from './customer-view/customer-view.component';
 import { FlightSelectionComponent } from './flight-selection/flight-selection.component';
+import { FlightSelectionPassengerInfoComponent } from './flight-selection/partials/flight-selection-passenger-info/flight-selection-passenger-info.component';
 import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
@@ -21,6 +22,10 @@ const routes: Routes = [
   path: 'flight-selection/:type/:fromLocationId/:toLocationId/:fromDate/:toDate/:passenger',
   component: FlightSelectionComponent,
   data: {}
+ },
+ {
+  path: 'passenger-info',
+  component: FlightSelectionPassengerInfoComponent,
  },
 ];
 

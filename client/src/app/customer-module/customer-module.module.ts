@@ -14,6 +14,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FlightSelectionComponent } from './flight-selection/flight-selection.component';
 import { FlightSelectionDetailComponent } from './flight-selection/partials/flight-selection-detail/flight-selection-detail.component';
+import { FlightSelectionPassengerInfoComponent } from './flight-selection/partials/flight-selection-passenger-info/flight-selection-passenger-info.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import { FlightSelectionDetailComponent } from './flight-selection/partials/flig
     CustomerViewComponent,
     FlightSelectionComponent,
     FlightSelectionDetailComponent,
+    FlightSelectionPassengerInfoComponent,
   ],
   imports: [
     CommonModule,

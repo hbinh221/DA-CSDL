@@ -21,24 +21,24 @@
         ></span>
         <nz-dropdown-menu #orderBy="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item (click)="onSortData('DepartureTime', 'asc')">
+            <li nz-menu-item (click)="onSortData('DepartureTime', 'ascending')">
               Departure time by ascending
             </li>
-            <li nz-menu-item (click)="onSortData('DepartureTime', 'desc')">
+            <li nz-menu-item (click)="onSortData('DepartureTime', 'descending')">
               Departure time by descending
             </li>
             <li nz-menu-divider></li>
-            <li nz-menu-item (click)="onSortData('AirlineName', 'asc')">
+            <li nz-menu-item (click)="onSortData('AirlineName', 'ascending')">
               Airline name by ascending
             </li>
-            <li nz-menu-item (click)="onSortData('AirlineName', 'desc')">
+            <li nz-menu-item (click)="onSortData('AirlineName', 'descending')">
               Airline name by descnding
             </li>
             <li nz-menu-divider></li>
-            <li nz-menu-item (click)="onSortData('Cost', 'asc')">
+            <li nz-menu-item (click)="onSortData('Cost', 'ascending')">
               Cost by ascending
             </li>
-            <li nz-menu-item (click)="onSortData('Cost', 'desc')">
+            <li nz-menu-item (click)="onSortData('Cost', 'descending')">
               Cost by descending
             </li>
           </ul>
@@ -86,13 +86,13 @@
       <div nz-col nzSpan="9">
         <div nz-row nzGutter="16">
           <div nz-col nzSpan="12">
-            <div class="text-center">
-              <span>PHỔ THÔNG</span>
+            <div class="text-center economy-card-header">
+              <span>ECONOMY</span>
             </div>
           </div>
           <div nz-col nzSpan="12">
-            <div class="text-center">
-              <span>THƯƠNG GIA</span>
+            <div class="text-center business-card-header">
+              <span>BUSINESS</span>
             </div>
           </div>
         </div>
@@ -129,22 +129,22 @@
               >
             </div>
             <div nz-col nzSpan="10">
-              <div nz-row>
-                <div nz-col nzSpan="12" class="text-center">
+              <div nz-row nzGutter="16">
+                <div nz-col nzSpan="12" class="text-center economy-card" (click)="goToInfo(item)">
                   <span>{{ item.rankClass[0].price | number }} </span>
                   <br />
                   <span>There are: {{ item.rankClass[0].remainingSeat }}</span>
                   <!-- {{listRank[0]?.cost }} -->
                 </div>
-                <div nz-col nzSpan="12" class="text-center">
+                <div nz-col nzSpan="12" class="text-center business-card" (click)="goToInfo(item)">
                   <span>{{ item.rankClass[1].price | number }} </span>
                   <br />
                   <span>There are: {{ item.rankClass[1].remainingSeat }}</span>
                 </div>
               </div>
             </div>
-            <app-flight-selection-detail [data]="item" [fromLocationName]="fromLocationName"
-            [toLocationName]="toLocationName" [listAirline]="listAirline" [isVisible]="isVisibleDetailTicket"
+            <app-flight-selection-detail class="w-100 mt-2" [data]="item" [fromLocationName]="fromLocationName"
+            [toLocationName]="toLocationName"  [isVisible]="isVisibleDetailTicket"
             (onEmitVisible)="onChangeVisibleDetail($event)"></app-flight-selection-detail>
           </div>
         </nz-card>
