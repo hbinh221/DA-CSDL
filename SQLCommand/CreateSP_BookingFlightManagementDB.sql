@@ -204,21 +204,21 @@ begin
 	inner join Location fl on f.FromLocationId = fl.Id
 	inner join Location tl on f.ToLocationId = tl.Id
 	order by
-	case when @ValueSort = 'DepartureTime desc' then DepartureTime end desc,
-	case when @ValueSort = 'Cost desc' then Cost end desc ,
-	case when @ValueSort = 'AirlineName desc' then AirlineName end desc,
-	case when @ValueSort = 'DepartureTime asc' then DepartureTime end asc,
-	case when @ValueSort = 'Cost asc' then Cost end asc ,
-	case when @ValueSort = 'AirlineName asc' then AirlineName end asc,
-	case when isnull(@ValueSort, 'asc') = 'asc' then DepartureTime end
+	case when @ValueSort = 'DepartureTime descending' then DepartureTime end desc,
+	case when @ValueSort = 'Cost descending' then Cost end desc ,
+	case when @ValueSort = 'AirlineName descending' then AirlineName end desc,
+	case when @ValueSort = 'DepartureTime ascending' then DepartureTime end asc,
+	case when @ValueSort = 'Cost ascending' then Cost end asc ,
+	case when @ValueSort = 'AirlineName ascending' then AirlineName end asc,
+	case when isnull(@ValueSort, 'ascending') = 'ascending' then DepartureTime end
 end;
 go
 exec GetFlightForPassenger 
-		'2022-11-21 13:32:41.0300000', 
+		'2022-11-21 00:32:41.0300000', 
 		'73CB409E-0A67-ED11-BE8B-484D7EF0B796', 
 		'78CB409E-0A67-ED11-BE8B-484D7EF0B796', 
 		null,
-		'Cost asc';
+		'Cost ascending';
 go
 -- check to create a flight that does not duplicate flight times on one plane
 create or alter procedure CheckCreateFlight
