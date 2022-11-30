@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -46,7 +47,8 @@ export class FlightSelectionComponent implements OnInit {
     private airlineService: AirlineService,
     private fb: FormBuilder,
     private router: Router,
-    private locationService: LocationService
+    private locationService: LocationService,
+    public datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +59,7 @@ export class FlightSelectionComponent implements OnInit {
         switchMap((params: any) => {
           this.type = params['type'];
           this.passenger = params['passenger'];
-          this.request.departureTime = new Date(params['fromDate']);
+          this.request.departureTime = this.datePipe.transform(new Date(params['fromDate']), 'yyyy-MM-dd HH:mm:ss');
           this.request.landedTime = new Date(params['toDate']);
           this.request.fromLocationId = params['fromLocationId'];
           this.request.toLocationId = params['toLocationId'];
@@ -130,7 +132,7 @@ export class FlightSelectionComponent implements OnInit {
     this.fetchData();
   }
 
- 
+
 
   // fetchData(payload: any){
   //   this.flightService.getFlightForPassenger(payload);
