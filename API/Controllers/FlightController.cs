@@ -84,8 +84,8 @@ namespace API.Controllers
             var dp_params = new DynamicParameters();
             Response<FlightDto> response = new Response<FlightDto>();
             dp_params.Add("@FlightNo", input.FlightNo, DbType.String);
-            dp_params.Add("@DepartureTime", _db.ConvertStringToDate(input.DepartureTime), DbType.DateTime2);
-            dp_params.Add("@LandedTime", _db.ConvertStringToDate(input.LandedTime), DbType.DateTime2);
+            dp_params.Add("@DepartureTime", input.DepartureTime, DbType.DateTime2);
+            dp_params.Add("@LandedTime", input.LandedTime, DbType.DateTime2);
             dp_params.Add("@Cost", input.Cost, DbType.Decimal);
             dp_params.Add("@Remark", input.Remark, DbType.String);
             dp_params.Add("@FromLocationId", input.FromLocationId, DbType.Guid);
@@ -137,8 +137,8 @@ namespace API.Controllers
             Response<bool> response = new Response<bool>();
 
             dp_params.Add("@PlaneId", input.PlaneId, DbType.Guid);
-            dp_params.Add("@DepartureTime", _db.ConvertStringToDate(input.DepartureTime), DbType.DateTime2);
-            dp_params.Add("@LandedTime", _db.ConvertStringToDate(input.LandedTime), DbType.DateTime2);
+            dp_params.Add("@DepartureTime", input.DepartureTime, DbType.DateTime2);
+            dp_params.Add("@LandedTime", input.LandedTime, DbType.DateTime2);
             var newData = await _db.Get<bool>("CheckCreateFlight", dp_params);
 
             response.Code = 200;

@@ -75,11 +75,5 @@ namespace API.Service
                 await conn.ExecuteAsync(storedProcedure, parameters, commandType: CommandType.StoredProcedure);
             }
         }
-
-        public DateTime ConvertStringToDate(string date)
-        {
-            DateTime myDate = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
-            return myDate;
-        }
     }
 }
