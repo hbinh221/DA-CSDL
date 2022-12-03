@@ -1,6 +1,6 @@
 <div class="register-container">
     <h1 class="register__container-header">Register</h1>
-    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <form nz-form [formGroup]="modalForm" (ngSubmit)="submitForm()">
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="firstname">First Name</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your first name!">
@@ -19,6 +19,30 @@
             <input nz-input formControlName="idCard"  />
           </nz-form-control>
         </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired >Email</nz-form-label>
+          <nz-form-control nzErrorTip="Email has been used or invalid"
+          [nzSm]="14"
+          [nzXs]="24">
+            <nz-input-group >
+              <input type="text" nz-input formControlName="email" placeholder="Email"
+                />
+            </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phone" nzRequired>Phone</nz-form-label>
+          <nz-form-control
+            [nzSm]="14"
+            [nzXs]="24"
+            nzErrorTip="Please input your phone number!"
+          >
+              <input formControlName="phone" id="'phone'" nz-input />
+          </nz-form-control>
+        </nz-form-item>
+
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="birthday" nzRequired>Birthday</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your birthday!">
@@ -33,17 +57,7 @@
             <label nz-radio-button [nzValue]="false">Female</label>
           </nz-radio-group>
         </nz-form-item>
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="phone" nzRequired>Phone</nz-form-label>
-          <nz-form-control
-            [nzSm]="14"
-            [nzXs]="24"
-            [nzValidateStatus]="validateForm.controls['phone']"
-            nzErrorTip="Please input your phone number!"
-          >
-              <input formControlName="phone" id="'phone'" nz-input />
-          </nz-form-control>
-        </nz-form-item>
+   
         <nz-form-item>
           <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="password" nzRequired>Password</nz-form-label>
           <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your password!">

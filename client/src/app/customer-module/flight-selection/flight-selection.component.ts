@@ -32,6 +32,7 @@ export class FlightSelectionComponent implements OnInit {
   listLocation: any[] = [];
 
   total: number = 0;
+  totalPassenger: number = 0;
   sortKey: string = 'Departure time by ascending';
   request: any = {
     departureTime: null,
@@ -148,19 +149,30 @@ export class FlightSelectionComponent implements OnInit {
 
   goToInfo(data: any){
     if(this.type === 'round-trip'){
-      localStorage.setItem('flight-info', JSON.stringify([data]));
-      this.request = {
-        ...this.request,
-        fromLocationId: this.request.toLocationId,
-        toLocationId: this.request.fromLocationId,
-        departureTime: this.request.landedTime,
-        airlineId: data.airlineId,
+      let  storageData:any[] = [];
+      if(localStorage.getItem('flight-info')){
+        storageData = JSON.parse(localStorage.getItem('flight-info')!);
       }
-      this.flightService.getFlightForPassenger(this.request).subscribe(res => {
-        this.handleResponseData(res);
-      });
+      if(storageData.length === 0){
+        storageData.push(data);
+        this.request = {
+          ...this.request,
+          fromLocationId: this.request.toLocationId,
+          toLocationId: this.request.fromLocationId,
+          departureTime: this.request.landedTime,
+          airlineId: data.airlineId,
+        }
+        this.flightService.getFlightForPassenger(this.request).subscribe(res => {
+          this.handleResponseData(res);
+        });
+        localStorage.setItem('flight-info', JSON.stringify([{...data, passengerQuantity: this.passenger}]));
+      }
+      else if(storageData.length === 1){
+        localStorage.setItem('flight-info', JSON.stringify([...storageData, {...data, passengerQuantity: this.passenger}]));
+        this.router.navigateByUrl('/customer/passenger-info');
+      }
     }else{
-      this.router.navigateByUrl('passenger-info');
+      this.router.navigateByUrl('/customer/passenger-info');
     }
   }
 }

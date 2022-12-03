@@ -33,7 +33,7 @@
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Birth Day</nz-form-label>
         <nz-form-control nzErrorTip="Please input birth day!">
           <nz-input-group >
-            <nz-date-picker formControlName="birthDay" placeholder="Birth Day" [(ngModel)]="modalForm.value.birthDay"
+            <nz-date-picker formControlName="birthDay" placeholder="Birth Day" 
               style="width: 100%"></nz-date-picker>
           </nz-input-group>
         </nz-form-control>
@@ -62,10 +62,10 @@
 
       <nz-form-item>
         <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Email</nz-form-label>
-        <nz-form-control nzErrorTip="Please input email!">
+        <nz-form-control nzErrorTip="Email has been used or invalid">
           <nz-input-group >
             <input type="text" nz-input formControlName="email" placeholder="Email"
-              pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" />
+              />
           </nz-input-group>
         </nz-form-control>
       </nz-form-item>

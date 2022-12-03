@@ -6,10 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./flight-selection-passenger-info.component.css']
 })
 export class FlightSelectionPassengerInfoComponent implements OnInit {
-
+  passengerQuantity: number = 0;
   constructor() { }
 
   ngOnInit(): void {
+    if(localStorage.getItem('flight-info')){
+      this.passengerQuantity = JSON.parse(localStorage.getItem('flight-info')!)[0].passengerQuantity
+    }
   }
 
 }
