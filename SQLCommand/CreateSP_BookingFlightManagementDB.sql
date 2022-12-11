@@ -122,6 +122,24 @@ begin
 	select @IsDuplicate as IsDuplicate;
 end;
 go
+create or alter procedure CheckDuplicateIdCard
+@IdCard nvarchar(50)
+with recompile
+as
+begin
+	declare @IsDuplicate bit, @DuplicateId uniqueidentifier; 
+	set @DuplicateId = (select Id from Passenger where IdCard = @IdCard);
+	if(isnull(@DuplicateId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000')
+	begin
+		set @IsDuplicate = 1;
+	end
+	else
+	begin
+		set @IsDuplicate = 0;
+	end
+	select @IsDuplicate as IsDuplicate;
+end;
+go
 create or alter procedure GetFlight
 @Id uniqueidentifier, @AirlineId uniqueidentifier, @ValueSort varchar(20)
 as
@@ -159,7 +177,7 @@ begin
 	case when @ValueSort = 'AirlineName asc' then AirlineName end asc,
 	case when isnull(@ValueSort, 'asc') = 'asc' then DepartureTime end
 end;
-exec GetFlight null, '88EA7E3D-925E-ED11-BE82-484D7EF0B796', null
+--exec GetFlight null, '88EA7E3D-925E-ED11-BE82-484D7EF0B796', null
 exec GetFlight null, null, 'Cost desc'
 go
 create or alter procedure GetRemaningTicket
@@ -213,12 +231,12 @@ begin
 	case when isnull(@ValueSort, 'ascending') = 'ascending' then DepartureTime end
 end;
 go
-exec GetFlightForPassenger 
-		'2022-11-21 00:32:41.0300000', 
-		'73CB409E-0A67-ED11-BE8B-484D7EF0B796', 
-		'78CB409E-0A67-ED11-BE8B-484D7EF0B796', 
-		null,
-		'Cost ascending';
+--exec GetFlightForPassenger 
+--		'2022-11-21 00:32:41.0300000', 
+--		'73CB409E-0A67-ED11-BE8B-484D7EF0B796', 
+--		'78CB409E-0A67-ED11-BE8B-484D7EF0B796', 
+--		null,
+--		'Cost ascending';
 go
 -- check to create a flight that does not duplicate flight times on one plane
 create or alter procedure CheckCreateFlight
@@ -279,4 +297,23 @@ begin
 	inner join (select Id, RankName, BaggageWeight from Rank) ra on r.RankId = ra.Id
 	group by ra.RankName, ra.BaggageWeight, t.Price, t.FlightId;
 end;
-exec GetRankForFlight 'ED55B8CC-0A67-ED11-BE8B-484D7EF0B796'
+go
+--exec GetRankForFlight 'ED55B8CC-0A67-ED11-BE8B-484D7EF0B796'
+create or alter procedure CheckIdCardHaveData
+@IdCard nvarchar(12)
+with recompile
+as
+begin
+	select Id, FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email from Passenger where IdCard = @IdCard and IsAdmin = 0
+end;
+go
+--insert multiple
+create or alter procedure InsertPassengerTmpList
+@FirstName nvarchar(50), @LastName nvarchar(50), @IdCard nvarchar(12), @Birthday datetime2, @Gender bit, @Phone nvarchar(10),@Email nvarchar(50)
+with recompile
+as
+begin
+	insert into PassengerTmp(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, PassengerId) 
+	values (@FirstName, @LastName, @IdCard, @Birthday, @Gender, @Phone, @Email, null);
+	select top 1 * from PassengerTmp order by Id desc
+end;

@@ -54,7 +54,7 @@ begin
 	-- Price = Cost in Rank table + Cost in Flight table
 	set @Price = (select Cost from Rank where Id = (select RankId from inserted)) + (select Cost from Flight where Id = (select FlightId from inserted));
 
-	insert into Ticket(Code, Price, Remark, Gate, PromotionId, FlightId, ReservationId, PassengerId, PaymentId, PaymentDate)
+	insert into Ticket(Code, Price, Remark, Gate, PromotionId, FlightId, ReservationId, PassengerTmpId, PaymentId, PaymentDate)
 	values (@Code, @Price, N'', @Gate, null, (select FlightId from inserted), (select Id from inserted), null, null, null);
 end;
 go
@@ -66,5 +66,17 @@ begin
 	delete from Ticket where FlightId = (select Id from deleted);
 	delete from Reservation where FlightId = (select Id from deleted);
 	delete from Flight where Id = (select Id from deleted);
+end;
+go
+-- update IsReserved in reservation table when ticket have PassengerTmpId
+create or alter trigger Trg_Ticket_Update_IsReserved_Reservation 
+	on Ticket 
+	for update 
+as
+begin
+	if((select IsReserved from Reservation where Id = (select ReservationId from inserted)) <> 1)
+	begin 
+		update Reservation set IsReserved = 1 where Id = (select ReservationId from inserted);
+	end;
 end;
 go

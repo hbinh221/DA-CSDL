@@ -28,7 +28,7 @@ export class BookingFlightComponent implements OnInit {
     private airlineService: AirlineService,
     private fb: FormBuilder,
     private router: Router,
-    private datepipe: DatePipe,
+    private datepipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -36,8 +36,7 @@ export class BookingFlightComponent implements OnInit {
     forkJoin([
       this.locationService.getLocation(),
       this.airlineService.getAirline(),
-    ])
-    .subscribe((result) => {
+    ]).subscribe((result) => {
       this.fetchLocation(result[0]);
       this.fetchAirline(result[1]);
     });
@@ -55,16 +54,16 @@ export class BookingFlightComponent implements OnInit {
     this.form.get('type')?.setValue('one-way');
   }
 
-  fetchLocation(res:any) {
-      if (res.code === 200) {
-        this.listLocation = res.data;
-        this.sourceLocation = [...this.listLocation];
-        this.desLocation = [...this.listLocation];
-      }
+  fetchLocation(res: any) {
+    if (res.code === 200) {
+      this.listLocation = res.data;
+      this.sourceLocation = [...this.listLocation];
+      this.desLocation = [...this.listLocation];
+    }
   }
 
-  fetchAirline(res:any){
-    if(res.code===200){
+  fetchAirline(res: any) {
+    if (res.code === 200) {
       this.listAirline = [...res.data];
     }
   }
@@ -86,13 +85,16 @@ export class BookingFlightComponent implements OnInit {
       this.sourceLocation = [...this.sourceLocation];
     }
   }
-  
+
   goToSelectFlight() {
-    const fromDate = this.form.value.type === 'one-way' ? 
-    this.datepipe.transform( this.form.value.flightTime, 'YYYY-MM-dd') : 
-    this.datepipe.transform( this.form.value.flightTime[0], 'YYYY-MM-dd');
-    const toDate = this.form.value.type === 'one-way' ? '' : 
-    this.datepipe.transform(this.form.value.flightTime[1], 'YYYY-MM-dd');
+    const fromDate =
+      this.form.value.type === 'one-way'
+        ? this.datepipe.transform(this.form.value.flightTime, 'YYYY-MM-dd')
+        : this.datepipe.transform(this.form.value.flightTime[0], 'YYYY-MM-dd');
+    const toDate =
+      this.form.value.type === 'one-way'
+        ? ''
+        : this.datepipe.transform(this.form.value.flightTime[1], 'YYYY-MM-dd');
     this.router.navigate([
       'customer/flight-selection',
       this.form.value.type,
@@ -104,9 +106,9 @@ export class BookingFlightComponent implements OnInit {
     ]);
   }
 
- addHours(numOfHours:any, date = new Date()) {
+  addHours(numOfHours: any, date = new Date()) {
     date.setTime(date.getTime() + numOfHours * 60 * 60 * 1000);
-  
+
     return date;
   }
 }

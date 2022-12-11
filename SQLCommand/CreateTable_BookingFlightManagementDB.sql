@@ -29,8 +29,8 @@ create table Payment(
 go
 create table Passenger(
 	Id uniqueidentifier primary key default newsequentialid(),
-	FirstName nvarchar(20) not null,
-	LastName nvarchar(10) not null,
+	FirstName nvarchar(50) not null,
+	LastName nvarchar(50) not null,
 	IdCard nvarchar(12) not null,
 	BirthDay datetime2 not null,
 	Gender bit not null, -- 1 male, 0 female
@@ -38,6 +38,19 @@ create table Passenger(
 	Email nvarchar(50) not null,
 	Password nvarchar(1000) null,
 	IsAdmin bit null -- 1 admin, 0 passenger
+);
+go
+create table PassengerTmp(
+	Id uniqueidentifier primary key default newsequentialid(),
+	FirstName nvarchar(50) not null,
+	LastName nvarchar(50) not null,
+	IdCard nvarchar(12) not null,
+	BirthDay datetime2 not null,
+	Gender bit not null, -- 1 male, 0 female
+	Phone nvarchar(10) not null,
+	Email nvarchar(50) not null,
+	PassengerId uniqueidentifier null,
+	constraint Passenger_PassengerId_Foreign foreign key (PassengerId) references Passenger(Id),
 );
 go
 /*create table Baggage(
@@ -109,12 +122,12 @@ create table Ticket(
 	Gate nvarchar(10) null,
 	PaymentDate datetime2 null,
 	FlightId uniqueidentifier null,
-	PassengerId uniqueidentifier null,
+	PassengerTmpId uniqueidentifier null,
 	PaymentId uniqueidentifier null,
 	ReservationId uniqueidentifier unique null,
 	PromotionId uniqueidentifier null,
 	constraint Ticket_FlightId_Foreign foreign key (FlightId) references Flight(Id),
-	constraint Ticket_PassengerId_Foreign foreign key (PassengerId) references Passenger(Id),
+	constraint Ticket_PassengerTmpId_Foreign foreign key (PassengerTmpId) references PassengerTmp(Id),
 	constraint Ticket_PaymentId_Foreign foreign key (PaymentId) references Payment(Id),
 	constraint Ticket_ReservationId_Foreign foreign key (ReservationId) references Reservation(Id),
 	constraint Ticket_PromotionId_Foreign foreign key (PromotionId) references Promotion(Id)

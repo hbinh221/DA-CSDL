@@ -1,138 +1,77 @@
 <div class="container">
   <h2 class="text-primary">Passenger Information</h2>
-  <span
-    >Please enter all passenger names and other information as they appear on
+  <span>Please enter all passenger names and other information as they appear on
     the passenger's goverenment-issues identification(s).
   </span>
   <div nz-row nzGutter="16" class="mt-3">
     <div nz-col nzSpan="18">
       <form [formGroup]="form">
         <div formArrayName="passengerInfo">
-          <ng-container
-            *ngFor="let item of passengerInfo.controls; index as i"
-            [formGroupName]="i"
-          >
+          <ng-container *ngFor="let item of passengerInfo.controls; index as i" [formGroupName]="i">
             <nz-card nzTitle="Passenger {{ i + 1 }}">
               <h5>Passenger detail</h5>
               <nz-form-item>
-                <nz-form-label
-                  [nzRequired]="true"
-                  style="width: 25%; text-align: left"
-                  >First Name</nz-form-label
-                >
+                <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left">First Name</nz-form-label>
                 <nz-form-control nzErrorTip="Please input first name!">
                   <nz-input-group>
-                    <input
-                      type="text"
-                      nz-input
-                      formControlName="firstName"
-                      placeholder="First Name"
-                    />
+                    <input type="text" nz-input formControlName="firstName" placeholder="First Name" />
                   </nz-input-group>
                 </nz-form-control>
               </nz-form-item>
 
               <nz-form-item>
-                <nz-form-label
-                  [nzRequired]="true"
-                  style="width: 25%; text-align: left"
-                  >Last Name</nz-form-label
-                >
+                <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left">Last Name</nz-form-label>
                 <nz-form-control nzErrorTip="Please input last name!">
                   <nz-input-group>
-                    <input
-                      type="text"
-                      nz-input
-                      formControlName="lastName"
-                      placeholder="Last Name"
-                    />
+                    <input type="text" nz-input formControlName="lastName" placeholder="Last Name" />
                   </nz-input-group>
                 </nz-form-control>
               </nz-form-item>
 
               <nz-form-item>
-                <nz-form-label
-                  [nzRequired]="true"
-                  style="width: 25%; text-align: left"
-                  >Id Card</nz-form-label
-                >
+                <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left">Id Card</nz-form-label>
                 <nz-form-control nzErrorTip="Please input id card!">
                   <nz-input-group>
-                    <input
-                      type="text"
-                      nz-input
-                      formControlName="idCard"
-                      placeholder="Id Card"
-                      maxlength="12"
-                    />
+                    <input type="text" nz-input formControlName="idCard" placeholder="Id Card" maxlength="12"
+                      (input)="onSearch($event, i)" />
                   </nz-input-group>
                 </nz-form-control>
               </nz-form-item>
 
               <nz-form-item>
-                <nz-form-label
-                  [nzRequired]="true"
-                  style="width: 25%; text-align: left"
-                  >Birth Day</nz-form-label
-                >
+                <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left">Birth Day</nz-form-label>
                 <nz-form-control nzErrorTip="Please input birth day!">
                   <nz-input-group>
-                    <nz-date-picker
-                      formControlName="birthday"
-                      placeholder="Birth Day"
-                      style="width: 100%"
-                    ></nz-date-picker>
+                    <nz-date-picker formControlName="birthDay" placeholder="Birth Day"
+                      style="width: 100%"></nz-date-picker>
                   </nz-input-group>
                 </nz-form-control>
               </nz-form-item>
 
               <nz-form-item>
-                <nz-form-label
-                  [nzRequired]="true"
-                  style="width: 25%; text-align: left"
-                  >Gender</nz-form-label
-                >
+                <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left">Gender</nz-form-label>
                 <nz-form-control nzErrorTip="Please input gender name!">
-                  <!-- <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a gender" [(ngModel)]="modalForm.value.gender"
-                                formControlName="gender">
-                                <nz-option *ngFor="let data of gender" nzLabel="{{data.label}}" nzValue="{{data.value}}">
-                                </nz-option>
-                              </nz-select> -->
+                  <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a gender" formControlName="gender">
+                    <nz-option *ngFor="let data of gender" nzLabel="{{data.label}}" nzValue="{{data.value}}">
+                    </nz-option>
+                  </nz-select>
                 </nz-form-control>
               </nz-form-item>
 
               <nz-form-item>
-                <nz-form-label
-                  [nzRequired]="true"
-                  style="width: 25%; text-align: left"
-                  >Phone</nz-form-label
-                >
+                <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left">Phone</nz-form-label>
                 <nz-form-control nzErrorTip="Please input phone!">
                   <nz-input-group>
-                    <input
-                      type="text"
-                      nz-input
-                      formControlName="phone"
-                      placeholder="Phone"
-                    />
+                    <input type="text" nz-input formControlName="phone" placeholder="Phone" />
                   </nz-input-group>
                 </nz-form-control>
               </nz-form-item>
 
               <nz-form-item>
-                <nz-form-label
-                  [nzRequired]="true"
-                  style="width: 25%; text-align: left"
-                  >Email</nz-form-label
-                >
+                <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left">Email</nz-form-label>
                 <nz-form-control nzErrorTip="Email has been used or invalid">
                   <nz-input-group>
-                    <input
-                      type="text"
-                      nz-input
-                      formControlName="email"
-                      placeholder="Email"
-                    />
+                    <input type="text" nz-input formControlName="email" placeholder="Email" />
                   </nz-input-group>
                 </nz-form-control>
               </nz-form-item>
@@ -156,20 +95,16 @@
           <div class="d-flex align-center">
             <span>{{ fromLocationCode }}</span>
             &nbsp;
-            <span
-              class="w-100"
-              nz-icon
-              nzType="arrow-right"
-              nzTheme="outline"
-            ></span>
+            <span class="w-100" nz-icon nzType="arrow-right" nzTheme="outline"></span>
             &nbsp;
             <span>{{ toLocationCode }}</span>
-            <span class="float-right">{{ data.cost | number }}VND</span>
+          </div>
+          <div class="">
+
+            <span class="">{{ data.cost | number }}VND</span>
           </div>
           <div>
-            <span class="text-primary"
-              >Departing {{ data.departureTime | date }}</span
-            >
+            <span class="text-primary">Departing {{ data.departureTime | date }}</span>
           </div>
           <div>{{ fromLocationName }} to {{ toLocationName }}</div>
         </ng-container>

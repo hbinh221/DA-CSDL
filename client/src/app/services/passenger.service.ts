@@ -37,6 +37,13 @@ export class PassengerService {
     );
   }
 
+  checkIdCard(payload: string): Observable<any> {
+    return this.http.post(
+      environment.baseUrl + this.baseUrl + '/check/idcardhavedata' + '?idCard=' + payload,
+      payload
+    );
+  }
+
   deleteAdmin(id: string): Observable<any> {
     return this.http.delete(
       environment.baseUrl + this.baseUrl + '/delete/admin' + '?id=' + id

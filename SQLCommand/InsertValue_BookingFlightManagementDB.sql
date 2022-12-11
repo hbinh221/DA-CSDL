@@ -55,21 +55,25 @@ values (N'FlightNo', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()),
 @FromLocationId, @ToLocationId, @PlaneId);
 go
 --set @PlaneId = (select Id from Plane);
-declare @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @PlaneId uniqueidentifier;
-set @FromLocationId = (select top 1 Id from Location);
-set @ToLocationId = (select top 1 Id from Location order by Id desc);
-insert into Flight(FlightNo, Cost, Remark, DepartureTime, LandedTime, FromLocationId, ToLocationId, PlaneId)
-values (N'FlightNo2', 3000000, N'', DATEADD(HH, 6, GETDATE()), DATEADD(HH, 8, GETDATE()), 
-@FromLocationId, @ToLocationId, '58EF1951-7A69-ED11-BE8B-484D7EF0B796');
+--declare @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @PlaneId uniqueidentifier;
+--set @FromLocationId = (select top 1 Id from Location);
+--set @ToLocationId = (select top 1 Id from Location order by Id desc);
+--insert into Flight(FlightNo, Cost, Remark, DepartureTime, LandedTime, FromLocationId, ToLocationId, PlaneId)
+--values (N'FlightNo2', 3000000, N'', DATEADD(HH, 6, GETDATE()), DATEADD(HH, 8, GETDATE()), 
+--@FromLocationId, @ToLocationId, '58EF1951-7A69-ED11-BE8B-484D7EF0B796');
 go
 insert into Promotion(PromotionName, StartDate, EndDate, Discount) values
 (N'Promotion4',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),
 (N'Promotion2',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),
 (N'Promotion3',GETDATE(), DATEADD(HH, 2, GETDATE()), 10);
+go
+insert into PassengerTmp(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, PassengerId) 
+values (N'NTD', N'sadasd', N'001201015777', '2001-09-17 16:12:25.113', 1, N'0392047427', N'asdasd@gmail.com', null);
+go
+-- get id after insert record but only identity
+--SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];  
+--GO  
+--SELECT @@IDENTITY AS [@@IDENTITY];  
 
-select * from Airline 
-select * from Plane 
-select * from Location 
-select top 1 p.Id, p.PlaneName, p.SeatQuantity, a.AirlineName, p.AirlineId 
-from Airline a inner join Plane p on a.Id = p.AirlineId where p.Id = @Id order by p.Id desc
-select * from Flight
+select * from PassengerTmp where IdCard ='001201015777'
+select * from Location
