@@ -24,16 +24,25 @@ export class PassengerService {
       payload
     );
   }
+
   updateAdmin(id: string, payload: any): Observable<any> {
     return this.http.put(
       environment.baseUrl + this.baseUrl + '/update/' + id,
       payload
     );
   }
+
   checkEmail(email: string) {
     return this.http.post(
       environment.baseUrl + this.baseUrl + '/checkemail' + '?email=' + email,
       null
+    );
+  }
+
+  addPassengerTmp(payload: any): Observable<any> {
+    return this.http.post(
+      environment.baseUrl + this.baseUrl + 'tmp' + '/add/passengertmp',
+      payload
     );
   }
 

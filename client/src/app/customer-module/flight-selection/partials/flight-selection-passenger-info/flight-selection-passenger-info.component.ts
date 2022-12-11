@@ -9,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocationService } from 'src/app/services/location.service';
 import { BehaviorSubject } from 'rxjs';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-flight-selection-passenger-info',
@@ -45,7 +46,8 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private locationService: LocationService,
-    private passengerService: PassengerService
+    private passengerService: PassengerService,
+    protected msg: NzMessageService,
   ) {}
 
   ngOnInit() {
@@ -145,5 +147,17 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     this.search$.next(target.value);
     this.indexFromArray = index;
+  }
+
+  addPasengerTmp(): void {
+    let payload: any[] = [];
+    payload = this.form.value?.passengerInfo;
+    this.passengerService.addPassengerTmp(payload).subscribe((res) => {
+      if(res.code === 200) {
+        let list: any[] = [];
+        list = res.data;
+        this.msg.success("Success")
+      }
+    })
   }
 }
