@@ -39,13 +39,12 @@ namespace API.Controllers
 
             return response;
         }
-        ///
-        [HttpPut("update/{id}")]
 
+        [HttpPut("update/{id}")]
         public async Task<Response<PassengerDto>> Update(Guid id,[FromBody] PassengerDto input)
         {
             var dp_params = new DynamicParameters();
-            Response<PassengerDto> response = new Response<PassengerDto>();
+            Response<PassengerDto> response = new();
             dp_params.Add("@Id", id, DbType.Guid);
             dp_params.Add("@FirstName", input.FirstName, DbType.String);
             dp_params.Add("@LastName", input.LastName, DbType.String);
@@ -88,6 +87,7 @@ namespace API.Controllers
             response.Data = user;
             return response;
         }
+
         [HttpPost("register")]
         public async Task<Response<AdminDto>> Register(RegisterDto input)
         {
@@ -105,7 +105,7 @@ namespace API.Controllers
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 string sqlCommand = "insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin)" +
-                    "values (@FirstName, @LastName,@IdCard,@BirthDay,@Gender,@Phone,@Email,@Password,@IsAdmin)";
+                    "values (@FirstName, @LastName, @IdCard, @BirthDay, @Gender, @Phone, @Email, @Password, @IsAdmin)";
                 if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == 1)
                 {
                     sqlCommand = "select top 1 * from Passenger where IsAdmin = 1 order by Id desc";
@@ -120,36 +120,6 @@ namespace API.Controllers
             return response;
         }
 
-        [HttpPost("add/passenger")]
-        public async Task<Response<string>> InsertPassenger(List<PassengerDto> input)
-        {
-            var dp_params = new DynamicParameters();
-            Response<string> response = new Response<string>();
-            foreach (PassengerDto passenger in input)
-            {
-                dp_params.Add("@FirstName", passenger.FirstName, DbType.String);
-                dp_params.Add("@LastName", passenger.LastName, DbType.String);
-                dp_params.Add("@IdCard", passenger.IdCard, DbType.String);
-                dp_params.Add("@BirthDay", passenger.BirthDay, DbType.DateTime2);
-                dp_params.Add("@Gender", passenger.Gender, DbType.Boolean);
-                dp_params.Add("@Phone", passenger.Phone, DbType.String);
-                dp_params.Add("@Email", passenger.Email, DbType.String);
-                dp_params.Add("@Password", passenger.Password, DbType.String);
-                dp_params.Add("@IsAdmin", false, DbType.Boolean);
-                using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
-                {
-                    string sqlCommand = "insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin)" +
-                        "values (@FirstName, @LastName,@IdCard,@BirthDay,@Gender,@Phone,@Email,@Password,@IsAdmin)";
-                    if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == input.Count)
-                    {
-                        response.Code = 200;
-                        response.Data = "Success";
-                    }
-                };
-            }
-            return response;
-        }
-
         [HttpPost("checkemail")]
         public async Task<bool> CheckDuplicateEmail(string email)
         {
@@ -159,11 +129,35 @@ namespace API.Controllers
             return isDuplicate;
         }
 
+        [HttpPost("check/idcard")]
+        public async Task<bool> CheckDuplicateIdCard(string idCard)
+        {
+            var dp_params = new DynamicParameters();
+            dp_params.Add("@IdCard", idCard, DbType.String);
+            bool isDuplicate = await _db.Get<bool>("CheckDuplicateIdCard", dp_params);
+            return isDuplicate;
+        }
+
+        [HttpPost("check/idcardhavedata")]
+        public async Task<Response<PassengerDto>> CheckIdCardHaveData(string idCard)
+        {
+            var dp_params = new DynamicParameters();
+            Response<PassengerDto> response = new();
+            dp_params.Add("@IdCard", idCard, DbType.String);
+            PassengerDto passenger = await _db.Get<PassengerDto>("CheckIdCardHaveData", dp_params);
+            if(passenger != null)
+            {
+                response.Code = 200;
+                response.Data = passenger;
+            }
+            return response;
+        }
+
         [HttpDelete("delete/admin")]
         public async Task<Response<AdminDto>> DeleteAdmin(Guid id)
         {
             var dp_params = new DynamicParameters();
-            Response<AdminDto> response = new Response<AdminDto>();
+            Response<AdminDto> response = new();
 
             dp_params.Add("@Id", id, DbType.Guid);
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
