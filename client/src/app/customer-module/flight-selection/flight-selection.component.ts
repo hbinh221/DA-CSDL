@@ -53,6 +53,7 @@ export class FlightSelectionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    sessionStorage.clear();
     this.initForm();
     this.isLoading = true;
     this.route.params
@@ -147,11 +148,11 @@ export class FlightSelectionComponent implements OnInit {
     this.isVisibleDetailTicket = ev;
   }
 
-  goToInfo(data: any){
+  goToInfo(data: any, rankName: string){
     if(this.type === 'round-trip'){
       let  storageData:any[] = [];
-      if(localStorage.getItem('flight-info')){
-        storageData = JSON.parse(localStorage.getItem('flight-info')!);
+      if(sessionStorage.getItem('flight-info')){
+        storageData = JSON.parse(sessionStorage.getItem('flight-info')!);
       }
       if(storageData.length === 0){
         storageData.push(data);
@@ -165,17 +166,18 @@ export class FlightSelectionComponent implements OnInit {
         this.flightService.getFlightForPassenger(this.request).subscribe(res => {
           this.handleResponseData(res);
         });
-        localStorage.setItem('flight-info', JSON.stringify([{...data, passengerQuantity: this.passenger}]));
-        this.router.navigateByUrl('/customer/passenger-info');
+        data.rankClass = (data.rankClass as any[]).filter(e => e.rankName == rankName);
+        sessionStorage.setItem('flight-info', JSON.stringify([{...data, passengerQuantity: this.passenger}]));
       }
       else if(storageData.length === 1){
-        localStorage.setItem('flight-info', JSON.stringify([...storageData, {...data, passengerQuantity: this.passenger}]));
+        data.rankClass = (data.rankClass as any[]).filter(e => e.rankName == rankName);
+        sessionStorage.setItem('flight-info', JSON.stringify([...storageData, {...data, passengerQuantity: this.passenger}]));
         this.router.navigateByUrl('/customer/passenger-info');
       }
     }else{
       let  storageData:any[] = [];
-      if(localStorage.getItem('flight-info')){
-        storageData = JSON.parse(localStorage.getItem('flight-info')!);
+      if(sessionStorage.getItem('flight-info')){
+        storageData = JSON.parse(sessionStorage.getItem('flight-info')!);
       }
       if(storageData.length === 0){
         storageData.push(data);
@@ -189,7 +191,8 @@ export class FlightSelectionComponent implements OnInit {
         this.flightService.getFlightForPassenger(this.request).subscribe(res => {
           this.handleResponseData(res);
         });
-        localStorage.setItem('flight-info', JSON.stringify([{...data, passengerQuantity: this.passenger}]));
+        data.rankClass = (data.rankClass as any[]).filter(e => e.rankName == rankName);
+        sessionStorage.setItem('flight-info', JSON.stringify([{...data, passengerQuantity: this.passenger}]));
         this.router.navigateByUrl('/customer/passenger-info');
       }
     }

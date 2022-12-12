@@ -1,0 +1,95 @@
+<div class="container">
+    <h3>Dịch vụ bổ trợ</h3>
+    <p>Quý khách lựa chọn dịch vụ bổ trợ để tiện lợi hơn cho chuyến đi của mình và người thân</p>
+    <div class="card">
+        <span class="d-content" nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'"
+            [nzTwotoneColor]="'#52c41a'"></span>
+        <div class="d-inline">
+            <span class="text-success ">Chuyến đi của Quý khách đã được lựa chọn bảo hiểm.</span>
+            <span class="">Quý khách nhấp vào "Không lựa chọn" nếu không có nhu cầu mua bảo hiểm.</span>
+        </div>
+    </div>
+
+    <div class="card mt-5">
+        <h3 class="ml-3">Bảo hiểm du lịch</h3>
+        <div class="row mb-5 ml-3 justify-content-sm-around">
+            <div class="col-sm-6">
+                <img  width="100%" height="75%" style="object-fit:cover" class="rounded mx-auto d-block" src="../../../assets/img/travel insurance common benefits.jpeg" alt="">
+                <p class="text-success ">TRIPCARE mang lại giá trị bảo hiểm lên tới 1.6 tỷ đồng cho</p>
+                <ul class="col-sm-6">
+                    <li>Quyền lợi tại nạn cá nhân</li>
+                    <li>Chi phí y tế</li>
+                    <li>Trở ngại trong chuyến đi</li>
+                    <li>Hỗ trợ Y tế toàn cầu 24/7</li>
+                </ul>
+            </div>
+            <div class="col-sm-5 card w-25">
+                <p class="d-flex align-center">
+                    <span nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#198754'"></span>
+                    <span class="text-success d-inline">Đã chọn trước</span>
+                </p>
+                <p class="d-flex align-center">
+                    <span nz-icon nzType="check" nzTheme="outline"></span>
+                    <span class="text-success">Đã thêm vào giỏ hàng</span>
+                </p>
+                <h5>Bảo hiểm du lịch</h5>
+                <p>126.00VND</p>
+                <p>mỗi hành khách</p>
+                <button nz-button nzType="default">Chọn</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-5">
+        <h3 class="ml-3">Hành lý trả trước</h3>
+        <div class="row mb-5 ml-3 justify-content-sm-around">
+            <div class="col-sm-6">
+                <img  width="75%" height="75%" style="object-fit:cover" class="rounded mx-auto d-block" src="../../../assets/img/suitcases-on-white-background-260nw-1367091764.webp" alt="">
+                <p>Hành lý trả trước là dịch vụ mua hành lý quá cước và thanh toán trước để hưởng
+                    mức giá ưu đãi hơn so với giá mua tại sân bay. Phí Hành lý trả trước đã mua
+                    sẽ không được phép hoàn.</p>
+            </div>
+            <div class="col-sm-5 card w-25">
+                <p class="d-flex align-center">
+                    <span nz-icon [nzType]="'check-circle'" [nzTheme]="'twotone'" [nzTwotoneColor]="'#198754'"></span>
+                    <span class="text-success d-inline">Đã chọn trước</span>
+                </p>
+                <p class="d-flex align-center">
+                    <span nz-icon nzType="check" nzTheme="outline"></span>
+                    <span class="text-success">Đã thêm vào giỏ hàng</span>
+                </p>
+                <h5>Kiện</h5>
+                <p>126.00VND</p>
+                <p>Mỗi kiện/mỗi hành khách</p>
+                <button (click)="goToCreate()" nz-button nzType="default">Thêm</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-5">
+        <h3 class="ml-3">Trà sữa</h3>
+        <div class="row mb-5 ml-3 justify-content-sm-around">
+            <div class="col-sm-6 mr-12">
+                <img  width="100%" height="75%" style="object-fit:cover" class="rounded mx-auto d-block" src="../../../assets/img/VNairline.webp" alt="">
+                <p>Với những bữa ăn được trình bày tỉ mỉ và chế biến từ những nguyên liệu được lựa chọn cẩn thận,
+                    kết hợp với sự hòa quyện tinh tế của gia giảm, hãy ngồi xuống và tận hưởng chuyến bay một cách
+                    thật thoải mái.</p>
+            </div>
+            <div class="col-sm-5 card w-25">
+                <p class="d-flex align-center">
+                    <span nz-icon nzType="check" nzTheme="outline"></span>
+                    <span class="text-success">Đã thêm vào giỏ hàng</span>
+                </p>
+                <h5>Trà sữa Skytea</h5>
+                <p>49.00VND</p>
+                <button (click)="show()" nz-button nzType="default">Thêm trà sữa</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-passenger-service-milk-tea-modal #milkTeaModal [passengerInfo]="passengerInfo" [flightData]="flightData" (onDeleteItem)="onDeleteItem($event)" (onCreateItem)="onCreateItem($event)"
+(onUpdateItem)="onUpdateItem($event)"></app-passenger-service-milk-tea-modal>
+
+<app-passenger-service-baggage-modal #baggageModal [passengerInfo]="passengerInfo" [flightData]="flightData" (onDeleteItem)="onDeleteItem($event)" (onCreateItem)="onCreateItem($event)"
+(onUpdateItem)="onUpdateItem($event)"></app-passenger-service-baggage-modal>

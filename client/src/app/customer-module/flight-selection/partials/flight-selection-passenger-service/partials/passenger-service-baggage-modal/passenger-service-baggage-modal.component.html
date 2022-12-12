@@ -1,0 +1,75 @@
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="'Hành lý trả trước'" (nzOnCancel)="handleCancel()"
+    [nzBodyStyle]="{'height': '65vh', 'overflow': 'hidden scroll', 'width': '75vw'}" nzWidth="75vw">
+    <ng-container *nzModalContent>
+        <ng-container *ngFor="let item of flightData">
+            <p>Chuyến bay chiều đi</p>
+            <p>VN 155 Hà Nội (HAN), Việt Nam đến Đà Nẵng (DAD), Việt Nam</p>
+            <div class="mt-5">
+                <div class="row mb-5 justify-content-sm-between">
+                    <div style="display: hidden;" class="col col-sm-5 w-25">
+                        <h6>Hành khách</h6>
+                        <h6 class="d-inline">
+                            <p>Số kiện: 1</p>
+                            <p>0 VND</p>
+                        </h6>
+                    </div>
+                    <div class="col col-md-6 w-25 p-0 mr-5 text-center">
+                        <p>10kg/22lb</p>
+                        <p>184.000 VND</p>
+                    </div>
+                    <div class="col col-md-6 w-25 p-0 text-center">
+                        <p>23kg/50lb</p>
+                        <p>303.000 VND</p>
+                    </div>
+                </div>
+                <ng-container *ngFor="let item of passengerInfo">
+                    <div class="row mb-5 justify-content-sm-between align-center">
+                        <div class="col col-sm-5 w-25">
+                            <h6>Hành khách</h6>
+                            <h6 class="d-inline">
+                                <span>Số kiện: 1</span>
+                                <span>0 VND</span>
+                            </h6>
+                        </div>
+                        <div class="col col-md-6 w-25 p-0 mr-5">
+                            <div class="text-center">
+                                <button class="w-10" nz-button nzType="default">+</button>
+                                <button class="w-10" nz-button nzType="default">-</button>
+                            </div>
+                        </div>
+                        <div class="col col-md-6 w-25 p-0">
+                            <div class="text-center">
+                                <button class="w-10" nz-button nzType="default">+</button>
+                                <button class="w-10" nz-button nzType="default">-</button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+            </div>
+        </ng-container>
+    </ng-container>
+
+    <div *nzModalFooter>
+        <div nz-row>
+            <div nz-col nzSpan="4">
+            </div>
+            <div nz-col nzSpan="20">
+                <div class="float-right ml-2">
+                    <button *ngIf="!isEdit && mode ==='detail'" nz-button nzType="primary"
+                        (click)="changeEdit(true)">Cập nhật giỏ hàng</button>
+                </div>
+                <div class="float-right ml-2">
+                    <button *ngIf="isEdit" nz-button nzType="primary" (click)="submitForm()" [nzLoading]="isLoading">
+                        Thêm vào giỏ hàng
+                    </button>
+                </div>
+                <div class="float-right ml-2">
+                    <button nz-button nzType="default" (click)="changeEdit(false)">
+                        Hủy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</nz-modal>

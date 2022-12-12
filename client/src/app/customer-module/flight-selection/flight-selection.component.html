@@ -130,13 +130,13 @@
             </div>
             <div nz-col nzSpan="10">
               <div nz-row nzGutter="16">
-                <div nz-col nzSpan="12" class="text-center economy-card" (click)="goToInfo(item)">
+                <div nz-col nzSpan="12" class="text-center economy-card" (click)="goToInfo(item, item.rankClass[0].rankName)">
                   <span>{{ item.rankClass[0].price | number }} </span>
                   <br />
                   <span>There are: {{ item.rankClass[0].remainingSeat }}</span>
                   <!-- {{listRank[0]?.cost }} -->
                 </div>
-                <div nz-col nzSpan="12" class="text-center business-card" (click)="goToInfo(item)">
+                <div nz-col nzSpan="12" class="text-center business-card" (click)="goToInfo(item, item.rankClass[1].rankName)">
                   <span>{{ item.rankClass[1].price | number }} </span>
                   <br />
                   <span>There are: {{ item.rankClass[1].remainingSeat }}</span>
@@ -148,8 +148,8 @@
             (onEmitVisible)="onChangeVisibleDetail($event)"></app-flight-selection-detail>
           </div>
         </nz-card>
-  
-        
+
+
       </nz-list-item>
     </nz-list>
   </nz-card>

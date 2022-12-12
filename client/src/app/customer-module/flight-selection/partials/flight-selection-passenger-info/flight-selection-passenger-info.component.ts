@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { PassengerService } from './../../../../services/passenger.service';
 import {
   debounceTime,
@@ -48,6 +49,7 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
     private locationService: LocationService,
     private passengerService: PassengerService,
     protected msg: NzMessageService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -57,32 +59,20 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
   }
 
   fetchLocation() {
-    this.locationService
-      .getLocation()
-      .pipe(finalize(() => {}))
-      .subscribe((res: { data: any[]; code: number }) => {
-        if (res.code === 200) {
-          res.data.forEach((e) => this.listLocation.push(e));
-          this.fromLocationName = this.listLocation?.find(
-            (location) => location.id === this.flightData[0].fromLocationId
-          )?.locationName;
-          this.toLocationName = this.listLocation?.find(
-            (location) => location.id === this.flightData[0].toLocationId
-          )?.locationName;
-          this.fromLocationCode = this.fromLocationName?.substring(
-            this.fromLocationName.indexOf('(') + 1,
-            this.fromLocationName.lastIndexOf(')')
-          );
-          this.toLocationCode = this.toLocationName?.substring(
-            this.toLocationName.indexOf('(') + 1,
-            this.toLocationName.lastIndexOf(')')
-          );
-        }
-      });
+    this.flightData.map((e) => {
+      e.fromLocation = e.fromLocation?.substring(
+        e.fromLocation.indexOf('(') + 1,
+        e.fromLocation.lastIndexOf(')')
+      );
+      e.toLocation = e.toLocation?.substring(
+        e.toLocation.indexOf('(') + 1,
+        e.toLocation.lastIndexOf(')')
+      );
+    });
   }
 
   initForm() {
-    this.flightData = JSON.parse(localStorage.getItem('flight-info')!);
+    this.flightData = JSON.parse(sessionStorage.getItem('flight-info')!);
     this.form = this.fb.group({
       passengerInfo: this.fb.array([]),
     });
@@ -98,13 +88,19 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
               Validators.required,
               Validators.minLength(9),
               Validators.maxLength(12),
-              Validators.pattern(this.idCardRegex)
+              Validators.pattern(this.idCardRegex),
             ],
           ],
           birthDay: [null, [Validators.required]],
           gender: [true, [Validators.required]],
-          phone: [null, [Validators.required, Validators.pattern(this.phoneRegex)]],
-          email: [null, [Validators.required, Validators.pattern(this.emailRegex)]],
+          phone: [
+            null,
+            [Validators.required, Validators.pattern(this.phoneRegex)],
+          ],
+          email: [
+            null,
+            [Validators.required, Validators.pattern(this.emailRegex)],
+          ],
         });
         this.passengerInfo.push(control);
       }
@@ -115,7 +111,7 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
     return this.form.controls.passengerInfo as FormArray;
   }
 
-  setValueForPassenger(form: FormGroup, ) {
+  setValueForPassenger(form: FormGroup) {
     form.get('firstName')?.setValue(this.passengerList.firstName);
     form.get('lastName')?.setValue(this.passengerList.lastName);
     form.get('gender')?.setValue(this.passengerList.gender);
@@ -136,9 +132,12 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
       .subscribe((res) => {
         if (res.code === 200) {
           this.passengerList = res.data;
-          this.setValueForPassenger((this.form.controls.passengerInfo as FormArray).controls[this.indexFromArray] as FormGroup);
+          this.setValueForPassenger(
+            (this.form.controls.passengerInfo as FormArray).controls[
+              this.indexFromArray
+            ] as FormGroup
+          );
           this.passengerList = null;
-          console.log((this.form.controls.passengerInfo as FormArray).controls[this.indexFromArray]);
         }
       });
   }
@@ -153,11 +152,16 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
     let payload: any[] = [];
     payload = this.form.value?.passengerInfo;
     this.passengerService.addPassengerTmp(payload).subscribe((res) => {
-      if(res.code === 200) {
+      if (res.code === 200) {
         let list: any[] = [];
         list = res.data;
-        this.msg.success("Success")
+        this.msg.success('Success');
+        sessionStorage.setItem(
+          'passenger-info',
+          JSON.stringify([...list])
+        );
+        this.router.navigateByUrl('/customer/passenger-service');
       }
-    })
+    });
   }
 }

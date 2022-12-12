@@ -50,12 +50,10 @@
 
               <nz-form-item>
                 <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left">Gender</nz-form-label>
-                <nz-form-control nzErrorTip="Please input gender name!">
-                  <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a gender" formControlName="gender">
-                    <nz-option *ngFor="let data of gender" nzLabel="{{data.label}}" nzValue="{{data.value}}">
-                    </nz-option>
-                  </nz-select>
-                </nz-form-control>
+                  <nz-radio-group formControlName="gender" nzButtonStyle="solid" class="mb-3">
+                    <label nz-radio-button [nzValue]="true">Male</label>
+                    <label nz-radio-button [nzValue]="false">Female</label>
+                  </nz-radio-group>
               </nz-form-item>
 
               <nz-form-item>
@@ -87,27 +85,27 @@
             </nz-card>
           </ng-container>
         </div>
-        <button nz-button nzType="primary">Lưu</button>
+        <button nz-button nzType="primary" class="float-end mt-5">Tiếp tục</button>
       </form>
     </div>
     <div nz-col nzSpan="6">
       <nz-card nzTitle="Price Sumary">
         <ng-container *ngFor="let data of flightData">
           <div class="d-flex align-center">
-            <span>{{ fromLocationCode }}</span>
+            <span>{{ data.fromLocation }}</span>
             &nbsp;
-            <span class="w-100" nz-icon nzType="arrow-right" nzTheme="outline"></span>
+            <span class="w-50" nz-icon nzType="arrow-right" nzTheme="outline"></span>
             &nbsp;
-            <span>{{ toLocationCode }}</span>
+            <span>{{ data.toLocation }}</span>
           </div>
           <div class="">
 
-            <span class="">{{ data.cost | number }}VND</span>
+            <span class="">{{ data.rankClass[0].price | number }}VND</span>
           </div>
           <div>
             <span class="text-primary">Departing {{ data.departureTime | date }}</span>
           </div>
-          <div>{{ fromLocationName }} to {{ toLocationName }}</div>
+          <div>{{ data.fromLocation }} to {{ data.toLocation }}</div>
         </ng-container>
       </nz-card>
     </div>
