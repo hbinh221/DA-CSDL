@@ -7,16 +7,18 @@
             <div class="mt-5">
                 <div class="row mb-5 ml-3 justify-content-sm-around mb-5">
                     <div class="col col-sm-5 w-25">
-                        <div class="card">
-                            <h5>Hành khách</h5>
-                            <h5>CHỌN BỮA ĂN</h5>
-                        </div>
+                        <ng-container *ngFor="let item of passengerInfo">
+                          <div class="card mb-3">
+                              <h5>{{item.firstName}} {{item.lastName}}</h5>
+                              <h5>CHỌN BỮA ĂN</h5>
+                          </div>
+                        </ng-container>
                     </div>
                     <div class="col col-md-6 card w-25 p-0">
                         <img width="100%" height="100%" style="object-fit:cover" class="rounded mx-auto d-block"
                             src="../../../assets/img/VNairline.webp" alt="">
-                        <h3>Trà sữa trân châu vị truyền thống</h3>
-                        <p>126.00VND/Ly</p>
+                        <h3>{{milkTeaList[0].serviceName}}</h3>
+                        <p>{{milkTeaList[0].cost}} VND/Ly</p>
                         <div class="text-center">
                             <button class="w-50" nz-button nzType="default">Thêm</button>
                         </div>
@@ -24,8 +26,8 @@
                     <div class="col col-md-6 card w-25 p-0">
                         <img width="100%" height="100%" style="object-fit:cover" class="rounded mx-auto d-block"
                             src="../../../assets/img/VNairline.webp" alt="">
-                        <h3>Trà sữa trân châu vị truyền thống</h3>
-                        <p>126.00VND/Ly</p>
+                            <h3>{{milkTeaList[1].serviceName}}</h3>
+                            <p>{{milkTeaList[1].cost}} VND/Ly</p>
                         <div class="text-center">
                             <button class="w-50" nz-button nzType="default">Thêm</button>
                         </div>

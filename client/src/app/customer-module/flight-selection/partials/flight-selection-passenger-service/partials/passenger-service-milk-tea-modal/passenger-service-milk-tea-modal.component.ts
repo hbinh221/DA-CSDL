@@ -12,6 +12,8 @@ import { ModelBaseComponent } from 'src/app/admin-module/shared/modal-base/modal
 export class PassengerServiceMilkTeaModalComponent extends ModelBaseComponent  implements OnInit {
   @Input() passengerInfo: any[] = [];
   @Input() flightData: any[] = [];
+  @Input() milkTeaList: any[] = [];
+  passengerList: any[] = [];
 
   constructor(
     protected http: HttpClient,
@@ -23,6 +25,8 @@ export class PassengerServiceMilkTeaModalComponent extends ModelBaseComponent  i
 
   ngOnInit(): void {
     this.initForm();
+    this.passengerList.map((e) => Object.assign(e, { milkTeaList: [] }));
+    sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerList));
   }
 
   initForm() {
@@ -37,5 +41,32 @@ export class PassengerServiceMilkTeaModalComponent extends ModelBaseComponent  i
       cost: [null, Validators.required],
       remark: [null],
     });
+  }
+
+  addBaggage(id: string, passengerId: string): void {
+    let baggage: Object;
+    baggage = this.milkTeaList.find((e) => (e.id == id));
+    this.passengerList.map((e) => {
+      if(e.id == passengerId ) {
+        (e.baggageList as any[]).push({ ...baggage, flightId: this.flightData })
+      }
+    }
+    );
+    sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerList));
+  }
+
+  minusBaggage(id: string, passengerId: string): void {
+    let baggage: Object;
+    baggage = this.milkTeaList.find((e) => (e.id == id));
+    this.passengerList.map((e) => {
+      if(e.id == passengerId) {
+        let index = -1;
+        index = e.baggageList.indexOf((e.baggageList as any[]).find(e => e.id == id));
+        if(index > -1) {
+          e.baggageList.splice(index, 1);
+        }
+      }
+    });
+    sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerList));
   }
 }

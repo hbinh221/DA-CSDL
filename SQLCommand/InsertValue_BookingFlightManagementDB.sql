@@ -44,14 +44,14 @@ insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Emai
 values (N'NTD', N'Hunter', N'001201015778', '2001-09-17 16:12:25.113', 1, N'0392047428', N'bykmaimai@gmail.com', N'123456789',1);
 go
 insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, Password, IsAdmin) 
-values (N'NTD', N'Hunter', N'001201015778', '2001-09-17 16:12:25.113', 1, N'0392047428', N'ntdhunter@gmail.com', N'123456789',1);
+values (N'An', N'O', N'001201015778', '2001-09-17 16:12:25.113', 1, N'0392047428', N'ano@gmail.com', N'123456789',0);
 go
 declare @FromLocationId uniqueidentifier, @ToLocationId uniqueidentifier, @PlaneId uniqueidentifier;
 set @PlaneId = (select top 1 Id from Plane);
 set @FromLocationId = (select top 1 Id from Location);
 set @ToLocationId = (select top 1 Id from Location order by Id desc);
 insert into Flight(FlightNo, Cost, Remark, DepartureTime, LandedTime, FromLocationId, ToLocationId, PlaneId)
-values (N'FlightNo', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()), 
+values (N'FlightNo1', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()), 
 @FromLocationId, @ToLocationId, @PlaneId);
 go
 --set @PlaneId = (select Id from Plane);
@@ -67,13 +67,30 @@ insert into Promotion(PromotionName, StartDate, EndDate, Discount) values
 (N'Promotion2',GETDATE(), DATEADD(HH, 2, GETDATE()), 10),
 (N'Promotion3',GETDATE(), DATEADD(HH, 2, GETDATE()), 10);
 go
-insert into PassengerTmp(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, PassengerId) 
-values (N'NTD', N'sadasd', N'001201015777', '2001-09-17 16:12:25.113', 1, N'0392047427', N'asdasd@gmail.com', null);
+insert into Passenger(FirstName, LastName, IdCard, BirthDay, Gender, Phone, Email, IsAdmin) 
+values (N'Binh', N'Hoang', N'00120101555', '2001-09-17 16:12:25.113', 1, N'0392047427', N'binhhb@gmail.com', 0);
 go
 -- get id after insert record but only identity
 --SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];  
 --GO  
 --SELECT @@IDENTITY AS [@@IDENTITY];  
 
-select * from PassengerTmp where IdCard ='001201015777'
-select * from Location
+select * from PassengerTmp where IdCard ='001201015778' and IsAdmin = 0
+select * from Airline
+insert into Service(ServiceName, Cost, AirlineId) values 
+(N'Bảo hiểm du lịch', 126000, '8F67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Bảo hiểm du lịch', 126000, '8E67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Bảo hiểm du lịch', 126000, '8D67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Bảo hiểm du lịch', 126000, '9167217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Hành lý trả trước', 83000, '8F67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Hành lý trả trước', 83000, '8E67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Hành lý trả trước', 83000, '8D67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Hành lý trả trước', 83000, '9167217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Trà sữa trân châu vị truyền thống', 42000, '8F67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Trà sữa trân châu vị truyền thống', 42000, '8E67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Trà sữa trân châu vị truyền thống', 42000, '8D67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Trà sữa trân châu vị truyền thống', 42000, '9167217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Trà sữa trân châu vị khoai môn', 42000, '8F67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Trà sữa trân châu vị khoai môn', 42000, '8E67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Trà sữa trân châu vị khoai môn', 42000, '8D67217F-5674-ED11-BE98-484D7EF0B796'),
+(N'Trà sữa trân châu vị khoai môn', 42000, '9167217F-5674-ED11-BE98-484D7EF0B796');

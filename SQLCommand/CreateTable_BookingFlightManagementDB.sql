@@ -68,6 +68,8 @@ create table Service(
 	constraint Service_AirlineId_Foreign foreign key (AirlineId) references Airline(Id)
 );
 go
+alter table Service add ParentId uniqueidentifier null
+go
 create table Plane(
 	Id uniqueidentifier primary key default newsequentialid(),
 	PlaneName nvarchar(20) not null,

@@ -73,6 +73,7 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
 
   initForm() {
     this.flightData = JSON.parse(sessionStorage.getItem('flight-info')!);
+
     this.form = this.fb.group({
       passengerInfo: this.fb.array([]),
     });
@@ -158,7 +159,7 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
         this.msg.success('Success');
         sessionStorage.setItem(
           'passenger-info',
-          JSON.stringify([...list])
+          JSON.stringify([...res.data])
         );
         this.router.navigateByUrl('/customer/passenger-service');
       }

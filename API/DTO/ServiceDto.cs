@@ -9,5 +9,6 @@ namespace API.DTO
         public float Cost { get; set; }
         public Guid AirlineId { get; set; }
         public string AirlineName { get; set; }
+        public Guid? ParentId { get; set; }
     }
 }

@@ -94,6 +94,7 @@ begin
 	or a.AirlineName like '%' + @SearchValue + '%'
 	or s.ServiceName like '%' + @SearchValue + '%';
 end;
+exec GetService null, '9067217F-5674-ED11-BE98-484D7EF0B796', null
 go
 create or alter procedure Signin
 @Email nvarchar(50)
