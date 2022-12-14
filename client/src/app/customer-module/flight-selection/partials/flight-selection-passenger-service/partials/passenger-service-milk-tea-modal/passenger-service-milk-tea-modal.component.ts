@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ModelBaseComponent } from 'src/app/admin-module/shared/modal-base/modal-base.component';
@@ -7,26 +7,32 @@ import { ModelBaseComponent } from 'src/app/admin-module/shared/modal-base/modal
 @Component({
   selector: 'app-passenger-service-milk-tea-modal',
   templateUrl: './passenger-service-milk-tea-modal.component.html',
-  styleUrls: ['./passenger-service-milk-tea-modal.component.css']
+  styleUrls: ['./passenger-service-milk-tea-modal.component.css'],
 })
-export class PassengerServiceMilkTeaModalComponent extends ModelBaseComponent  implements OnInit {
+export class PassengerServiceMilkTeaModalComponent
+  extends ModelBaseComponent
+  implements OnInit
+{
   @Input() passengerInfo: any[] = [];
   @Input() flightData: any[] = [];
   @Input() milkTeaList: any[] = [];
+  @Output() isChooseMilkTea = new EventEmitter();
   passengerList: any[] = [];
+  passengerId: string = '';
 
   constructor(
     protected http: HttpClient,
     protected fb: FormBuilder,
-    protected msg: NzMessageService,
+    protected msg: NzMessageService
   ) {
     super(http, fb, msg);
   }
 
   ngOnInit(): void {
     this.initForm();
-    this.passengerList.map((e) => Object.assign(e, { milkTeaList: [] }));
-    sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerList));
+    this.passengerList = JSON.parse(sessionStorage.getItem('passenger-info')!);
+    this.passengerId = this.passengerList[0].id;
+    this.milkTeaList.map(e => Object.assign(e, {isChoose: false}))
   }
 
   initForm() {
@@ -43,30 +49,62 @@ export class PassengerServiceMilkTeaModalComponent extends ModelBaseComponent  i
     });
   }
 
-  addBaggage(id: string, passengerId: string): void {
-    let baggage: Object;
-    baggage = this.milkTeaList.find((e) => (e.id == id));
-    this.passengerList.map((e) => {
-      if(e.id == passengerId ) {
-        (e.baggageList as any[]).push({ ...baggage, flightId: this.flightData })
-      }
-    }
+  closeModal() {
+    let list = [];
+    list = JSON.parse(sessionStorage.getItem('passenger-info')!);
+    (list as any[]).map(e => e.milkTeaList = []);
+    sessionStorage.setItem(
+      'passenger-info',
+      JSON.stringify(list)
     );
-    sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerList));
+    this.isChooseMilkTea.emit();
+    this.handleCancel()
   }
 
-  minusBaggage(id: string, passengerId: string): void {
-    let baggage: Object;
-    baggage = this.milkTeaList.find((e) => (e.id == id));
-    this.passengerList.map((e) => {
-      if(e.id == passengerId) {
-        let index = -1;
-        index = e.baggageList.indexOf((e.baggageList as any[]).find(e => e.id == id));
-        if(index > -1) {
-          e.baggageList.splice(index, 1);
+  addToCart() {
+    this.isChooseMilkTea.emit();
+    this.handleCancel();
+  }
+
+  changePassengerId(passengerId: string) {
+    this.passengerId = passengerId;
+  }
+
+  addMilkTea(id: string, flightId: string, isChoose: boolean): void {
+    isChoose = !isChoose;
+    if (isChoose) {
+      let milkTea: Object;
+      milkTea = this.milkTeaList.find((e) => e.id == id);
+      this.passengerList.map((e) => {
+        if (e.id == this.passengerId) {
+          (e.milkTeaList as any[]).push({
+            ...milkTea,
+            flightId: this.flightData.find((e) => e.id == flightId),
+          });
         }
-      }
-    });
-    sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerList));
+      });
+      sessionStorage.setItem(
+        'passenger-info',
+        JSON.stringify(this.passengerList)
+      );
+    } else {
+      let milkTea: Object;
+      milkTea = this.milkTeaList.find((e) => e.id == id);
+      this.passengerList.map((e) => {
+        if (e.id == this.passengerId) {
+          let index = -1;
+          index = e.milkTeaList.indexOf(
+            (e.milkTeaList as any[]).find((e) => e.id == id)
+          );
+          if (index > -1) {
+            e.milkTeaList.splice(index, 1);
+          }
+        }
+      });
+      sessionStorage.setItem(
+        'passenger-info',
+        JSON.stringify(this.passengerList)
+      );
+    }
   }
 }

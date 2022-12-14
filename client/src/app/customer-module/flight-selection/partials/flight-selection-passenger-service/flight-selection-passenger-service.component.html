@@ -3,7 +3,7 @@
     <p>Quý khách lựa chọn dịch vụ bổ trợ để tiện lợi hơn cho chuyến đi của mình và người thân</p>
 
     <div class="card mt-5">
-        <h3 class="ml-3">{{serviceList[0].serviceName}}</h3>
+        <h3 class="ml-3">{{serviceList[0]?.serviceName}}</h3>
         <div class="row mb-5 ml-3 justify-content-sm-around">
             <div class="col-sm-6">
                 <img width="100%" height="75%" style="object-fit:cover" class="rounded mx-auto d-block"
@@ -22,15 +22,15 @@
                     <span class="text-success">Đã thêm vào giỏ hàng</span>
                 </p>
                 <h5>Bảo hiểm du lịch</h5>
-                <p>{{serviceList[0].cost}} VND</p>
+                <p>{{serviceList[0]?.cost}} VND</p>
                 <p>mỗi hành khách</p>
-                <button nz-button nzType="default" (click)="chooseInsurance(serviceList[0].id)">{{!isInsurance ? 'Chọn' : 'Bỏ Chọn'}}</button>
+                <button nz-button nzType="default" (click)="chooseInsurance(serviceList[0]?.id)">{{!isInsurance ? 'Chọn' : 'Bỏ Chọn'}}</button>
             </div>
         </div>
     </div>
 
     <div class="card mt-5">
-        <h3 class="ml-3">{{serviceList[1].serviceName}}</h3>
+        <h3 class="ml-3">{{serviceList[1]?.serviceName}}</h3>
         <div class="row mb-5 ml-3 justify-content-sm-around">
             <div class="col-sm-6">
                 <img width="75%" height="75%" style="object-fit:cover" class="rounded mx-auto d-block"
@@ -40,14 +40,14 @@
                     sẽ không được phép hoàn.</p>
             </div>
             <div class="col-sm-5 card w-25">
-                <p class="d-flex align-center">
+                <p *ngIf="isBaggage" class="d-flex align-center">
                     <span nz-icon nzType="check" nzTheme="outline"></span>
                     <span class="text-success">Đã thêm vào giỏ hàng</span>
                 </p>
                 <h5>Kiện</h5>
-                <p>{{serviceList[1].cost}} VND</p>
+                <p>{{serviceList[1]?.cost}} VND</p>
                 <p>Mỗi kiện/mỗi hành khách</p>
-                <button (click)="showBaggageModal()" nz-button nzType="default">Thêm</button>
+                <button (click)="showBaggageModal()" nz-button nzType="default">{{isBaggage ? 'Thay đổi' : 'Thêm'}}</button>
             </div>
         </div>
     </div>
@@ -63,24 +63,20 @@
                     thật thoải mái.</p>
             </div>
             <div class="col-sm-5 card w-25">
-                <p class="d-flex align-center">
+                <p *ngIf="isMilkTea" class="d-flex align-center">
                     <span nz-icon nzType="check" nzTheme="outline"></span>
                     <span class="text-success">Đã thêm vào giỏ hàng</span>
                 </p>
                 <h5>Trà sữa Skytea</h5>
-                <p>{{serviceList[3].cost}} VND</p>
-                <button (click)="showMilkTeaModal()" nz-button nzType="default">Thêm trà sữa</button>
+                <p>{{serviceList[3]?.cost}} VND</p>
+                <button (click)="showMilkTeaModal()" nz-button nzType="default">{{isMilkTea ? 'Thay đổi' : 'Thêm trà sữa'}}</button>
             </div>
         </div>
     </div>
 </div>
 
 <app-passenger-service-milk-tea-modal #milkTeaModal [passengerInfo]="passengerInfo" [flightData]="flightData"
-    [milkTeaList]="milkTeaList"
-    (onDeleteItem)="onDeleteItem($event)" (onCreateItem)="onCreateItem($event)"
-    (onUpdateItem)="onUpdateItem($event)"></app-passenger-service-milk-tea-modal>
+    [milkTeaList]="milkTeaList" (isChooseMilkTea)="chooseMilkTea()"></app-passenger-service-milk-tea-modal>
 
 <app-passenger-service-baggage-modal #baggageModal [passengerInfo]="passengerInfo" [flightData]="flightData"
-    [baggageList]="baggageList"
-    (onDeleteItem)="onDeleteItem($event)" (onCreateItem)="onCreateItem($event)"
-    (onUpdateItem)="onUpdateItem($event)"></app-passenger-service-baggage-modal>
+    [baggageList]="baggageList" (isChooseBaggage)="chooseBaggage()"></app-passenger-service-baggage-modal>

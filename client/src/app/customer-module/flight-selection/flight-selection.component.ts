@@ -96,11 +96,11 @@ export class FlightSelectionComponent implements OnInit {
       this.toLocationName = this.listLocation.find(
         (location) => location.id === this.request.toLocationId
       )?.locationName;
-      this.fromLocationCode = this.fromLocationName.substring(
+      this.fromLocationCode = this.fromLocationName?.substring(
         this.fromLocationName.indexOf('(') + 1,
         this.fromLocationName.lastIndexOf(')')
       );
-      this.toLocationCode = this.toLocationName.substring(
+      this.toLocationCode = this.toLocationName?.substring(
         this.toLocationName.indexOf('(') + 1,
         this.toLocationName.lastIndexOf(')')
       );

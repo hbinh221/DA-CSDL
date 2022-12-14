@@ -1,37 +1,42 @@
-<nz-modal [(nzVisible)]="isVisible" [nzTitle]="'Trà sữa'" (nzOnCancel)="handleCancel()"
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="'Trà sữa'" (nzOnCancel)="closeModal()"
     [nzBodyStyle]="{'height': '65vh', 'overflow': 'hidden scroll', 'width': '75vw'}" nzWidth="75vw">
     <ng-container *nzModalContent>
-        <ng-container *ngFor="let item of flightData">
+        <ng-container *ngFor="let data of flightData">
             <p>Chuyến bay chiều đi</p>
-            <p>VN 155 Hà Nội (HAN), Việt Nam đến Đà Nẵng (DAD), Việt Nam</p>
+            <p>{{data.flightNo}}: {{data.fromLocation}} đến {{data.toLocation}}</p>
             <div class="mt-5">
                 <div class="row mb-5 ml-3 justify-content-sm-around mb-5">
                     <div class="col col-sm-5 w-25">
                         <ng-container *ngFor="let item of passengerInfo">
-                          <div class="card mb-3">
+                          <button (click)="changePassengerId(item.id)" class="card mb-3">
                               <h5>{{item.firstName}} {{item.lastName}}</h5>
                               <h5>CHỌN BỮA ĂN</h5>
-                          </div>
+                          </button>
                         </ng-container>
                     </div>
-                    <div class="col col-md-6 card w-25 p-0">
-                        <img width="100%" height="100%" style="object-fit:cover" class="rounded mx-auto d-block"
-                            src="../../../assets/img/VNairline.webp" alt="">
-                        <h3>{{milkTeaList[0].serviceName}}</h3>
-                        <p>{{milkTeaList[0].cost}} VND/Ly</p>
-                        <div class="text-center">
-                            <button class="w-50" nz-button nzType="default">Thêm</button>
-                        </div>
-                    </div>
-                    <div class="col col-md-6 card w-25 p-0">
+                    <ng-container *ngFor="let item of milkTeaList">
+                      <div class="col col-md-6 card w-25 p-0">
+                          <img width="100%" height="100%" style="object-fit:cover" class="rounded mx-auto d-block"
+                              src="../../../assets/img/VNairline.webp" alt="">
+                          <h3>{{item.serviceName}}</h3>
+                          <p class="text-center">{{item.cost}} VND/Ly</p>
+                          <div class="text-center">
+                              <button (click)="addMilkTea(item.id, data.id, item.isChoose)" class="w-50" nz-button nzType="default">{{item?.isChoose ? 'Không lựa chọn' : 'Thêm'}}</button>
+                          </div>
+                      </div>
+                    </ng-container>
+
+
+                    <!-- <div class="col col-md-6 card w-25 p-0">
                         <img width="100%" height="100%" style="object-fit:cover" class="rounded mx-auto d-block"
                             src="../../../assets/img/VNairline.webp" alt="">
                             <h3>{{milkTeaList[1].serviceName}}</h3>
                             <p>{{milkTeaList[1].cost}} VND/Ly</p>
                         <div class="text-center">
-                            <button class="w-50" nz-button nzType="default">Thêm</button>
+                            <button (click)="addMilkTea(milkTeaList[1].id, data.id)" class="w-50" nz-button nzType="default">{{isChoose ? 'Không lựa chọn' : 'Thêm'}}</button>
                         </div>
-                    </div>
+                    </div> -->
+
                 </div>
             </div>
         </ng-container>
@@ -45,15 +50,15 @@
             <div nz-col nzSpan="20">
                 <div class="float-right ml-2">
                     <button *ngIf="!isEdit && mode ==='detail'" nz-button nzType="primary"
-                        (click)="changeEdit(true)">Cập nhật giỏ hàng</button>
+                        (click)="addToCart()">Cập nhật giỏ hàng</button>
                 </div>
                 <div class="float-right ml-2">
-                    <button *ngIf="isEdit" nz-button nzType="primary" (click)="submitForm()" [nzLoading]="isLoading">
+                    <button *ngIf="isEdit" nz-button nzType="primary" (click)="addToCart()" [nzLoading]="isLoading">
                         Thêm vào giỏ hàng
                     </button>
                 </div>
                 <div class="float-right ml-2">
-                    <button nz-button nzType="default" (click)="changeEdit(false)">
+                    <button nz-button nzType="default" (click)="closeModal()">
                         Hủy
                     </button>
                 </div>

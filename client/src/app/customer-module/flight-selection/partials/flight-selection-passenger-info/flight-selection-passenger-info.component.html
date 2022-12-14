@@ -73,15 +73,6 @@
                   </nz-input-group>
                 </nz-form-control>
               </nz-form-item>
-
-              <!-- <nz-form-item>
-                            <nz-form-label [nzRequired]="true" style="width: 25%; text-align: left;">Password</nz-form-label>
-                            <nz-form-control nzErrorTip="Please input password">
-                              <nz-input-group >
-                                <input type="password" nz-input formControlName="password" placeholder="Password" />
-                              </nz-input-group>
-                            </nz-form-control>
-                          </nz-form-item> -->
             </nz-card>
           </ng-container>
         </div>
@@ -100,7 +91,7 @@
           </div>
           <div class="">
 
-            <span class="">{{ data.rankClass[0].price | number }}VND</span>
+            <span class="">{{ data.rankClass[0]?.price | number }}VND</span>
           </div>
           <div>
             <span class="text-primary">Departing {{ data.departureTime | date }}</span>

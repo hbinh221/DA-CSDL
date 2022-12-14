@@ -1,5 +1,5 @@
 import { ModelBaseComponent } from './../../../../../../admin-module/shared/modal-base/modal-base.component';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -16,6 +16,7 @@ export class PassengerServiceBaggageModalComponent
   @Input() passengerInfo: any[] = [];
   @Input() flightData: any[] = [];
   @Input() baggageList: any[] = [];
+  @Output() isChooseBaggage  = new EventEmitter();
   passengerList: any[] = [];
 
   constructor(
@@ -29,8 +30,23 @@ export class PassengerServiceBaggageModalComponent
   ngOnInit(): void {
     this.initForm();
     this.passengerList = JSON.parse(sessionStorage.getItem('passenger-info')!);
-    this.passengerList.map((e) => Object.assign(e, { baggageList: [] }));
-    sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerList));
+  }
+
+  closeModal() {
+    let list = [];
+    list = JSON.parse(sessionStorage.getItem('passenger-info')!);
+    (list as any[]).map(e => e.baggageList = []);
+    sessionStorage.setItem(
+      'passenger-info',
+      JSON.stringify(list)
+    );
+    this.isChooseBaggage.emit();
+    this.handleCancel();
+  }
+
+  addToCart() {
+    this.isChooseBaggage.emit();
+    this.handleCancel();
   }
 
   initForm() {
@@ -48,6 +64,7 @@ export class PassengerServiceBaggageModalComponent
   }
 
   addBaggage(id: string, passengerId: string, flightId: string): void {
+    this.passengerList = JSON.parse(sessionStorage.getItem('passenger-info')!);
     let baggage: Object;
     baggage = this.baggageList.find((e) => (e.id == id));
     this.passengerList.map((e) => {
@@ -60,6 +77,7 @@ export class PassengerServiceBaggageModalComponent
   }
 
   minusBaggage(id: string, passengerId: string): void {
+    this.passengerList = JSON.parse(sessionStorage.getItem('passenger-info')!);
     let baggage: Object;
     baggage = this.baggageList.find((e) => (e.id == id));
     this.passengerList.map((e) => {
@@ -74,22 +92,24 @@ export class PassengerServiceBaggageModalComponent
     sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerList));
   }
 
-  calcCostBaggage(passengerId: string) {
+  calcCostBaggage(passengerId: string, flightId: string) {
+    this.passengerList = JSON.parse(sessionStorage.getItem('passenger-info')!);
     let sum = 0;
     let passenger = this.passengerList.some(e => e.id == passengerId);
     if(passenger) {
       let list = this.passengerList.find(e => e.id == passengerId).baggageList as any[];
-      list.map(e => sum += e.cost);
+      list.map(e => e.flightId.id == flightId ? sum += e.cost : null);
     }
     return sum;
   }
 
-  countBaggage(id: string, passengerId: string) {
+  countBaggage(id: string, passengerId: string, flightId: string) {
+    this.passengerList = JSON.parse(sessionStorage.getItem('passenger-info')!);
     let count = 0;
     let passenger = this.passengerList.some(e => e.id == passengerId);
     if(passenger) {
       let list = this.passengerList.find(e => e.id == passengerId).baggageList as any[];
-      list.map(e => e.id == id ? count ++ : null);
+      list.map(e => e.id == id && e.flightId.id == flightId ? count ++ : null);
     }
     return count;
   }

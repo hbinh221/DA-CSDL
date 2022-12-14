@@ -1,15 +1,15 @@
-<nz-modal [(nzVisible)]="isVisible" [nzTitle]="'Hành lý trả trước'" (nzOnCancel)="handleCancel()"
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="'Hành lý trả trước'" (nzOnCancel)="closeModal()"
     [nzBodyStyle]="{'height': '65vh', 'overflow': 'hidden scroll', 'width': '75vw'}" nzWidth="75vw">
     <ng-container *nzModalContent>
         <ng-container *ngFor="let data of flightData">
             <p>Chuyến bay chiều đi</p>
-            <p>VN 155 Hà Nội (HAN), Việt Nam đến Đà Nẵng (DAD), Việt Nam</p>
+            <p>{{data.flightNo}}: {{data.fromLocation}} đến {{data.toLocation}}</p>
             <div class="mt-5">
                 <div class="row mb-5 justify-content-sm-between">
                     <div style="display: hidden;" class="col col-sm-5 w-25">
                         <h6>Hành khách</h6>
                         <h6 class="d-inline">
-                            <p>Số kiện: 1</p>
+                            <p>Số kiện: </p>
                             <p>0 VND</p>
                         </h6>
                     </div>
@@ -22,19 +22,21 @@
                         <p>{{baggageList[1].cost}} VND</p>
                     </div>
                 </div>
-                <ng-container *ngFor="let item of passengerList">
+                <ng-container *ngFor="let item of passengerInfo">
                     <div class="row mb-5 justify-content-sm-between align-center">
                         <div class="col col-sm-5 w-25">
                             <h6>{{item.firstName}} {{item.lastName}}</h6>
                             <h6 class="d-inline">
-                                <span>Số kiện: {{item.baggageList.length }}</span>
+                                <span>Số kiện: {{ countBaggage(baggageList[1].id,
+                                    item.id, data.id) + countBaggage(baggageList[0].id,
+                                    item.id, data.id) | number}}</span>
                             </h6>
-                            <h6>{{calcCostBaggage(item.id) | number}} VND</h6>
+                            <h6>{{calcCostBaggage(item.id, data.id) | number}} VND</h6>
                         </div>
                         <div class="col col-md-6 w-25 p-0 mr-5">
                             <div class="text-center">
                                 <button class="w-20" nz-button nzType="default">{{countBaggage(baggageList[0].id,
-                                    item.id)}}</button>
+                                    item.id, data.id)}}</button>
                                 <button (click)="addBaggage(baggageList[0].id, item.id, data.id)" class="w-20" nz-button
                                     nzType="default">+</button>
                                 <button (click)="minusBaggage(baggageList[0].id, item.id)" class="w-10" nz-button
@@ -44,7 +46,7 @@
                         <div class="col col-md-6 w-25 p-0">
                             <div class="text-center">
                                 <button class="w-20" nz-button nzType="default">{{countBaggage(baggageList[1].id,
-                                    item.id)}}</button>
+                                    item.id, data.id)}}</button>
                                 <button (click)="addBaggage(baggageList[1].id, item.id, data.id)" class="w-20" nz-button
                                     nzType="default">+</button>
                                 <button (click)="minusBaggage(baggageList[1].id, item.id)" class="w-10" nz-button
@@ -65,15 +67,15 @@
             <div nz-col nzSpan="20">
                 <div class="float-right ml-2">
                     <button *ngIf="!isEdit && mode ==='detail'" nz-button nzType="primary"
-                        (click)="changeEdit(true)">Cập nhật giỏ hàng</button>
+                        (click)="addToCart()">Cập nhật giỏ hàng</button>
                 </div>
                 <div class="float-right ml-2">
-                    <button *ngIf="isEdit" nz-button nzType="primary" (click)="submitForm()" [nzLoading]="isLoading">
+                    <button *ngIf="isEdit" nz-button nzType="primary" (click)="addToCart()" [nzLoading]="isLoading">
                         Thêm vào giỏ hàng
                     </button>
                 </div>
                 <div class="float-right ml-2">
-                    <button nz-button nzType="default" (click)="changeEdit(false)">
+                    <button nz-button nzType="default" (click)="closeModal()">
                         Hủy
                     </button>
                 </div>

@@ -17,12 +17,15 @@ export class FlightSelectionPassengerServiceComponent
 {
   @ViewChild('baggageModal') baggageModal!: ModelBaseComponent;
   @ViewChild('milkTeaModal') milkTeaModal!: ModelBaseComponent;
+
   flightData: any[] = [];
   passengerInfo: any[] = [];
   serviceList: any[] = [];
   milkTeaList: any[] = [];
   baggageList: any[] = [];
   isInsurance: boolean = false;
+  isBaggage: boolean = false;
+  isMilkTea: boolean = false;
 
 
   constructor(
@@ -37,8 +40,6 @@ export class FlightSelectionPassengerServiceComponent
     this.flightData = JSON.parse(sessionStorage.getItem('flight-info')!);
     this.passengerInfo = JSON.parse(sessionStorage.getItem('passenger-info')!)
     this.fetchService();
-    this.passengerInfo.map(e => Object.assign(e, {serviceList: []}));
-    sessionStorage.setItem('passenger-info', JSON.stringify([...this.passengerInfo]));
   }
 
   fetchService(): void {
@@ -47,6 +48,7 @@ export class FlightSelectionPassengerServiceComponent
         this.serviceList = res.data;
         this.baggageList = (res.data as any[]).filter(e => e.parentId != null);
         this.milkTeaList = (res.data as any[]).filter(e => (e.serviceName as string).includes('Trà sữa trân châu vị'));
+        this.milkTeaList.map(e => Object.assign(e, {isChoose: false}))
       }
     })
   }
@@ -63,16 +65,28 @@ export class FlightSelectionPassengerServiceComponent
     this.isInsurance = !this.isInsurance;
     if(this.isInsurance) {
       let insurance: any;
-      insurance = this.serviceList.find(e => e.id = id);
+      insurance = this.serviceList.find(e => e.id == id);
       this.passengerInfo.map(e => (e.serviceList as any[]).push({...insurance, flightId: this.flightData}))
     } else {
       let insurance: any;
-      insurance = this.serviceList.find(e => e.Id = id);
+      insurance = this.serviceList.find(e => e.id == id);
       this.passengerInfo.map(e =>
         {
             e.serviceList = (e.serviceList as any[]).filter(e => e.id != insurance.id);
         })
     }
     sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerInfo));
+  }
+
+  chooseMilkTea() {
+    let list = [];
+    list = JSON.parse(sessionStorage.getItem('passenger-info')!);
+    (list.milkTeaList as any[])?.length > 0 ? this.isMilkTea = true : this.isMilkTea = false;
+  }
+
+  chooseBaggage() {
+    let list = [];
+    list = JSON.parse(sessionStorage.getItem('passenger-info')!);
+    (list.baggageList as any[])?.length > 0 ? this.isBaggage = true : this.isBaggage = false;
   }
 }
