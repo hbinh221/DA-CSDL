@@ -155,7 +155,7 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
       if (res.code === 200) {
         let list: any[] = [];
         list = res.data;
-        list.map(e => Object.assign(e, {serviceList: [], milkTeaList: [], baggageList: [] }));
+        list.map(e => Object.assign(e, {insuranceList: [], milkTeaList: [], baggageList: [] }));
         this.msg.success('Success');
         sessionStorage.setItem(
           'passenger-info',

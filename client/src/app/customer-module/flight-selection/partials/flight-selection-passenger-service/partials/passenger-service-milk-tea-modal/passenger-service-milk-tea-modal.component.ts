@@ -71,7 +71,6 @@ export class PassengerServiceMilkTeaModalComponent
   }
 
   addMilkTea(id: string, flightId: string, isChoose: boolean): void {
-    isChoose = !isChoose;
     if (isChoose) {
       let milkTea: Object;
       milkTea = this.milkTeaList.find((e) => e.id == id);

@@ -5,7 +5,9 @@ import { CustomerLayoutComponent } from './customer-layout/customer-layout.compo
 import { CustomerViewComponent } from './customer-view/customer-view.component';
 import { FlightSelectionComponent } from './flight-selection/flight-selection.component';
 import { FlightSelectionPassengerInfoComponent } from './flight-selection/partials/flight-selection-passenger-info/flight-selection-passenger-info.component';
+import { FlightSelectionPassengerPaymentComponent } from './flight-selection/partials/flight-selection-passenger-payment/flight-selection-passenger-payment.component';
 import { FlightSelectionPassengerServiceComponent } from './flight-selection/partials/flight-selection-passenger-service/flight-selection-passenger-service.component';
+import { FlightSelectionPassengerTicketComponent } from './flight-selection/partials/flight-selection-passenger-ticket/flight-selection-passenger-ticket.component';
 import { RegisterComponent } from './register/register.component';
 
 const routes: Routes = [
@@ -31,6 +33,14 @@ const routes: Routes = [
  {
   path: 'passenger-service',
   component: FlightSelectionPassengerServiceComponent,
+ },
+ {
+  path: 'passenger-ticket',
+  component: FlightSelectionPassengerTicketComponent,
+ },
+ {
+  path: 'passenger-payment',
+  component: FlightSelectionPassengerPaymentComponent,
  },
 ];
 

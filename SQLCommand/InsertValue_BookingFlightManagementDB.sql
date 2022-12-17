@@ -73,24 +73,6 @@ go
 -- get id after insert record but only identity
 --SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];  
 --GO  
---SELECT @@IDENTITY AS [@@IDENTITY];  
-
-select * from PassengerTmp where IdCard ='001201015778' and IsAdmin = 0
-select * from Airline
-insert into Service(ServiceName, Cost, AirlineId) values 
-(N'Bảo hiểm du lịch', 126000, '8F67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Bảo hiểm du lịch', 126000, '8E67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Bảo hiểm du lịch', 126000, '8D67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Bảo hiểm du lịch', 126000, '9167217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Hành lý trả trước', 83000, '8F67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Hành lý trả trước', 83000, '8E67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Hành lý trả trước', 83000, '8D67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Hành lý trả trước', 83000, '9167217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Trà sữa trân châu vị truyền thống', 42000, '8F67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Trà sữa trân châu vị truyền thống', 42000, '8E67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Trà sữa trân châu vị truyền thống', 42000, '8D67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Trà sữa trân châu vị truyền thống', 42000, '9167217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Trà sữa trân châu vị khoai môn', 42000, '8F67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Trà sữa trân châu vị khoai môn', 42000, '8E67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Trà sữa trân châu vị khoai môn', 42000, '8D67217F-5674-ED11-BE98-484D7EF0B796'),
-(N'Trà sữa trân châu vị khoai môn', 42000, '9167217F-5674-ED11-BE98-484D7EF0B796');
+--SELECT @@IDENTITY AS [@@IDENTITY];
+select * from Flight
+delete from Flight where 

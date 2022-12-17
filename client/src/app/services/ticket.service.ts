@@ -12,9 +12,9 @@ export class TicketService {
 
   getTicket(id?: string): Observable<any> {
     let idString = '';
-    if (id) idString = '?id=' + id;
+    if (id) idString = '?flightId=' + id;
     return this.http.get(
-      environment.baseUrl + this.baseUrl + '/get/ticket' + idString
+      environment.baseUrl + this.baseUrl + '/get/remaningticket' + idString
     );
   }
   updateAdmin(id: string, payload: any): Observable<any> {

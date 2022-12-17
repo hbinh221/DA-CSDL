@@ -18,6 +18,8 @@ import { FlightSelectionPassengerInfoComponent } from './flight-selection/partia
 import { FlightSelectionPassengerServiceComponent } from './flight-selection/partials/flight-selection-passenger-service/flight-selection-passenger-service.component';
 import { PassengerServiceMilkTeaModalComponent } from './flight-selection/partials/flight-selection-passenger-service/partials/passenger-service-milk-tea-modal/passenger-service-milk-tea-modal.component';
 import { PassengerServiceBaggageModalComponent } from './flight-selection/partials/flight-selection-passenger-service/partials/passenger-service-baggage-modal/passenger-service-baggage-modal.component';
+import { FlightSelectionPassengerTicketComponent } from './flight-selection/partials/flight-selection-passenger-ticket/flight-selection-passenger-ticket.component';
+import { FlightSelectionPassengerPaymentComponent } from './flight-selection/partials/flight-selection-passenger-payment/flight-selection-passenger-payment.component';
 
 
 @NgModule({
@@ -34,6 +36,8 @@ import { PassengerServiceBaggageModalComponent } from './flight-selection/partia
     FlightSelectionPassengerServiceComponent,
     PassengerServiceMilkTeaModalComponent,
     PassengerServiceBaggageModalComponent,
+    FlightSelectionPassengerTicketComponent,
+    FlightSelectionPassengerPaymentComponent,
   ],
   imports: [
     CommonModule,

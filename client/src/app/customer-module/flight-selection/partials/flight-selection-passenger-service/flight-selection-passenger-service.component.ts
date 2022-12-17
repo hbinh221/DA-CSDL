@@ -38,7 +38,7 @@ export class FlightSelectionPassengerServiceComponent
 
   ngOnInit(): void {
     this.flightData = JSON.parse(sessionStorage.getItem('flight-info')!);
-    this.passengerInfo = JSON.parse(sessionStorage.getItem('passenger-info')!)
+    this.passengerInfo = JSON.parse(sessionStorage.getItem('passenger-info')!);
     this.fetchService();
   }
 
@@ -66,13 +66,13 @@ export class FlightSelectionPassengerServiceComponent
     if(this.isInsurance) {
       let insurance: any;
       insurance = this.serviceList.find(e => e.id == id);
-      this.passengerInfo.map(e => (e.serviceList as any[]).push({...insurance, flightId: this.flightData}))
+      this.passengerInfo.map(e => (e.insuranceList as any[]).push({...insurance, flightId: this.flightData}))
     } else {
       let insurance: any;
       insurance = this.serviceList.find(e => e.id == id);
       this.passengerInfo.map(e =>
         {
-            e.serviceList = (e.serviceList as any[]).filter(e => e.id != insurance.id);
+            e.insuranceList = (e.insuranceList as any[]).filter(e => e.id != insurance.id);
         })
     }
     sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerInfo));
@@ -88,5 +88,9 @@ export class FlightSelectionPassengerServiceComponent
     let list = [];
     list = JSON.parse(sessionStorage.getItem('passenger-info')!);
     (list.baggageList as any[])?.length > 0 ? this.isBaggage = true : this.isBaggage = false;
+  }
+
+  chooseTicket() {
+    this.router.navigateByUrl('/customer/passenger-ticket');
   }
 }

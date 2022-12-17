@@ -1,0 +1,60 @@
+<div class="container">
+  <nz-tabset [nzSelectedIndex]="tabIndex">
+    <nz-tab nzTitle="{{flightData[0]?.fromLocation}} đến {{flightData[0]?.toLocation}}">
+      <div class="">
+        <div class="row">
+          <div class="col col-6">
+            <h3>Hành khách</h3>
+            <ng-container *ngFor="let item of passengerInfo">
+              <button (click)="changePassengerId(item.id)" class="card mb-3">
+                <h5>{{item.firstName}} {{item.lastName}}</h5>
+              </button>
+            </ng-container>
+          </div>
+          <div class="col col-6">
+            <h3>Ghi chú</h3>
+            <ng-container *ngFor="let rank of rankList">
+              <div>
+                <span class="align-middle" nz-icon nzType="cloud" nzTheme="outline"></span>
+                <span class="align-middle">{{rank.rankName}}</span>
+              </div>
+            </ng-container>
+
+          </div>
+        </div>
+        <ng-container *ngFor="let item of ticketData1">
+          <button [disabled]="item.isReserved" (click)="chooseTicket(item.id, item.flightId)" class="w-15" nz-button nzType="default">{{item.code}}</button>
+        </ng-container>
+      </div>
+    </nz-tab>
+
+    <nz-tab *ngIf="!(ticketData2.length === 0)"
+      nzTitle="{{flightData[1]?.fromLocation}} đến {{flightData[1]?.toLocation}}">
+      <div class="">
+        <div class="row">
+          <div class="col col-6">
+            <h3>Hành khách</h3>
+            <ng-container *ngFor="let item of passengerInfo">
+              <button (click)="changePassengerId(item.id)" class="card mb-3">
+                <h5>{{item.firstName}} {{item.lastName}}</h5>
+              </button>
+            </ng-container>
+          </div>
+          <div class="col col-6">
+            <h3>Ghi chú</h3>
+            <ng-container *ngFor="let rank of rankList">
+              <div>
+                <span class="align-middle" nz-icon nzType="cloud" nzTheme="outline"></span>
+                <span class="align-middle">{{rank.rankName}}</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <ng-container *ngFor="let item of ticketData2">
+          <button [disabled]="item.isReserved" (click)="chooseTicket(item.id, item.flightId)" class="w-15" nz-button nzType="default">{{item.code}}</button>
+        </ng-container>
+      </div>
+    </nz-tab>
+  </nz-tabset>
+  <button (click)="checkPassengerChooseTicket()" nz-button nzType="primary" class="float-end mt-5">Tiếp tục</button>
+</div>

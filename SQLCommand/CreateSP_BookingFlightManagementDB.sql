@@ -84,11 +84,12 @@ create or alter procedure GetService
 with recompile
 as
 begin
-	select s.Id, s.ServiceName, s.Cost, s.AirlineId, a.AirlineName from Airline a
+	select s.Id, s.ServiceName, s.Cost, s.AirlineId, a.AirlineName, s.ParentId from Airline a
 	inner join Service s on a.Id = s.AirlineId
 	where (isnull(@Id, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000' 
 	and isnull(@AirlineId, '00000000-0000-0000-0000-000000000000') = '00000000-0000-0000-0000-000000000000'
 	and isnull(@SearchValue, '') = '')
+	or (isnull(ParentId, '00000000-0000-0000-0000-000000000000') <> '00000000-0000-0000-0000-000000000000' and a.Id = @AirlineId)
 	or s.AirlineId = @AirlineId
 	or s.Id = @Id
 	or a.AirlineName like '%' + @SearchValue + '%'
@@ -186,10 +187,10 @@ create or alter procedure GetRemaningTicket
 with recompile
 as
 begin
-	select t.Code, t.Price, ra.RankName, ra.BaggageWeight from Ticket t 
+	select t.Id, t.FlightId,t.Code, t.Price, ra.RankName, ra.BaggageWeight, r.IsReserved from Ticket t 
 	inner join Reservation r on t.ReservationId = r.Id
 	inner join Rank ra on r.RankId = ra.Id
-	where t.FlightId = @FlightId and r.IsReserved = 0
+	where t.FlightId = @FlightId
 end;
 go
 -- get all flight in day

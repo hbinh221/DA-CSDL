@@ -25,42 +25,75 @@ namespace API.Controllers
         }
 
         [HttpGet("get/remaningticket")]
-        public async Task<IEnumerable<RemaningTicketDto>> GetTicketForPassenger(Guid flightId)
+        public async Task<Response<IEnumerable<RemaningTicketDto>>> GetTicketForPassenger(Guid flightId)
         {
             var dp_params = new DynamicParameters();
+            Response<IEnumerable<RemaningTicketDto>> response = new();
             dp_params.Add("@FlightId", flightId, DbType.Guid);
-            return await _db.GetAll<RemaningTicketDto>("GetRemaningTicket", dp_params);
+            var data = await _db.GetAll<RemaningTicketDto>("GetRemaningTicket", dp_params);
+            if(data != null)
+            {
+                response.Code = 200;
+                response.Data = data;
+            }
+            return response;
         }
 
         [HttpPost("create/ticket")]
-        public async Task<Response<List<Guid>>> CreateTicket(List<TicketInput> input)
+        public async Task<Response<List<Guid?>>> CreateTicket(List<TicketInput> input)
         {
             var dp_params = new DynamicParameters();
-            Response<List<Guid>> response = new();
+            Response<List<Guid?>> response = new();
             using (IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection")))
             {
                 foreach (var item in input)
                 {
-                    dp_params.Add("@Id", item.Id, DbType.Guid);
-                    dp_params.Add("@PromotionId", item.PromotionId, DbType.Guid);
-                    dp_params.Add("@PassengerTmpId", item.PassengerTmpId, DbType.Guid);
-                    dp_params.Add("@PaymentId", item.PaymentId, DbType.Guid);
-                    dp_params.Add("@PaymentDate", item.PaymentDate, DbType.DateTime2);
-
-                    string sqlCommand = "update Ticket set PromotionId = @PromotionId, PassengerTmpId = @PassengerTmpId, " +
-                        "PaymentId = @PaymentId, PaymentDate = @PaymentDate where Id = @Id";
-                    if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == input.Count)
+                    // Xử lý trường hợp hành khách không chọn chỗ
+                    if (item.Id == null)
                     {
-                        response.Code = 200;
-                        foreach(var ticket in input)
-                        {
+                        string sqlCommand = @"select top 1 t.Id from Ticket t inner join Reservation r on t.ReservationId = r.Id
+                            where r.RankId = @RankId and r.IsReserved = 0";
+                        var ticketId = await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
 
-                            response.Data.Add(ticket.Id);
+                        dp_params.Add("@Id", ticketId, DbType.Guid);
+                        dp_params.Add("@PromotionId", item.PromotionId, DbType.Guid);
+                        dp_params.Add("@PassengerTmpId", item.PassengerTmpId, DbType.Guid);
+                        dp_params.Add("@PaymentId", item.PaymentId, DbType.Guid);
+                        dp_params.Add("@PaymentDate", item.PaymentDate, DbType.DateTime2);
+
+                        sqlCommand = "update Ticket set PromotionId = @PromotionId, PassengerTmpId = @PassengerTmpId, " +
+                            "PaymentId = @PaymentId, PaymentDate = @PaymentDate where Id = @Id";
+                        if (await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == input.Count)
+                        {
+                            response.Code = 200;
+                            foreach (var ticket in input)
+                            {
+                                response.Data.Add(ticket.Id);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        dp_params.Add("@Id", item.Id, DbType.Guid);
+                        dp_params.Add("@PromotionId", item.PromotionId, DbType.Guid);
+                        dp_params.Add("@PassengerTmpId", item.PassengerTmpId, DbType.Guid);
+                        dp_params.Add("@PaymentId", item.PaymentId, DbType.Guid);
+                        dp_params.Add("@PaymentDate", item.PaymentDate, DbType.DateTime2);
+
+                        string sqlCommand = "update Ticket set PromotionId = @PromotionId, PassengerTmpId = @PassengerTmpId, " +
+                            "PaymentId = @PaymentId, PaymentDate = @PaymentDate where Id = @Id";
+                        if(await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text) == input.Count)
+                        {
+                            response.Code = 200;
+                            foreach(var ticket in input)
+                            {
+
+                                response.Data.Add(ticket.Id);
+                            }
                         }
                     }
                 }    
             };
-
             return response;
         }
     }

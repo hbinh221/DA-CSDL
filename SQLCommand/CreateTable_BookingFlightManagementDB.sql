@@ -65,10 +65,11 @@ create table Service(
 	ServiceName nvarchar(100) not null,
 	Cost money not null,
 	AirlineId uniqueidentifier not null,
+	ParentId uniqueidentifier null,
 	constraint Service_AirlineId_Foreign foreign key (AirlineId) references Airline(Id)
 );
 go
-alter table Service add ParentId uniqueidentifier null
+--alter table Service add ParentId uniqueidentifier null
 go
 create table Plane(
 	Id uniqueidentifier primary key default newsequentialid(),
@@ -77,8 +78,10 @@ create table Plane(
 	Code nvarchar(8) not null,
 	AirlineId uniqueidentifier not null,
 	constraint Plane_AirlineId_Foreign foreign key (AirlineId) references Airline(Id),
-	constraint Chk_SeatQuantity check (SeatQuantity>=250)
+	constraint Chk_SeatQuantity check (SeatQuantity>=100)
 );
+--alter table Plane DROP constraint Chk_SeatQuantity
+--alter table Plane add constraint Chk_SeatQuantity check(SeatQuantity>=100)
 go
 create table Flight(
 	Id uniqueidentifier primary key default newsequentialid(),
