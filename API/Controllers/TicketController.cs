@@ -53,6 +53,9 @@ namespace API.Controllers
                     {
                         string sqlCommand = @"select top 1 t.Id from Ticket t inner join Reservation r on t.ReservationId = r.Id
                             where r.RankId = @RankId and r.IsReserved = 0";
+                        dp_params = new DynamicParameters();
+                        dp_params.Add("@RankId", item.RankId, DbType.Guid);
+
                         var ticketId = await db.ExecuteAsync(sqlCommand, dp_params, null, null, CommandType.Text);
 
                         dp_params.Add("@Id", ticketId, DbType.Guid);

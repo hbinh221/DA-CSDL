@@ -5,6 +5,9 @@ import { ModelBaseComponent } from 'src/app/admin-module/shared/modal-base/modal
 import { Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { FlightService } from 'src/app/services/flight.service';
+import { PassengerInforModel } from 'src/app/customer-module/models/passenger-infor.model';
+import { ServiceDataModel } from 'src/app/customer-module/models/service-data.model';
+import { FlightDataModel } from 'src/app/customer-module/models/flight-data.model';
 
 @Component({
   selector: 'app-flight-selection-passenger-service',
@@ -18,11 +21,11 @@ export class FlightSelectionPassengerServiceComponent
   @ViewChild('baggageModal') baggageModal!: ModelBaseComponent;
   @ViewChild('milkTeaModal') milkTeaModal!: ModelBaseComponent;
 
-  flightData: any[] = [];
-  passengerInfo: any[] = [];
+  flightData: FlightDataModel[] = [];
+  passengerInfo: PassengerInforModel[] = [];
   serviceList: any[] = [];
-  milkTeaList: any[] = [];
-  baggageList: any[] = [];
+  milkTeaList: ServiceDataModel[] = [];
+  baggageList: ServiceDataModel[] = [];
   isInsurance: boolean = false;
   isBaggage: boolean = false;
   isMilkTea: boolean = false;
@@ -43,12 +46,27 @@ export class FlightSelectionPassengerServiceComponent
   }
 
   fetchService(): void {
-    this.serviceService.getService('','9067217F-5674-ED11-BE98-484D7EF0B796', '').subscribe(res => {
+    this.serviceService.getService('','9067217F-5674-ED11-BE98-484D7EF0B796', '').subscribe((res: {code: number, data: ServiceDataModel[]}) => {
       if(res.code === 200) {
         this.serviceList = res.data;
-        this.baggageList = (res.data as any[]).filter(e => e.parentId != null);
-        this.milkTeaList = (res.data as any[]).filter(e => (e.serviceName as string).includes('Trà sữa trân châu vị'));
-        this.milkTeaList.map(e => Object.assign(e, {isChoose: false}))
+        this.baggageList = res.data.filter(e => e.parentId != null);
+        this.milkTeaList = res.data.filter(e => (e.serviceName as string).includes('Trà sữa trân châu vị'));
+        let list = [] as any[]
+        let list1 = [] as any[]
+        if (this.flightData.length !== 0) {
+          list = [{...this.milkTeaList[0], isChoose: false, flightId: this.flightData[0].id},
+            {...this.milkTeaList[1], isChoose: false, flightId: this.flightData[0].id}]
+          if (this.flightData.length === 2) {
+            list1 = [{...this.milkTeaList[0], isChoose: false, flightId: this.flightData[1].id},
+            {...this.milkTeaList[1], isChoose: false, flightId: this.flightData[1].id}]
+          }
+          this.passengerInfo.map(e => e.milkTeaList = list.concat(list1));
+        }
+
+        sessionStorage.setItem(
+          'passenger-info',
+          JSON.stringify(this.passengerInfo)
+        );
       }
     })
   }
@@ -61,12 +79,13 @@ export class FlightSelectionPassengerServiceComponent
     this.milkTeaModal.openModal(null, 'create', true);
   }
 
-  chooseInsurance(id: string) {
+  chooseInsurance(id: string | undefined) {
     this.isInsurance = !this.isInsurance;
     if(this.isInsurance) {
       let insurance: any;
       insurance = this.serviceList.find(e => e.id == id);
-      this.passengerInfo.map(e => (e.insuranceList as any[]).push({...insurance, flightId: this.flightData}))
+      let list = this.flightData.length !== 1 ? [ this.flightData[0].id, this.flightData[1].id] : [ this.flightData[0].id];
+      this.passengerInfo.map(e => (e.insuranceList as any[]).push({...insurance, flightId: list}))
     } else {
       let insurance: any;
       insurance = this.serviceList.find(e => e.id == id);

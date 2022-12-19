@@ -11,6 +11,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LocationService } from 'src/app/services/location.service';
 import { BehaviorSubject } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { FlightDataModel } from 'src/app/customer-module/models/flight-data.model';
 
 @Component({
   selector: 'app-flight-selection-passenger-info',
@@ -23,7 +24,7 @@ export class FlightSelectionPassengerInfoComponent implements OnInit {
   idCardRegex: string = '^[0-9]+$';
   passengerQuantity: number = 0;
   form!: FormGroup;
-  flightData: any[] = [];
+  flightData: FlightDataModel[] = [];
   fromLocationName: string = '';
   toLocationName: string = '';
   fromLocationCode: string = '';

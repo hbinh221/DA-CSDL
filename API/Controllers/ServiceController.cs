@@ -32,7 +32,7 @@ namespace API.Controllers
             var response = new Response<IEnumerable<ServiceDto>>();
             dp_params.Add("@Id", id, DbType.Guid); 
             dp_params.Add("@AirlineId", airlineId, DbType.Guid);
-            dp_params.Add("@SearchValue ", searchValue, DbType.String);
+            dp_params.Add("@SearchValue", searchValue, DbType.String);
 
             var newData = await _db.GetAll<ServiceDto>("GetService", dp_params);
             if(newData != null)
