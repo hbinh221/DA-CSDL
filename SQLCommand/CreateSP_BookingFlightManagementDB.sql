@@ -183,13 +183,13 @@ end;
 exec GetFlight null, null, 'Cost desc'
 go
 create or alter procedure GetRemaningTicket
-@FlightId uniqueidentifier
+@FlightId uniqueidentifier, @RankId uniqueidentifier 
 with recompile
 as
 begin
-	select t.Id, t.FlightId, r.ReservationNo as Code, t.Price, ra.RankName, ra.BaggageWeight, r.IsReserved from Ticket t 
+	select t.Id, t.FlightId, r.ReservationNo as Code, t.Price, ra.Id as RankId, ra.RankName, ra.BaggageWeight, r.IsReserved from Ticket t 
 	inner join Reservation r on t.ReservationId = r.Id
-	inner join Rank ra on r.RankId = ra.Id
+	inner join (select Id, RankName, BaggageWeight from Rank where Id = @RankId) ra on r.RankId = ra.Id
 	where t.FlightId = @FlightId
 	order by r.ReservationNo
 end;
@@ -289,6 +289,7 @@ with recompile
 as
 begin
 	select 
+		ra.Id,
 		t.FlightId,
 		ra.RankName,
 		ra.BaggageWeight,
@@ -298,7 +299,7 @@ begin
 	inner join (select Price, ReservationId, FlightId from Ticket) t on f.Id = t.FlightId
 	inner join (select Id, RankId from Reservation where IsReserved = 0) r on t.ReservationId = r.Id
 	inner join (select Id, RankName, BaggageWeight from Rank) ra on r.RankId = ra.Id
-	group by ra.RankName, ra.BaggageWeight, t.Price, t.FlightId;
+	group by ra.RankName, ra.BaggageWeight, t.Price, t.FlightId, ra.Id;
 end;
 go
 --exec GetRankForFlight 'ED55B8CC-0A67-ED11-BE8B-484D7EF0B796'

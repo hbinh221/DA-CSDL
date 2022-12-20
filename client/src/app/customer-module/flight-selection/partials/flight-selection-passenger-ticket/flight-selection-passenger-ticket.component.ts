@@ -19,7 +19,6 @@ export class FlightSelectionPassengerTicketComponent implements OnInit {
   passengerInfo: PassengerInforModel[] = [];
   passengerId: string = '';
   rankList: any[] = [];
-  tabIndex: number = 0;
 
   constructor(
     private ticketService: TicketService,
@@ -65,13 +64,13 @@ export class FlightSelectionPassengerTicketComponent implements OnInit {
   }
 
   fetchData() {
-    this.ticketService.getTicket(this.flightData[0].id).subscribe((res) => {
+    this.ticketService.getTicket(this.flightData[0].id, this.flightData[0].rankClass[0].id).subscribe((res) => {
       if (res.code === 200) {
         this.ticketData1 = res.data;
       }
     });
     if (this.flightData.length === 2) {
-      this.ticketService.getTicket(this.flightData[1].id).subscribe((res) => {
+      this.ticketService.getTicket(this.flightData[1].id, this.flightData[1].rankClass[0].id).subscribe((res) => {
         if (res.code === 200) {
           this.ticketData2 = res.data;
         }

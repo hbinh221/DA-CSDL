@@ -10,11 +10,13 @@ export class TicketService {
   baseUrl: string = 'ticket';
   constructor(private http: HttpClient) { }
 
-  getTicket(id?: string): Observable<any> {
+  getTicket(id?: string, rankId?: string): Observable<any> {
     let idString = '';
+    let rankIdString = '';
     if (id) idString = '?flightId=' + id;
+    if (rankId) rankIdString = '&rankId=' + rankId;
     return this.http.get(
-      environment.baseUrl + this.baseUrl + '/get/remaningticket' + idString
+      environment.baseUrl + this.baseUrl + '/get/remaningticket' + idString + rankIdString
     );
   }
   updateAdmin(id: string, payload: any): Observable<any> {

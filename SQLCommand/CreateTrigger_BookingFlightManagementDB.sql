@@ -6,28 +6,49 @@ create or alter trigger Trg_Flight_Create_Reservation
 	after insert 
 as
 begin
-	declare @SeatQuantity int, @Index int, @FlightNo nvarchar(20), @RankId uniqueidentifier;
+	declare @Alphabet varchar(36) = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', @SeatQuantity int, 
+		@Row int, @FlightNo nvarchar(20), @RankId uniqueidentifier, @Index int;
+
 	set @SeatQuantity = (select SeatQuantity from Plane where Id = (select PlaneId from inserted));
 	set @FlightNo = (select FlightNo from inserted);
-	--set @SeatQuantity = 250;
-	--set @FlightNo = 'FlightNo1';
-	set @Index = 1;
-	while (@seatQuantity > 0)
+	set @Row = 1;
+
+	while (@Row <= @SeatQuantity / 6)
 	begin
-		if @Index <= 20
+		while (@Index <= 6)
 		begin
-			-- 20 first seat with business class
-			set @RankId = (select top 1 Id from Rank order by Id desc);
+			--if @Row = 1
+			--begin
+			--	-- 6 first seat with business class
+			--	set @RankId = (select top 1 Id from Rank order by Id desc);
+
+			--	insert into Reservation(ReservationNo, ReservationDate, IsReserved, FlightId, RankId)
+			--	values (concat('A', cast(@Index as nvarchar(10))), null, 0, (select Id from inserted), @RankId);
+			--end;
+			if @Row = 2
+			begin
+				-- 6 first seat with business class
+				set @RankId = (select top 1 Id from Rank order by Id desc);
+
+				insert into Reservation(ReservationNo, ReservationDate, IsReserved, FlightId, RankId)
+				values (concat('A', cast(@Index as nvarchar(10))), null, 0, (select Id from inserted), @RankId);
+
+				insert into Reservation(ReservationNo, ReservationDate, IsReserved, FlightId, RankId)
+				values (concat('B', cast(@Index as nvarchar(10))), null, 0, (select Id from inserted), @RankId);
+			end;
+			if @Row >=3
+			begin
+				-- remaining seat with economy class
+				set @RankId = (select top 1 Id from Rank);
+				insert into Reservation(ReservationNo, ReservationDate, IsReserved, FlightId, RankId)
+				values (concat(substring(@Alphabet, @Row, 1),cast(@Index as nvarchar(10))), null, 0, (select Id from inserted), @RankId);
+			end;
+
+			set @Index = @Index + 1;
 		end;
-		else
-		begin
-			-- remaining seat with economy class
-			set @RankId = (select top 1 Id from Rank);
-		end;
-		insert into Reservation(ReservationNo, ReservationDate, IsReserved, FlightId, RankId)
-		values (concat(@FlightNo, '_',cast(@Index as nvarchar(10))), null, 0, (select Id from inserted), @RankId);
-		set @Index = @Index + 1;
-		set @SeatQuantity = @SeatQuantity - 1;
+
+		set @Row = @Row + 1;
+		set @Index = 1;
 	end;
 end;
 go
@@ -40,6 +61,7 @@ as
 begin
 	declare @Alphabet varchar(36) = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', @Code nvarchar(10), @Price money, @Gate nvarchar(10);
 	-- make color
+	set @Code = substring(@Alphabet, 0, 1)
 	set @Code = (substring(@Alphabet, convert(int, rand()*36), 1) + 
 	substring(@Alphabet, convert(int, rand()*36), 1) +
 	substring(@Alphabet, convert(int, rand()*36), 1) +

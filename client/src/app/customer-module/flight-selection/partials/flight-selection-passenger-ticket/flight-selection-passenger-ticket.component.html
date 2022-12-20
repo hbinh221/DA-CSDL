@@ -1,10 +1,8 @@
 <div class="container">
-  <nz-tabset [nzSelectedIndex]="tabIndex">
-    <nz-tab
-      nzTitle="{{ flightData[0].fromLocation }} đến {{
+  <nz-tabset>
+    <nz-tab nzTitle="{{ flightData[0].fromLocation }} đến {{
         flightData[0].toLocation
-      }}"
-    >
+      }}">
       <div nz-row>
         <div nz-col nzSpan="12">
           <h3>Hành khách</h3>
@@ -18,42 +16,27 @@
           <h3>Ghi chú</h3>
           <ng-container *ngFor="let rank of rankList">
             <div>
-              <span
-                class="align-middle"
-                nz-icon
-                nzType="cloud"
-                nzTheme="outline"
-              ></span>
+              <span class="align-middle" nz-icon nzType="cloud" nzTheme="outline"></span>
               <span class="align-middle">{{ rank.rankName }}</span>
             </div>
           </ng-container>
         </div>
       </div>
-      <div nz-row [nzGutter]="1">
-        <div *ngFor="let item of ticketData1" nz-col nzSpan="4">
-          <button
-            [disabled]="item.isReserved"
-            (click)="chooseTicket(item.id, item.flightId, item.rankId)"
-            class="w-15"
-            nz-button
-            nzType="default"
-          >
-            {{ item.code }}
-          </button>
-          <!-- <ng-container *ngFor="let item of ticketData1">
-              <button [disabled]="item.isReserved" (click)="chooseTicket(item.id, item.flightId, item.rankId)" class="w-15" nz-button
-                nzType="default">{{item.code}}</button>
-            </ng-container> -->
+      <nz-card style="width:700px;" nzTitle="{{flightData[0].planeName}}">
+        <div nz-row [nzGutter]="1">
+          <div class="text-center" *ngFor="let item of ticketData1" nz-col nzSpan="4">
+            <button class="mb-5" [disabled]="item.isReserved"
+              (click)="chooseTicket(item.id, item.flightId, item.rankId)" [nzSize]="'large'" nz-button nzType="default">
+              {{ item.code }}
+            </button>
+          </div>
         </div>
-      </div>
+      </nz-card>
     </nz-tab>
 
-    <nz-tab
-      *ngIf="!(ticketData2.length === 0)"
-      nzTitle="{{ flightData[1].fromLocation }} đến {{
+    <nz-tab *ngIf="!(ticketData2.length === 0)" nzTitle="{{ flightData[1].fromLocation }} đến {{
         flightData[1].toLocation
-      }}"
-    >
+      }}">
       <div nz-row>
         <div nz-col nzSpan="12">
           <h3>Hành khách</h3>
@@ -67,36 +50,25 @@
           <h3>Ghi chú</h3>
           <ng-container *ngFor="let rank of rankList">
             <div>
-              <span
-                class="align-middle"
-                nz-icon
-                nzType="cloud"
-                nzTheme="outline"
-              ></span>
+              <span class="align-middle" nz-icon nzType="cloud" nzTheme="outline"></span>
               <span class="align-middle">{{ rank.rankName }}</span>
             </div>
           </ng-container>
         </div>
       </div>
-      <ng-container *ngFor="let item of ticketData2">
-        <button
-          [disabled]="item.isReserved"
-          (click)="chooseTicket(item.id, item.flightId, item.rankId)"
-          class="w-15"
-          nz-button
-          nzType="default"
-        >
-          {{ item.code }}
-        </button>
-      </ng-container>
+      <nz-card style="width:700px;" nzTitle="{{flightData[1].planeName}}">
+        <div nz-row [nzGutter]="1">
+          <div *ngFor="let item of ticketData2" nz-col nzSpan="4">
+            <button class="mb-5" [disabled]="item.isReserved"
+              (click)="chooseTicket(item.id, item.flightId, item.rankId)" [nzSize]="'large'" nz-button nzType="default">
+              {{ item.code }}
+            </button>
+          </div>
+        </div>
+      </nz-card>
     </nz-tab>
   </nz-tabset>
-  <button
-    (click)="checkPassengerChooseTicket()"
-    nz-button
-    nzType="primary"
-    class="float-end mt-5"
-  >
+  <button (click)="checkPassengerChooseTicket()" nz-button nzType="primary" class="float-end mt-5">
     Tiếp tục
   </button>
 </div>

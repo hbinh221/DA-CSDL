@@ -25,11 +25,12 @@ namespace API.Controllers
         }
 
         [HttpGet("get/remaningticket")]
-        public async Task<Response<IEnumerable<RemaningTicketDto>>> GetTicketForPassenger(Guid flightId)
+        public async Task<Response<IEnumerable<RemaningTicketDto>>> GetTicketForPassenger(Guid flightId, Guid rankId)
         {
             var dp_params = new DynamicParameters();
             Response<IEnumerable<RemaningTicketDto>> response = new();
             dp_params.Add("@FlightId", flightId, DbType.Guid);
+            dp_params.Add("@RankId", rankId, DbType.Guid);
             var data = await _db.GetAll<RemaningTicketDto>("GetRemaningTicket", dp_params);
             if(data != null)
             {
