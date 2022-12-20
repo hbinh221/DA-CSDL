@@ -51,7 +51,7 @@ set @PlaneId = (select top 1 Id from Plane);
 set @FromLocationId = (select top 1 Id from Location);
 set @ToLocationId = (select top 1 Id from Location order by Id desc);
 insert into Flight(FlightNo, Cost, Remark, DepartureTime, LandedTime, FromLocationId, ToLocationId, PlaneId)
-values (N'FlightNo1', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()), 
+values (N'No.1', 2500000, N'', GETDATE(), DATEADD(HH, 2, GETDATE()), 
 @FromLocationId, @ToLocationId, @PlaneId);
 go
 --set @PlaneId = (select Id from Plane);
@@ -74,5 +74,5 @@ go
 --SELECT SCOPE_IDENTITY() AS [SCOPE_IDENTITY];  
 --GO  
 --SELECT @@IDENTITY AS [@@IDENTITY];
+select * from Reservation where FlightId ='1AE7F71B-A77F-ED11-BE9F-484D7EF0B796'
 select * from Flight
-delete from Flight where 

@@ -17,6 +17,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from './shared-module/shared-module.module';
 import { AdminModuleModule } from './admin-module/admin-module.module';
 import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { NzGridModule } from 'ng-zorro-antd/grid';
 registerLocaleData(en);
 
 @NgModule({
@@ -35,6 +36,7 @@ registerLocaleData(en);
     ReactiveFormsModule,
     SharedModuleModule,
     NzAlertModule,
+    NzGridModule
   ],
   exports:[
     SharedModuleModule,

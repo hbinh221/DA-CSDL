@@ -187,10 +187,11 @@ create or alter procedure GetRemaningTicket
 with recompile
 as
 begin
-	select t.Id, t.FlightId,t.Code, t.Price, ra.RankName, ra.BaggageWeight, r.IsReserved from Ticket t 
+	select t.Id, t.FlightId, r.ReservationNo as Code, t.Price, ra.RankName, ra.BaggageWeight, r.IsReserved from Ticket t 
 	inner join Reservation r on t.ReservationId = r.Id
 	inner join Rank ra on r.RankId = ra.Id
 	where t.FlightId = @FlightId
+	order by r.ReservationNo
 end;
 go
 -- get all flight in day
