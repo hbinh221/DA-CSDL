@@ -80,6 +80,7 @@ export class FlightSelectionPassengerServiceComponent
   }
 
   chooseInsurance(id: string | undefined) {
+    this.passengerInfo = JSON.parse(sessionStorage.getItem('passenger-info')!);
     this.isInsurance = !this.isInsurance;
     if(this.isInsurance) {
       let insurance: any;

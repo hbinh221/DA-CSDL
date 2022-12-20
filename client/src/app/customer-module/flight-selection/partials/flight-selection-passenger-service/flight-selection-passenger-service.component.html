@@ -22,7 +22,7 @@
                     <span class="text-success">Đã thêm vào giỏ hàng</span>
                 </p>
                 <h5>Bảo hiểm du lịch</h5>
-                <p>{{serviceList[0]?.cost}} VND</p>
+                <p>{{serviceList[0]?.cost | formatMoney}} VND</p>
                 <p>mỗi hành khách</p>
                 <button nz-button nzType="default" (click)="chooseInsurance(serviceList[0]?.id)">{{!isInsurance ? 'Chọn' : 'Bỏ Chọn'}}</button>
             </div>
@@ -45,7 +45,7 @@
                     <span class="text-success">Đã thêm vào giỏ hàng</span>
                 </p>
                 <h5>Kiện</h5>
-                <p>{{serviceList[1]?.cost}} VND</p>
+                <p>{{serviceList[1]?.cost | formatMoney}} VND</p>
                 <p>Mỗi kiện/mỗi hành khách</p>
                 <button (click)="showBaggageModal()" nz-button nzType="default">{{isBaggage ? 'Thay đổi' : 'Thêm'}}</button>
             </div>
@@ -68,7 +68,7 @@
                     <span class="text-success">Đã thêm vào giỏ hàng</span>
                 </p>
                 <h5>Trà sữa Skytea</h5>
-                <p>{{serviceList[3]?.cost}} VND</p>
+                <p>{{serviceList[3]?.cost | formatMoney}} VND</p>
                 <button (click)="showMilkTeaModal()" nz-button nzType="default">{{isMilkTea ? 'Thay đổi' : 'Thêm trà sữa'}}</button>
             </div>
         </div>

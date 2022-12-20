@@ -50,7 +50,7 @@ begin
 		set @Row = @Row + 1;
 		set @Index = 1;
 	end;
-end;
+end;                                                           
 go
 -- create ticket with reservation
 -- After create reservation then create ticket with this reservation

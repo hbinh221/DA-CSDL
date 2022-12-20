@@ -64,6 +64,7 @@ export class PassengerServiceMilkTeaModalComponent
   }
 
   addMilkTea(passengerId: string, flightId: string, milkTeaId: string): void {
+    this.passengerInfo = JSON.parse(sessionStorage.getItem('passenger-info')!);
     let passenger: PassengerInforModel;
     passenger = this.passengerInfo.find(e => e.id === passengerId)!;
     passenger.milkTeaList.map(e => {
@@ -72,5 +73,6 @@ export class PassengerServiceMilkTeaModalComponent
       }
     })
     this.passengerInfo.map(e => e.id == passengerId ? e = Object.assign(passenger) : null);
+    sessionStorage.setItem('passenger-info', JSON.stringify(this.passengerInfo));
   }
 }

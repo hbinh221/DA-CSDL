@@ -20,6 +20,7 @@ import { PassengerServiceMilkTeaModalComponent } from './flight-selection/partia
 import { PassengerServiceBaggageModalComponent } from './flight-selection/partials/flight-selection-passenger-service/partials/passenger-service-baggage-modal/passenger-service-baggage-modal.component';
 import { FlightSelectionPassengerTicketComponent } from './flight-selection/partials/flight-selection-passenger-ticket/flight-selection-passenger-ticket.component';
 import { FlightSelectionPassengerPaymentComponent } from './flight-selection/partials/flight-selection-passenger-payment/flight-selection-passenger-payment.component';
+import { FormatMoneyPipe } from '../pipes/format-money.pipe';
 
 
 @NgModule({
@@ -38,6 +39,7 @@ import { FlightSelectionPassengerPaymentComponent } from './flight-selection/par
     PassengerServiceBaggageModalComponent,
     FlightSelectionPassengerTicketComponent,
     FlightSelectionPassengerPaymentComponent,
+    FormatMoneyPipe,
   ],
   imports: [
     CommonModule,

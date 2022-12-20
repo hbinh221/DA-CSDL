@@ -20,7 +20,7 @@
                 <img width="100%" height="100%" style="object-fit:cover" class="rounded mx-auto d-block"
                   src="../../../assets/img/VNairline.webp" alt="">
                 <h3>{{e.serviceName}}</h3>
-                <p class="text-center">{{e.cost}} VND/Ly</p>
+                <p class="text-center">{{e.cost | formatMoney}} VND/Ly</p>
                 <div class="text-center">
                   <button (click)="addMilkTea(item.id, data.id, e.id)" class="w-70" nz-button
                     nzType="default">{{e?.isChoose ? 'Không lựa chọn' : 'Thêm'}}</button>

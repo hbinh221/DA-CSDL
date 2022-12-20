@@ -15,11 +15,11 @@
                     </div>
                     <div class="col col-md-6 w-25 p-0 mr-5 text-center">
                         <p>{{baggageList[0].serviceName}}</p>
-                        <p>{{baggageList[0].cost}} VND</p>
+                        <p>{{baggageList[0].cost | formatMoney}} VND</p>
                     </div>
                     <div class="col col-md-6 w-25 p-0 text-center">
                         <p>{{baggageList[1].serviceName}}</p>
-                        <p>{{baggageList[1].cost}} VND</p>
+                        <p>{{baggageList[1].cost | formatMoney}} VND</p>
                     </div>
                 </div>
                 <ng-container *ngFor="let item of passengerInfo">
