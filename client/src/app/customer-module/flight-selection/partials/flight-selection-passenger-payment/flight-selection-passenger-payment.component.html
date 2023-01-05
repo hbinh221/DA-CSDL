@@ -4,5 +4,15 @@
     <h2>Chọn hình thức thanh toán {{price}} VND</h2>
     <p>Quý khách lựa chọn hình thức thanh toán dưới đây.</p>
     <p>Tổng số tiền phải trả: {{price}} VND</p>
+    <ng-container *ngFor="let payment of paymentList">
+      <div style="width:300px;" class="p-0 m-0">
+        <img nz-image
+        width="150px"
+        height="150px"
+        nzSrc="../../../../../assets/img/visa.png" alt="Visa">
+        <p >{{payment.paymentType}}</p>
+      </div>
+    </ng-container>
+
   </nz-card>
 </div>
